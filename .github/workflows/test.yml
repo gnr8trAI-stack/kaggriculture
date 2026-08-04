@@ -2,7 +2,9 @@ name: test
 
 on:
   push:
+    branches: [main]
   pull_request:
+    branches: [main]
 
 jobs:
   test:
@@ -12,7 +14,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install pytest
-      - run: pytest -q
-      - run: python scripts/build_submission.py
-      - run: python -m py_compile dist/submission.py
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip pytest
+      - name: Run unit tests
+        run: python -m pytest -q
+      - name: Build standalone submission
+        run: python scripts/build_submission.py
+      - name: Compile standalone submission
+        run: python -m py_compile dist/submission.py
