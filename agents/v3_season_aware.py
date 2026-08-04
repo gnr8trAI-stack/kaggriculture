@@ -1,8 +1,8 @@
 """Agent V3: season-aware crop selection layered over the proven V2 planner.
 
-This experiment intentionally changes only crop and seed economics. Movement,
-maintenance, harvesting, reservations, and liquidation remain inherited from
-frozen Agent V2 so benchmark deltas are easier to attribute.
+This experiment changes only crop and seed economics. Movement, maintenance,
+harvesting, reservations, and liquidation remain inherited from frozen Agent
+V2 so benchmark deltas are easier to attribute.
 """
 from __future__ import annotations
 
@@ -66,31 +66,45 @@ def choose_crop(observation: Any) -> Optional[str]:
     return candidates[0][2] if candidates[0][0] > 0 else None
 
 
-def _replace_plant_actions(action: Dict[str, Any], crop: str) -> None:
-    farmer = action.get("farmer")
-    if isinstance(farmer, list) and farmer[:1] == ["PLANT"]:
-        action["farmer"] = ["PLANT", crop]
-    hands = action.get("hands", [])
-    for index, hand_action in enumerate(hands):
-        if isinstance(hand_action, list) and hand_action[:1] == ["PLANT"]:
-            hands[index] = ["PLANT", crop]
-
-
-def _replace_seed_order(action: Dict[str, Any], observation: Any, crop: str) -> None:
+def _seed_inventory(observation: Any) -> Mapping[str, Any]:
     obs = _as_mapping(observation)
     private = _as_mapping(obs.get("private"))
-    seeds = _as_mapping(private.get("seeds"))
-    target_have = int(seeds.get(crop, 0) or 0)
+    return _as_mapping(private.get("seeds"))
 
-    market = action.get("market", [])
-    replaced = False
-    for index, order in enumerate(market):
-        if isinstance(order, list) and order[:2] == ["BUY_SEED", "WHEAT"]:
-            quantity = int(order[2]) if len(order) > 2 else 1
-            market[index] = ["BUY_SEED", crop, max(1, quantity - target_have)]
-            replaced = True
+
+def _replace_plant_actions(action: Dict[str, Any], crop: str, available: int) -> int:
+    """Replace at most ``available`` V2 wheat plants with a seed-backed crop."""
+    if crop == "WHEAT" or available <= 0:
+        return 0
+
+    replaced = 0
+    farmer = action.get("farmer")
+    if isinstance(farmer, list) and farmer[:1] == ["PLANT"] and replaced < available:
+        action["farmer"] = ["PLANT", crop]
+        replaced += 1
+
+    hands = action.get("hands", [])
+    for index, hand_action in enumerate(hands):
+        if replaced >= available:
             break
-    if not replaced and target_have == 0 and len(market) < 10:
+        if isinstance(hand_action, list) and hand_action[:1] == ["PLANT"]:
+            hands[index] = ["PLANT", crop]
+            replaced += 1
+    return replaced
+
+
+def _add_seed_order(action: Dict[str, Any], observation: Any, crop: str) -> None:
+    """Build crop inventory without removing V2's wheat safety order."""
+    if crop == "WHEAT":
+        return
+    seeds = _seed_inventory(observation)
+    target_have = int(seeds.get(crop, 0) or 0)
+    market = action.get("market", [])
+    already_buying = any(
+        isinstance(order, list) and order[:2] == ["BUY_SEED", crop]
+        for order in market
+    )
+    if target_have == 0 and not already_buying and len(market) < 10:
         market.append(["BUY_SEED", crop, 1])
 
 
@@ -99,6 +113,9 @@ def agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
     crop = choose_crop(observation)
     if crop is None:
         return action
-    _replace_plant_actions(action, crop)
-    _replace_seed_order(action, observation, crop)
+
+    seeds = _seed_inventory(observation)
+    available = int(seeds.get(crop, 0) or 0)
+    _replace_plant_actions(action, crop, available)
+    _add_seed_order(action, observation, crop)
     return action
