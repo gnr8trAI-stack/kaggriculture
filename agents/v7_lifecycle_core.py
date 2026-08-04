@@ -86,7 +86,9 @@ def tile_task(tile: Any, day: int) -> Optional[Tuple[int, List[Any]]]:
     if kind != "PLANT":
         return None
     crop = str(tile.get("crop", "")).upper()
-    age = day - int(tile.get("planted_day", day) or day)
+    planted_raw = tile.get("planted_day", day)
+    planted_day = day if planted_raw is None else int(planted_raw)
+    age = day - planted_day
     yield_units = int(tile.get("yield_units", 0) or 0)
     watered = bool(tile.get("watered_today", False))
     danger = int(tile.get("consecutive_unwatered", 0) or 0) >= 1
