@@ -21,8 +21,9 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -r requirements-dev.txt
       - name: Run V3 against frozen V2
-        run: python scripts/benchmark_v3.py --games-per-seat 10 --output experiments/v3-season-aware-vs-v2-20.json
+        run: python -m scripts.benchmark_v3 --games-per-seat 10 --output experiments/v3-season-aware-vs-v2-20.json
       - name: Enforce runtime safety gate
+        if: success()
         run: |
           python - <<'PY'
           import json
@@ -33,6 +34,8 @@ jobs:
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: v3-season-aware-benchmark
           path: experiments/v3-season-aware-vs-v2-20.json
+          if-no-files-found: warn
