@@ -1,12 +1,18 @@
-from agents.v3_season_aware import choose_crop, crop_score
+from agents.v3_season_aware import (
+    _add_seed_order,
+    _replace_plant_actions,
+    choose_crop,
+    crop_score,
+)
 
 
-def observation(day=0, money=3000, prices=None):
+def observation(day=0, money=3000, prices=None, seeds=None):
     return {
         "player": 0,
         "day": day,
         "farms": [{"money": money}, {"money": 3000}],
         "market": {"prices": prices or {}},
+        "private": {"seeds": seeds or {}},
     }
 
 
@@ -47,3 +53,31 @@ def test_glutted_premium_crop_is_penalized():
         )
     )
     assert crop not in {"MELON", "STRAWBERRY"}
+
+
+def test_plant_is_not_replaced_without_target_seed():
+    action = {"farmer": ["PLANT", "WHEAT"], "hands": [], "market": []}
+    assert _replace_plant_actions(action, "MELON", available=0) == 0
+    assert action["farmer"] == ["PLANT", "WHEAT"]
+
+
+def test_replacement_count_never_exceeds_available_seed():
+    action = {
+        "farmer": ["PLANT", "WHEAT"],
+        "hands": [["PLANT", "WHEAT"], ["PLANT", "WHEAT"]],
+        "market": [],
+    }
+    assert _replace_plant_actions(action, "MELON", available=1) == 1
+    planted = [action["farmer"], *action["hands"]]
+    assert planted.count(["PLANT", "MELON"]) == 1
+
+
+def test_premium_seed_order_does_not_remove_wheat_safety_order():
+    action = {
+        "farmer": ["PASS"],
+        "hands": [],
+        "market": [["BUY_SEED", "WHEAT", 2]],
+    }
+    _add_seed_order(action, observation(seeds={"MELON": 0}), "MELON")
+    assert ["BUY_SEED", "WHEAT", 2] in action["market"]
+    assert ["BUY_SEED", "MELON", 1] in action["market"]
