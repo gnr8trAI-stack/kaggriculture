@@ -1,8 +1,8 @@
 """Benchmark Kaggriculture agents across seeds and both player positions.
 
-The harness deliberately reports raw evidence instead of declaring a strategy
-better from one or two games. It can write a machine-readable JSON report for
-versioned experiments.
+The candidate is the actively developed agent. The opponent is a frozen Agent
+V2 snapshot, so later changes must beat a stable prior policy rather than a
+passive no-op.
 """
 from __future__ import annotations
 
@@ -12,23 +12,14 @@ import statistics
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Sequence
 
 from kaggle_environments import make
 
 from agents.adaptive_agent import agent as candidate_agent
+from agents.v2_frozen import agent as reference_agent
 
 Agent = Callable[[Any, Any], Dict[str, Any]]
-
-
-def passive_agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
-    """Schema-safe no-op opponent used only as a minimum sanity baseline."""
-    farm = observation["farms"][observation["player"]]
-    return {
-        "farmer": ["PASS"],
-        "hands": [["PASS"] for _ in farm.get("hands", [])],
-        "market": [],
-    }
 
 
 @dataclass(frozen=True)
@@ -119,16 +110,18 @@ def run_benchmark(games_per_seat: int, output: Path | None = None) -> BenchmarkS
     results: List[GameResult] = []
     for seat in (0, 1):
         for seed in range(games_per_seat):
-            result = _run_game(seed, seat, candidate_agent, passive_agent)
+            result = _run_game(seed, seat, candidate_agent, reference_agent)
             results.append(result)
             print(
                 f"seed={seed:04d} seat={seat} candidate={result.candidate_reward:.0f} "
-                f"opponent={result.opponent_reward:.0f} delta={result.delta:.0f} "
+                f"v2={result.opponent_reward:.0f} delta={result.delta:.0f} "
                 f"status={result.candidate_status}"
             )
 
     summary = summarize(results)
     payload = {
+        "candidate": "agents.adaptive_agent",
+        "opponent": "agents.v2_frozen",
         "summary": asdict(summary),
         "games": [asdict(result) for result in results],
     }
