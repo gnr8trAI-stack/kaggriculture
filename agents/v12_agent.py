@@ -5,6 +5,8 @@ from typing import Any, Dict
 from agents import v12_market_aware as _policy  # noqa: F401
 from agents import v11_agent as _telemetry_wrapper
 
+TELEMETRY_SCHEMA_VERSION = _telemetry_wrapper.TELEMETRY_SCHEMA_VERSION
+
 
 def agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
     return _telemetry_wrapper.agent(observation, configuration)
