@@ -1,6 +1,13 @@
 """Benchmark V12 with the V11 telemetry and opponent population."""
 import argparse
+import sys
 from pathlib import Path
+
+# Running ``python scripts/benchmark_v12.py`` places scripts/ on sys.path.
+# Add the repository root explicitly before importing repository packages.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from agents import v12_agent
 from scripts import benchmark_v11 as base
