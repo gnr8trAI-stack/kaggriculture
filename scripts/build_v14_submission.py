@@ -1,11 +1,16 @@
 """Build the standalone V14 integrated-farm Kaggriculture submission."""
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts.build_v13_submission import _v12_source
 
 
 def build() -> Path:
-    root = Path(__file__).resolve().parents[1]
+    root = ROOT
     v10 = (root / "agents" / "v10_market_front_runner.py").read_text(encoding="utf-8")
     v12 = _v12_source(root)
     wrapper = (root / "agents" / "v14_integrated_farm.py").read_text(encoding="utf-8")
