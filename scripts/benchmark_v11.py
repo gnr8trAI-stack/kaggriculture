@@ -2,9 +2,17 @@
 import argparse
 import json
 import statistics
+import sys
 import time
 from dataclasses import asdict
 from pathlib import Path
+
+# Running ``python scripts/benchmark_v11.py`` puts scripts/ on sys.path rather
+# than the repository root. Add the root explicitly so repository packages are
+# imported consistently in GitHub Actions, Colab, and local shells.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from agents.melon_baseline import agent as melon_baseline
 from agents.v7_lifecycle_core import agent as v7_agent
