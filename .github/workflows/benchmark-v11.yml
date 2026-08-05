@@ -1,0 +1,26 @@
+name: benchmark-v11
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run V11 focused tests
+        run: pytest -q tests/test_v11_adaptive_planner.py
+      - name: Run both-seat benchmark
+        run: python scripts/benchmark_v11.py --games-per-seat 10 --seed-start 70000 --output experiments/v11-benchmark.json
+      - name: Upload benchmark artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v11-adaptive-benchmark
+          path: experiments/v11-benchmark.json
