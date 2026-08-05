@@ -1,0 +1,56 @@
+name: benchmark-v10
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agents/**'
+      - 'scripts/benchmark*.py'
+      - 'tests/**'
+      - '.github/workflows/benchmark-v10.yml'
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Run V10 competitive benchmark
+        run: >-
+          python -m scripts.benchmark_v10
+          --games-per-seat 10
+          --output experiments/v10-competitive-60.json
+      - name: Enforce safety and primary opponent gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path('experiments/v10-competitive-60.json').read_text()
+          )
+          overall = report['summary']
+          melon = report['by_opponent']['melon_baseline']['summary']
+          melon_seats = report['by_opponent']['melon_baseline']['seat_mean_delta']
+
+          assert overall['invalid_or_error_games'] == 0, overall
+          assert melon['invalid_or_error_games'] == 0, melon
+          assert melon['mean_delta'] > 0, melon
+          assert all(value > 0 for value in melon_seats.values()), melon_seats
+
+          print(json.dumps(overall, indent=2, sort_keys=True))
+          print(json.dumps(melon, indent=2, sort_keys=True))
+          print(json.dumps(melon_seats, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v10-competitive-benchmark
+          path: experiments/v10-competitive-60.json
+          if-no-files-found: warn
