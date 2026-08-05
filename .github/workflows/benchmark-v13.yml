@@ -1,0 +1,46 @@
+name: benchmark-v13
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run V13 focused tests
+        run: pytest -q tests/test_v13_hybrid_champion.py
+      - name: Build standalone submission
+        run: |
+          python scripts/build_v13_submission.py
+          python -m py_compile dist/submission.py
+          test -s dist/submission.py
+          ! grep -Eq 'from agents|import agents|from scripts|import scripts' dist/submission.py
+      - name: Run population benchmark with telemetry
+        run: >-
+          python scripts/benchmark_v13.py
+          --games-per-seat 10
+          --seed-start 90000
+          --output experiments/v13-benchmark.json
+          --telemetry-output experiments/v13-telemetry.jsonl
+      - name: Compress telemetry
+        if: always()
+        run: gzip -9 -f experiments/v13-telemetry.jsonl || true
+      - name: Upload V13 package
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v13-hybrid-benchmark
+          path: |
+            experiments/v13-benchmark.json
+            experiments/v13-telemetry.jsonl.gz
+            dist/submission.py
+          if-no-files-found: warn
+          retention-days: 90

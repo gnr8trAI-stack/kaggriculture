@@ -1,0 +1,59 @@
+name: benchmark-v8
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agents/**'
+      - 'scripts/benchmark*.py'
+      - 'tests/**'
+      - '.github/workflows/benchmark-v8.yml'
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Run tests
+        run: python -m pytest -q
+      - name: Compile standalone V8 source
+        run: python -m py_compile agents/v8_melon_optimizer.py
+      - name: Run V8 competition benchmark
+        run: python -m scripts.benchmark_v8 --games-per-seat 10 --output experiments/v8-competition-40.json
+      - name: Enforce competition gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('experiments/v8-competition-40.json').read_text())
+          combined = report['combined_summary']
+          assert combined['invalid_or_error_games'] == 0, combined
+          assert combined['mean_delta'] > 0, combined
+          assert all(
+              delta > 0 for delta in report['combined_seat_mean_delta'].values()
+          ), report['combined_seat_mean_delta']
+
+          for name, result in report['opponents'].items():
+              summary = result['summary']
+              assert summary['invalid_or_error_games'] == 0, (name, summary)
+              assert summary['mean_delta'] > 0, (name, summary)
+              assert all(
+                  delta > 0 for delta in result['seat_mean_delta'].values()
+              ), (name, result['seat_mean_delta'])
+
+          print(json.dumps(combined, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v8-competition-benchmark
+          path: experiments/v8-competition-40.json
+          if-no-files-found: warn
