@@ -27,7 +27,6 @@ CROP_DATA = {
     "MELON": (80, 10, 12, False),
 }
 
-# Defaults are deliberately conservative pending grid-search validation.
 MELON_SHARE = 60
 TARGET_HANDS = 5
 MELON_STOP_DAY = 15
@@ -159,16 +158,12 @@ def _choose_crop(tiles: Sequence[Sequence[Any]], opponent_tiles: Sequence[Sequen
     own = _crop_counts(tiles)
     opponent = _crop_counts(opponent_tiles)
     total = own["MELON"] + own["TOMATO"]
-
-    # If the opponent already has a strong melon commitment, reduce our target
-    # melon share to avoid depressing the shared market further.
     opponent_melon = opponent["MELON"]
     target_share = MELON_SHARE
     if opponent_melon >= 12:
         target_share = min(target_share, 40)
     elif opponent_melon >= 6:
         target_share = min(target_share, 50)
-
     melon_pct = 100 if total == 0 else (100 * own["MELON"] // total)
     if day <= MELON_STOP_DAY and melon_pct < target_share:
         return "MELON"
@@ -177,6 +172,29 @@ def _choose_crop(tiles: Sequence[Sequence[Any]], opponent_tiles: Sequence[Sequen
     if day <= MELON_STOP_DAY:
         return "MELON"
     return None
+
+
+def _choose_available_crop(
+    tiles: Sequence[Sequence[Any]],
+    opponent_tiles: Sequence[Sequence[Any]],
+    day: int,
+    available_seeds: Mapping[str, int],
+) -> Optional[str]:
+    """Choose the preferred crop, falling back to any legal seeded crop.
+
+    The portfolio target is advisory. A worker must not pass on an empty tile
+    merely because the preferred crop has no seed while another permitted crop
+    is available.
+    """
+    preferred = _choose_crop(tiles, opponent_tiles, day)
+    if preferred and int(available_seeds.get(preferred, 0) or 0) > 0:
+        return preferred
+    alternatives = []
+    if day <= MELON_STOP_DAY and int(available_seeds.get("MELON", 0) or 0) > 0:
+        alternatives.append("MELON")
+    if day <= TOMATO_STOP_DAY and int(available_seeds.get("TOMATO", 0) or 0) > 0:
+        alternatives.append("TOMATO")
+    return alternatives[0] if alternatives else None
 
 
 def _assign(
@@ -198,8 +216,8 @@ def _assign(
         reserved.add(target)
         return (action if distance == 0 else [first]), None
 
-    crop = _choose_crop(tiles, opponent_tiles, day)
-    if crop and int(available_seeds.get(crop, 0) or 0) > 0:
+    crop = _choose_available_crop(tiles, opponent_tiles, day, available_seeds)
+    if crop:
         plant_candidates = []
         for target in empties:
             if target in reserved:
@@ -235,7 +253,6 @@ def _market_orders(obs: Mapping[str, Any], farm: Mapping[str, Any], empty_count:
             if len(orders) >= 8:
                 break
             orders.append(["HIRE"])
-
     if not liquidate and empty_count > 0:
         for crop, stop_day, reserve_mult in (
             ("MELON", MELON_STOP_DAY, 2),
