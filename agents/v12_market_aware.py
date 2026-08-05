@@ -37,6 +37,12 @@ STRATEGIC_WEIGHT = {
     "MELON": 1.22,
 }
 
+# Twelve visible opponent melon plots imply at least 72 future units before
+# accounting for hidden inventory. At that level the quadratic melon curve is
+# too fragile to preserve the V10 opening floor.
+HEAVY_OPPONENT_MELON_PLOTS = 12
+HEAVY_MELON_SCORE_MULTIPLIER = 0.10
+
 
 def _shape(name: str, value: float) -> float:
     value = max(0.0, value)
@@ -119,10 +125,15 @@ def market_aware_scores(
         score = velocity * STRATEGIC_WEIGHT[crop] / nonlinear_risk
         score += _demand_bonus(crop, shops)
 
-        # Preserve V10's proven opening economics unless the shared visible
-        # melon exposure or current quote signals a genuine collapse.
-        if crop == "MELON" and live_price >= 150 and other[crop] < 8 and remaining >= 12:
-            score = max(score, 105.0 - 3.0 * own[crop])
+        if crop == "MELON":
+            if other[crop] >= HEAVY_OPPONENT_MELON_PLOTS:
+                # Heavy visible commitment is a hard regime change. Do not let
+                # melon's high nominal margin overwhelm quadratic glut risk.
+                score *= HEAVY_MELON_SCORE_MULTIPLIER
+            elif live_price >= 150 and other[crop] < 8 and remaining >= 12:
+                # Preserve V10's proven opening economics only when opponent
+                # exposure and the current quote still support it.
+                score = max(score, 105.0 - 3.0 * own[crop])
         scores[crop] = score
     return scores, projected
 
