@@ -1,0 +1,44 @@
+name: benchmark-v7
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agents/**'
+      - 'scripts/benchmark*.py'
+      - 'tests/**'
+      - '.github/workflows/benchmark-v7.yml'
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Run V7 against frozen V2
+        run: python -m scripts.benchmark_v7 --games-per-seat 10 --output experiments/v7-lifecycle-core-vs-v2-20.json
+      - name: Enforce promotion safety gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('experiments/v7-lifecycle-core-vs-v2-20.json').read_text())
+          summary = report['summary']
+          assert summary['invalid_or_error_games'] == 0, summary
+          assert summary['mean_delta'] > 0, summary
+          assert all(delta > 0 for delta in report['seat_mean_delta'].values()), report['seat_mean_delta']
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          print(json.dumps(report['seat_mean_delta'], indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v7-lifecycle-core-benchmark
+          path: experiments/v7-lifecycle-core-vs-v2-20.json
+          if-no-files-found: warn
