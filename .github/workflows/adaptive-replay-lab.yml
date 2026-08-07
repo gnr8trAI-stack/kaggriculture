@@ -1,0 +1,40 @@
+name: adaptive-replay-lab
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+  pull_request:
+    paths:
+      - 'trainer/**'
+      - 'adaptive_lab/**'
+      - 'scripts/benchmark_adaptive_population.py'
+      - '.github/workflows/adaptive-replay-lab.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-adaptive-tooling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install core dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile adaptive tooling
+        run: |
+          python -m py_compile trainer/ingest_replays.py
+          python -m py_compile trainer/build_route_library.py
+          python -m py_compile trainer/generate_adaptive_agent.py
+          python -m py_compile scripts/benchmark_adaptive_population.py
+      - name: Verify repository benchmark import
+        run: |
+          python - <<'PY'
+          from scripts.benchmark import _run_game, summarize
+          assert callable(_run_game)
+          assert callable(summarize)
+          print('benchmark harness import OK')
+          PY
