@@ -23,9 +23,10 @@ jobs:
       - name: Install core dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install kaggle-environments
+          pip install kaggle-environments kaggle
       - name: Compile adaptive tooling
         run: |
+          python -m py_compile trainer/harvest_kaggle_replays.py
           python -m py_compile trainer/ingest_replays.py
           python -m py_compile trainer/build_route_library.py
           python -m py_compile trainer/generate_adaptive_agent.py
@@ -38,3 +39,120 @@ jobs:
           assert callable(summarize)
           print('benchmark harness import OK')
           PY
+
+  harvest-train-build:
+    if: github.event_name != 'pull_request'
+    needs: validate-adaptive-tooling
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle and simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle kaggle-environments
+      - name: Verify Kaggle authentication secret
+        shell: bash
+        run: |
+          test -n "$KAGGLE_API_TOKEN"
+          echo "Kaggle token is configured"
+      - name: Harvest public Kaggriculture replay datasets
+        run: |
+          python trainer/harvest_kaggle_replays.py --output raw_kaggle_replays
+      - name: Ingest and split replay corpus
+        run: |
+          python trainer/ingest_replays.py --input raw_kaggle_replays --output replay_db
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary=json.loads(Path('replay_db/summary.json').read_text())
+          assert summary['unique_episodes'] > 0, summary
+          assert summary['trajectory_rows'] >= 2, summary
+          assert summary['families'] > 0, summary
+          print(json.dumps(summary, indent=2))
+          PY
+      - name: Build replay route library
+        run: |
+          python trainer/build_route_library.py \
+            --corpus replay_db \
+            --output artifacts/route_library.json \
+            --max-routes-per-strategy 5
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('artifacts/route_library.json').read_text())
+          routes=data.get('routes') or []
+          assert routes, 'No fit-window winning routes were produced'
+          print('routes', len(routes))
+          print('strategies', sorted({r['strategy'] for r in routes}))
+          PY
+      - name: Generate standalone adaptive agent
+        run: |
+          python trainer/generate_adaptive_agent.py \
+            --routes artifacts/route_library.json \
+            --fallback agents/adaptive_agent.py \
+            --output dist/main.py
+          python -m py_compile dist/main.py
+          ! grep -Eq 'from trainer|import trainer|from agents|import agents|from scripts|import scripts' dist/main.py
+      - name: Import generated submission
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p=Path('dist/main.py')
+          spec=importlib.util.spec_from_file_location('adaptive_submission', p)
+          mod=importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          assert callable(mod.agent)
+          print('standalone agent import OK', p.stat().st_size)
+          PY
+      - name: Smoke test generated agent
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from kaggle_environments import make
+          spec=importlib.util.spec_from_file_location('submission','dist/main.py')
+          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+          env=make('kaggriculture', configuration={'episodeSteps': 720}, debug=True)
+          env.run([mod.agent, 'starter'])
+          final=env.state
+          print([(s.reward, str(s.status)) for s in final])
+          assert str(final[0].status) not in {'ERROR','INVALID','TIMEOUT'}
+          PY
+      - name: Build provenance report
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          harvest=json.loads(Path('raw_kaggle_replays/harvest_summary.json').read_text())
+          corpus=json.loads(Path('replay_db/summary.json').read_text())
+          routes=json.loads(Path('artifacts/route_library.json').read_text()).get('routes') or []
+          agent=Path('dist/main.py')
+          report={
+            'harvest': harvest,
+            'corpus': corpus,
+            'routes': len(routes),
+            'route_strategies': sorted({r['strategy'] for r in routes}),
+            'agent_bytes': agent.stat().st_size,
+            'agent_sha256': hashlib.sha256(agent.read_bytes()).hexdigest(),
+          }
+          Path('artifacts/build_report.json').write_text(json.dumps(report, indent=2))
+          print(json.dumps(report, indent=2))
+          PY
+      - name: Upload submit-ready agent
+        uses: actions/upload-artifact@v4
+        with:
+          name: adaptive-kaggriculture-agent
+          path: |
+            dist/main.py
+            artifacts/route_library.json
+            artifacts/build_report.json
+            replay_db/index.csv
+            replay_db/summary.json
+            raw_kaggle_replays/harvest_summary.json
+          retention-days: 14
