@@ -55,23 +55,19 @@ def _load_file(path: Path) -> Iterator[Tuple[Mapping[str, Any], str]]:
 
 
 def _episode_id(episode: Mapping[str, Any]) -> str:
-    for key in ("episodeId", "episode_id", "id"):
-        value = episode.get(key)
-        if value not in (None, ""):
-            return str(value)
-    metadata = episode.get("metadata") or {}
-    if isinstance(metadata, Mapping):
-        for key in ("episodeId", "episode_id", "id"):
-            value = metadata.get(key)
-            if value not in (None, ""):
-                return str(value)
+    for container in (episode, episode.get("metadata") or {}, episode.get("info") or {}):
+        if isinstance(container, Mapping):
+            for key in ("episodeId", "episode_id", "id"):
+                value = container.get(key)
+                if value not in (None, ""):
+                    return str(value)
     return ""
 
 
 def _created_at(episode: Mapping[str, Any]) -> str:
     for container in (episode, episode.get("metadata") or {}, episode.get("info") or {}):
         if isinstance(container, Mapping):
-            for key in ("createdAt", "created_at"):
+            for key in ("createdAt", "created_at", "startedAt", "started_at"):
                 value = container.get(key)
                 if value:
                     return str(value)
@@ -107,6 +103,53 @@ def _final_rewards(episode: Mapping[str, Any]) -> tuple[float | None, float | No
     return None, None
 
 
+def _player_meta(episode: Mapping[str, Any], seat: int) -> Mapping[str, Any]:
+    candidates = [
+        episode.get("agents"),
+        episode.get("players"),
+        (episode.get("metadata") or {}).get("agents") if isinstance(episode.get("metadata"), Mapping) else None,
+        (episode.get("metadata") or {}).get("players") if isinstance(episode.get("metadata"), Mapping) else None,
+        (episode.get("info") or {}).get("agents") if isinstance(episode.get("info"), Mapping) else None,
+    ]
+    for candidate in candidates:
+        if isinstance(candidate, list) and seat < len(candidate) and isinstance(candidate[seat], Mapping):
+            return candidate[seat]
+    return {}
+
+
+def _first(meta: Mapping[str, Any], *keys: str) -> str:
+    for key in keys:
+        value = meta.get(key)
+        if value not in (None, ""):
+            if isinstance(value, Mapping):
+                for nested in ("id", "name", "submissionId", "submission_id"):
+                    if value.get(nested) not in (None, ""):
+                        return str(value[nested])
+            return str(value)
+    return ""
+
+
+def _identity(episode: Mapping[str, Any], seat: int, source: str) -> tuple[str, str]:
+    meta = _player_meta(episode, seat)
+    submission = _first(meta, "submissionId", "submission_id", "submission")
+    team = _first(meta, "teamName", "team_name", "team", "name")
+    if not submission:
+        # Some exports place submission ids in episode-level arrays.
+        for container in (episode, episode.get("metadata") or {}, episode.get("info") or {}):
+            if not isinstance(container, Mapping):
+                continue
+            for key in ("submissionIds", "submission_ids"):
+                values = container.get(key)
+                if isinstance(values, list) and seat < len(values) and values[seat] not in (None, ""):
+                    submission = str(values[seat])
+                    break
+            if submission:
+                break
+    # Keep unknown sources separate instead of collapsing the whole population.
+    family = submission or team or f"unknown:{Path(source).name}"
+    return submission, team or family
+
+
 def ingest(input_dir: Path, output_dir: Path) -> None:
     episodes_dir = output_dir / "episodes"
     episodes_dir.mkdir(parents=True, exist_ok=True)
@@ -129,12 +172,15 @@ def ingest(input_dir: Path, output_dir: Path) -> None:
                 result = ""
                 if own is not None and opp is not None:
                     result = "win" if own > opp else "loss" if own < opp else "tie"
+                submission_id, team = _identity(episode, seat, source)
                 rows.append({
                     "episode_id": safe_id,
                     "sha256": digest,
                     "source": source,
                     "created_at": _created_at(episode),
                     "seat": seat,
+                    "submission_id": submission_id,
+                    "team": team,
                     "reward": own,
                     "opponent_reward": opp,
                     "result": result,
@@ -143,9 +189,10 @@ def ingest(input_dir: Path, output_dir: Path) -> None:
                     "recency_rank": "",
                 })
 
-    grouped: dict[int, list[Dict[str, Any]]] = defaultdict(list)
+    grouped: dict[str, list[Dict[str, Any]]] = defaultdict(list)
     for row in rows:
-        grouped[int(row["seat"])].append(row)
+        family = row["submission_id"] or row["team"] or f"unknown:{Path(str(row['source'])).name}"
+        grouped[f"{family}:seat{row['seat']}"].append(row)
     for family in grouped.values():
         family.sort(key=lambda r: (_parse_time(str(r["created_at"])), str(r["episode_id"])), reverse=True)
         for rank, row in enumerate(family):
@@ -159,12 +206,20 @@ def ingest(input_dir: Path, output_dir: Path) -> None:
             )
 
     output_dir.mkdir(parents=True, exist_ok=True)
-    fields = ["episode_id", "sha256", "source", "created_at", "seat", "reward", "opponent_reward", "result", "steps", "window", "recency_rank"]
+    fields = ["episode_id", "sha256", "source", "created_at", "seat", "submission_id", "team", "reward", "opponent_reward", "result", "steps", "window", "recency_rank"]
     with (output_dir / "index.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
-    (output_dir / "summary.json").write_text(json.dumps({"unique_episodes": len(seen), "trajectory_rows": len(rows)}, indent=2), encoding="utf-8")
+    summary = {
+        "unique_episodes": len(seen),
+        "trajectory_rows": len(rows),
+        "families": len(grouped),
+        "fit_rows": sum(row["window"] == "fit" for row in rows),
+        "outer_rows": sum(row["window"] == "outer" for row in rows),
+    }
+    (output_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    print(json.dumps(summary, indent=2))
 
 
 if __name__ == "__main__":
