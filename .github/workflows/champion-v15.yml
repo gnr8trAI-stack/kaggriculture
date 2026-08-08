@@ -1,0 +1,147 @@
+name: champion-v15
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v15_champion.py'
+      - 'scripts/benchmark.py'
+      - '.github/workflows/champion-v15.yml'
+  workflow_dispatch:
+
+jobs:
+  benchmark-v15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Verify frozen V15 payload
+        run: |
+          python -m py_compile agents/v15_champion.py
+          python - <<'PY'
+          import base64, hashlib, importlib.util, zlib
+          p='agents/v15_champion.py'
+          spec=importlib.util.spec_from_file_location('v15_verify',p)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          raw=zlib.decompress(base64.b64decode(m._PAYLOAD))
+          digest=hashlib.sha256(raw).hexdigest()
+          expected='60e3b8bb6a432793c7756f1dc88cf9590b4d0e44b20336a3eb275e4f533358f6'
+          print({'bytes':len(raw),'sha256':digest})
+          assert digest == expected
+          assert callable(m.agent)
+          PY
+      - name: Run V15 champion population benchmark
+        run: |
+          mkdir -p artifacts
+          python - <<'PY'
+          import csv, importlib.util, json, statistics, time
+          from pathlib import Path
+          from kaggle_environments import make
+
+          def load(path,name):
+              spec=importlib.util.spec_from_file_location(name,path)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+              return mod.agent
+
+          v15=load('agents/v15_champion.py','v15_candidate')
+          opponents=[
+              ('starter','starter'),
+              ('v2_frozen',load('agents/v2_frozen.py','v2_opp')),
+              ('adaptive_baseline',load('agents/adaptive_agent.py','adaptive_opp')),
+          ]
+          BAD={'ERROR','INVALID','TIMEOUT'}
+          rows=[]
+
+          def weed_ratio(obs, seat):
+              try:
+                  farms=obs.get('farms') or []
+                  farm=farms[seat]
+                  tiles=farm.get('tiles') or []
+              except Exception:
+                  return None
+              usable=weed=0
+              for row in tiles:
+                  for tile in row:
+                      kind=(str(tile.get('kind','')).upper() if isinstance(tile,dict) else '')
+                      if tile == 'LOCKED' or kind == 'LOCKED':
+                          continue
+                      usable += 1
+                      if kind == 'WEED': weed += 1
+              return weed/max(1,usable)
+
+          for opponent_name,opponent in opponents:
+              for seat in (0,1):
+                  for offset in range(20):
+                      seed=710000+offset
+                      agents=[v15,opponent] if seat==0 else [opponent,v15]
+                      started=time.perf_counter()
+                      env=make('kaggriculture',configuration={'seed':seed},debug=True)
+                      env.run(agents)
+                      elapsed=time.perf_counter()-started
+                      mine=env.state[seat]; other=env.state[1-seat]
+                      cr=float(mine.reward or 0); rr=float(other.reward or 0)
+                      max_weed=0.0; weed_samples=0
+                      for step in getattr(env,'steps',[]) or []:
+                          try: obs=step[seat].observation
+                          except Exception: continue
+                          if not isinstance(obs,dict): continue
+                          r=weed_ratio(obs,seat)
+                          if r is not None:
+                              max_weed=max(max_weed,r); weed_samples+=1
+                      rows.append({
+                          'opponent':opponent_name,'seat':seat,'seed':seed,
+                          'candidate_reward':cr,'opponent_reward':rr,'delta':cr-rr,
+                          'result':'win' if cr>rr else 'loss' if cr<rr else 'tie',
+                          'candidate_status':str(mine.status),'opponent_status':str(other.status),
+                          'max_weed_ratio':max_weed,'weed_samples':weed_samples,
+                          'runtime_seconds':elapsed,
+                      })
+                      print(rows[-1])
+
+          with Path('artifacts/v15_champion_results.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+          overall={
+              'games':len(rows),
+              'wins':sum(r['result']=='win' for r in rows),
+              'losses':sum(r['result']=='loss' for r in rows),
+              'ties':sum(r['result']=='tie' for r in rows),
+              'invalid':sum(r['candidate_status'] in BAD for r in rows),
+              'mean_reward':statistics.fmean(r['candidate_reward'] for r in rows),
+              'mean_delta':statistics.fmean(r['delta'] for r in rows),
+              'max_weed_ratio':max(r['max_weed_ratio'] for r in rows),
+              'unique_candidate_scores':len(set(r['candidate_reward'] for r in rows)),
+          }
+          by={}
+          for name,_ in opponents:
+              v=[r for r in rows if r['opponent']==name]
+              by[name]={
+                  'games':len(v),'wins':sum(r['result']=='win' for r in v),
+                  'losses':sum(r['result']=='loss' for r in v),'ties':sum(r['result']=='tie' for r in v),
+                  'mean_reward':statistics.fmean(r['candidate_reward'] for r in v),
+                  'mean_delta':statistics.fmean(r['delta'] for r in v),
+                  'seat0_delta':statistics.fmean(r['delta'] for r in v if r['seat']==0),
+                  'seat1_delta':statistics.fmean(r['delta'] for r in v if r['seat']==1),
+                  'max_weed_ratio':max(r['max_weed_ratio'] for r in v),
+              }
+          report={'version':'v15-champion','overall':overall,'by_opponent':by}
+          Path('artifacts/v15_champion_report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          assert overall['invalid']==0
+          PY
+      - name: Upload V15 baseline evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: v15-champion-benchmark
+          path: |
+            artifacts/v15_champion_results.csv
+            artifacts/v15_champion_report.json
+          retention-days: 30
