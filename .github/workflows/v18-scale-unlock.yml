@@ -1,0 +1,254 @@
+name: v18-scale-unlock
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v18_scale_unlock.py'
+      - '.github/workflows/v18-scale-unlock.yml'
+  pull_request:
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v18_scale_unlock.py'
+      - '.github/workflows/v18-scale-unlock.yml'
+  workflow_dispatch:
+
+jobs:
+  scale-unlock-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile champion and challenger
+        run: |
+          python -m py_compile agents/v15_champion.py agents/v18_scale_unlock.py
+      - name: Run scale-unlock tournament
+        run: |
+          mkdir -p artifacts dist
+          python - <<'PY'
+          import csv, importlib.util, json, math, statistics, time
+          from pathlib import Path
+          from kaggle_environments import make
+
+          BAD={'ERROR','INVALID','TIMEOUT'}
+
+          def load_module(path,name):
+              spec=importlib.util.spec_from_file_location(name,path)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+              if not callable(getattr(mod,'agent',None)): raise TypeError(path)
+              return mod
+
+          candidate_mod=load_module('agents/v18_scale_unlock.py','v18_candidate')
+          champion_mod=load_module('agents/v15_champion.py','v15_isolated')
+          candidate=candidate_mod.agent
+          champion=champion_mod.agent
+
+          def percentile(values,q):
+              values=sorted(values)
+              if not values: return 0.0
+              if len(values)==1: return float(values[0])
+              pos=(len(values)-1)*q
+              lo=int(math.floor(pos)); hi=int(math.ceil(pos))
+              if lo==hi: return float(values[lo])
+              return float(values[lo]+(values[hi]-values[lo])*(pos-lo))
+
+          def weed_ratio(obs,seat):
+              try:
+                  tiles=(obs.get('farms') or [])[seat].get('tiles') or []
+              except Exception: return None
+              usable=weed=0
+              for row in tiles:
+                  for tile in row:
+                      kind=str(tile.get('kind','')).upper() if isinstance(tile,dict) else ''
+                      if tile=='LOCKED' or kind=='LOCKED': continue
+                      usable+=1; weed+=int(kind=='WEED')
+              return weed/max(1,usable)
+
+          def play(agent,opponent,seat,seed,series,module=None):
+              if module is not None and callable(getattr(module,'reset_state',None)):
+                  module.reset_state()
+              agents=[agent,opponent] if seat==0 else [opponent,agent]
+              started=time.perf_counter()
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run(agents)
+              elapsed=time.perf_counter()-started
+              mine=env.state[seat]; other=env.state[1-seat]
+              cr=float(mine.reward or 0); rr=float(other.reward or 0)
+              weeds=[]
+              for step in getattr(env,'steps',[]) or []:
+                  try: obs=step[seat].observation
+                  except Exception: continue
+                  if isinstance(obs,dict):
+                      r=weed_ratio(obs,seat)
+                      if r is not None: weeds.append(r)
+              telemetry=[]
+              if module is not None and callable(getattr(module,'get_telemetry',None)):
+                  telemetry=module.get_telemetry(clear=True)
+              return {
+                  'series':series,'seat':seat,'seed':seed,
+                  'candidate_reward':cr,'reference_reward':rr,'delta':cr-rr,
+                  'result':'win' if cr>rr else 'loss' if cr<rr else 'tie',
+                  'candidate_status':str(mine.status),'reference_status':str(other.status),
+                  'max_weed_ratio':max(weeds) if weeds else 0.0,
+                  'land_injections':sum(bool(t.get('land_injected')) for t in telemetry),
+                  'expansion_eligible_turns':sum(bool(t.get('expansion_eligible')) for t in telemetry),
+                  'forced_adaptive_turns':sum(bool(t.get('forced_adaptive')) for t in telemetry),
+                  'peak_nw_productive':max([int(t.get('peak_nw_productive',0)) for t in telemetry] or [0]),
+                  'runtime_seconds':elapsed,
+              }
+
+          rows=[]
+          # Primary gate: 60 independent towns in each seat against frozen V15.
+          for seat in (0,1):
+              for offset in range(60):
+                  r=play(candidate,champion,seat,760000+offset,'v18_vs_v15',candidate_mod)
+                  rows.append(r); print(r)
+
+          # Absolute economic controls. Compare distributions; planner changes
+          # can perturb coupled town/weed RNG even with the same configured seed.
+          for label,agent,module in (
+              ('v18_vs_starter',candidate,candidate_mod),
+              ('v15_vs_starter',champion,champion_mod),
+          ):
+              for seat in (0,1):
+                  for offset in range(30):
+                      r=play(agent,'starter',seat,770000+offset,label,module)
+                      rows.append(r); print(r)
+
+          with Path('artifacts/v18_scale_results.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+          def summarize(v):
+              rewards=[r['candidate_reward'] for r in v]
+              deltas=[r['delta'] for r in v]
+              return {
+                  'games':len(v),
+                  'wins':sum(r['result']=='win' for r in v),
+                  'losses':sum(r['result']=='loss' for r in v),
+                  'ties':sum(r['result']=='tie' for r in v),
+                  'score_rate':sum(1 if r['result']=='win' else .5 if r['result']=='tie' else 0 for r in v)/len(v),
+                  'mean_reward':statistics.fmean(rewards),
+                  'median_reward':statistics.median(rewards),
+                  'p10_reward':percentile(rewards,.10),
+                  'p90_reward':percentile(rewards,.90),
+                  'max_reward':max(rewards),
+                  'games_ge_35000':sum(x>=35000 for x in rewards),
+                  'games_ge_40000':sum(x>=40000 for x in rewards),
+                  'games_ge_50000':sum(x>=50000 for x in rewards),
+                  'mean_delta':statistics.fmean(deltas),
+                  'median_delta':statistics.median(deltas),
+                  'seat0_delta':statistics.fmean(r['delta'] for r in v if r['seat']==0),
+                  'seat1_delta':statistics.fmean(r['delta'] for r in v if r['seat']==1),
+                  'max_weed_ratio':max(r['max_weed_ratio'] for r in v),
+                  'games_with_land_injection':sum(r['land_injections']>0 for r in v),
+                  'mean_land_injections':statistics.fmean(r['land_injections'] for r in v),
+                  'invalid':sum(r['candidate_status'] in BAD for r in v),
+              }
+
+          direct=[r for r in rows if r['series']=='v18_vs_v15']
+          c=[r for r in rows if r['series']=='v18_vs_starter']
+          b=[r for r in rows if r['series']=='v15_vs_starter']
+          sd=summarize(direct); sc=summarize(c); sb=summarize(b)
+          reward_ratio=sc['mean_reward']/max(1.0,sb['mean_reward'])
+          tail_ratio=sc['p10_reward']/max(1.0,sb['p10_reward'])
+
+          # A scale release must both beat the champion and demonstrate a real
+          # upward shift in terminal-money capacity. Merely matching V15 while
+          # buying land is not enough.
+          promotion=(
+              sd['invalid']==0 and sc['invalid']==0 and
+              sd['score_rate']>=0.55 and sd['mean_delta']>0 and
+              sd['seat0_delta']>=0 and sd['seat1_delta']>=0 and
+              reward_ratio>=1.05 and tail_ratio>=0.98 and
+              sc['games_with_land_injection']>=20 and
+              sc['games_ge_35000']>=12 and sc['p90_reward']>=35000
+          )
+          report={
+              'version':'18.0.0-rc1',
+              'hypothesis':'V15 opening + historical-saturation land unlock + forced adaptive post-cycle production',
+              'direct_v18_vs_v15':sd,
+              'v18_vs_starter':sc,
+              'v15_vs_starter':sb,
+              'mean_reward_ratio_vs_v15_control':reward_ratio,
+              'p10_reward_ratio_vs_v15_control':tail_ratio,
+              'promotion_recommended':promotion,
+          }
+          Path('artifacts/v18_scale_report.json').write_text(json.dumps(report,indent=2))
+          Path('artifacts/PROMOTE').write_text('1' if promotion else '0')
+          print(json.dumps(report,indent=2))
+          assert sd['invalid']==0 and sc['invalid']==0
+          PY
+      - name: Build standalone only if promoted
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          if Path('artifacts/PROMOTE').read_text().strip()!='1':
+              print('V18 did not clear the V15 + economic-scale gate; no submission produced.')
+              raise SystemExit(0)
+          base=Path('agents/v15_champion.py').read_text()
+          overlay=Path('agents/v18_scale_unlock.py').read_text()
+          overlay=overlay.replace('from __future__ import annotations\n','')
+          overlay=overlay.replace('from agents import v15_champion as _v15','')
+          # Standalone overlay needs module-like access to the embedded V15
+          # globals. Build a tiny proxy whose attributes resolve globals().
+          proxy='''\nclass _V15Proxy:\n    def __getattr__(self,n): return globals()[n]\n    def __setattr__(self,n,v): globals().__setitem__(n,v)\n_v15=_V15Proxy()\n_v15_base_agent=agent\n'''
+          overlay=overlay.replace('LAND_COST_FIRST = 1000',proxy+'\nLAND_COST_FIRST = 1000')
+          # Avoid recursive call after overlay redefines agent.
+          overlay=overlay.replace('result = dict(_v15.agent(observation, configuration))','result = dict(_v15_base_agent(observation, configuration))')
+          Path('dist/main.py').write_text(base+'\n\n'+overlay)
+          PY
+          if [ -f dist/main.py ]; then python -m py_compile dist/main.py; fi
+      - name: Package promoted release
+        run: |
+          if [ "$(cat artifacts/PROMOTE)" != "1" ]; then exit 0; fi
+          (cd dist && zip -9 ../kaggriculture_adaptive_v18.0.0_submission.zip main.py)
+          python - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          z=Path('kaggriculture_adaptive_v18.0.0_submission.zip')
+          with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          r=json.loads(Path('artifacts/v18_scale_report.json').read_text())
+          Path('RELEASE_NOTES_v18.0.0.md').write_text(
+              '# Kaggriculture Adaptive v18.0.0\n\n'
+              'V15-derived scale-unlock release.\n\n'
+              f"Direct V18 vs V15: {r['direct_v18_vs_v15']}\n\n"
+              f"V18 vs starter: {r['v18_vs_starter']}\n\n"
+              f"V15 control: {r['v15_vs_starter']}\n"
+          )
+          manifest={
+              'version':'18.0.0','submission':z.name,
+              'submission_sha256':hashlib.sha256(z.read_bytes()).hexdigest(),
+              'main_sha256':hashlib.sha256(Path('dist/main.py').read_bytes()).hexdigest(),
+              'promotion_recommended':r['promotion_recommended'],
+          }
+          Path('release_manifest_v18.0.0.json').write_text(json.dumps(manifest,indent=2))
+          PY
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v18-scale-unlock-gate
+          path: |
+            artifacts/v18_scale_results.csv
+            artifacts/v18_scale_report.json
+            artifacts/PROMOTE
+            dist/main.py
+            kaggriculture_adaptive_v18.0.0_submission.zip
+            RELEASE_NOTES_v18.0.0.md
+            release_manifest_v18.0.0.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Enforce economic promotion gate
+        if: always()
+        run: |
+          test -f artifacts/PROMOTE
+          test "$(cat artifacts/PROMOTE)" = "1"
