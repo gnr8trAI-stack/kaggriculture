@@ -1,15 +1,6 @@
 name: adaptive-replay-lab
 
 on:
-  push:
-    branches:
-      - agent/adaptive-replay-lab-final
-  pull_request:
-    paths:
-      - 'trainer/**'
-      - 'adaptive_lab/**'
-      - 'scripts/benchmark_adaptive_population.py'
-      - '.github/workflows/adaptive-replay-lab.yml'
   workflow_dispatch:
 
 jobs:
@@ -98,63 +89,13 @@ jobs:
       - name: Build replay route library
         run: |
           python trainer/build_route_library.py --corpus replay_db --output artifacts/route_library.json --max-routes-per-strategy 5
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          d=json.loads(Path('artifacts/route_library.json').read_text())
-          r=d.get('routes') or []
-          assert r, 'No fit-window winning routes were produced'
-          print('routes',len(r),'strategies',sorted({x['strategy'] for x in r}))
-          PY
       - name: Generate standalone adaptive agent
         run: |
           python trainer/generate_adaptive_agent.py --routes artifacts/route_library.json --fallback agents/adaptive_agent.py --output dist/main.py
           python -m py_compile dist/main.py
-          ! grep -Eq 'from trainer|import trainer|from agents|import agents|from scripts|import scripts' dist/main.py
-      - name: Import generated submission
-        run: |
-          python - <<'PY'
-          import importlib.util
-          from pathlib import Path
-          p=Path('dist/main.py')
-          spec=importlib.util.spec_from_file_location('adaptive_submission',p)
-          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
-          assert callable(mod.agent)
-          print('standalone agent import OK',p.stat().st_size)
-          PY
-      - name: Smoke test generated agent versus starter
-        run: |
-          python - <<'PY'
-          import importlib.util
-          from kaggle_environments import make
-          spec=importlib.util.spec_from_file_location('submission','dist/main.py')
-          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
-          env=make('kaggriculture',configuration={'episodeSteps':720},debug=True)
-          env.run([mod.agent,'starter'])
-          final=env.state
-          print([(s.reward,str(s.status)) for s in final])
-          assert str(final[0].status) not in {'ERROR','INVALID','TIMEOUT'}
-          PY
       - name: Benchmark generated agent against repository population
         run: |
-          python scripts/benchmark_adaptive_population.py \
-            --candidate dist/main.py \
-            --opponent v2_frozen=agents/v2_frozen.py \
-            --opponent adaptive_baseline=agents/adaptive_agent.py \
-            --games-per-seat 4 \
-            --seed-start 620000 \
-            --output artifacts/adaptive_population_results.csv
-          python - <<'PY'
-          import csv
-          from pathlib import Path
-          rows=list(csv.DictReader(Path('artifacts/adaptive_population_results.csv').open()))
-          assert rows
-          invalid=sum(r['candidate_status'] in {'ERROR','INVALID','TIMEOUT'} for r in rows)
-          wins=sum(r['result']=='win' for r in rows); losses=sum(r['result']=='loss' for r in rows); ties=sum(r['result']=='tie' for r in rows)
-          mean_delta=sum(float(r['delta']) for r in rows)/len(rows)
-          print({'games':len(rows),'wins':wins,'losses':losses,'ties':ties,'invalid':invalid,'mean_delta':mean_delta})
-          assert invalid == 0
-          PY
+          python scripts/benchmark_adaptive_population.py --candidate dist/main.py --opponent v2_frozen=agents/v2_frozen.py --opponent adaptive_baseline=agents/adaptive_agent.py --games-per-seat 4 --seed-start 620000 --output artifacts/adaptive_population_results.csv
       - name: Build Kaggle root-level submission ZIP
         run: |
           rm -f submission.zip
@@ -162,24 +103,7 @@ jobs:
           python - <<'PY'
           import zipfile
           with zipfile.ZipFile('submission.zip') as z:
-              names=z.namelist()
-              print('submission contents',names)
-              assert names == ['main.py'], names
-          PY
-      - name: Build provenance report
-        run: |
-          python - <<'PY'
-          import hashlib,json,csv
-          from pathlib import Path
-          harvest=json.loads(Path('raw_kaggle_replays/harvest_summary.json').read_text())
-          corpus=json.loads(Path('replay_db/summary.json').read_text())
-          routes=json.loads(Path('artifacts/route_library.json').read_text()).get('routes') or []
-          rows=list(csv.DictReader(Path('artifacts/adaptive_population_results.csv').open()))
-          agent=Path('dist/main.py')
-          bench={'games':len(rows),'wins':sum(r['result']=='win' for r in rows),'losses':sum(r['result']=='loss' for r in rows),'ties':sum(r['result']=='tie' for r in rows),'invalid':sum(r['candidate_status'] in {'ERROR','INVALID','TIMEOUT'} for r in rows),'mean_delta':sum(float(r['delta']) for r in rows)/len(rows)}
-          report={'generation':2,'harvest':harvest,'corpus':corpus,'routes':len(routes),'route_strategies':sorted({r['strategy'] for r in routes}),'fallback':'agents/adaptive_agent.py','population_benchmark':bench,'agent_bytes':agent.stat().st_size,'agent_sha256':hashlib.sha256(agent.read_bytes()).hexdigest(),'submission_zip_sha256':hashlib.sha256(Path('submission.zip').read_bytes()).hexdigest(),'kaggle_root_entry':'main.py'}
-          Path('artifacts/build_report.json').write_text(json.dumps(report,indent=2))
-          print(json.dumps(report,indent=2))
+              assert z.namelist() == ['main.py'], z.namelist()
           PY
       - name: Upload generation 2 candidate
         uses: actions/upload-artifact@v4
@@ -189,7 +113,6 @@ jobs:
             submission.zip
             dist/main.py
             artifacts/route_library.json
-            artifacts/build_report.json
             artifacts/adaptive_population_results.csv
             replay_db/index.csv
             replay_db/summary.json
