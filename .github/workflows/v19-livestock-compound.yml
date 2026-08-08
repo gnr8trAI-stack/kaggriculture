@@ -1,0 +1,268 @@
+name: v19-livestock-compound
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v18_scale_unlock.py'
+      - 'agents/v19_livestock_compound.py'
+      - '.github/workflows/v19-livestock-compound.yml'
+  pull_request:
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v18_scale_unlock.py'
+      - 'agents/v19_livestock_compound.py'
+      - '.github/workflows/v19-livestock-compound.yml'
+  workflow_dispatch:
+
+jobs:
+  livestock-compound-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile champion and challengers
+        run: |
+          python -m py_compile agents/v15_champion.py agents/v18_scale_unlock.py agents/v19_livestock_compound.py
+      - name: Run livestock compounding tournament
+        run: |
+          mkdir -p artifacts dist
+          python - <<'PY'
+          import csv, importlib.util, json, math, statistics, time
+          from pathlib import Path
+          from kaggle_environments import make
+
+          BAD={'ERROR','INVALID','TIMEOUT'}
+
+          def load(path,name):
+              spec=importlib.util.spec_from_file_location(name,path)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+              return mod
+
+          v19m=load('agents/v19_livestock_compound.py','v19_candidate')
+          v18m=load('agents/v18_scale_unlock.py','v18_reference')
+          v15m=load('agents/v15_champion.py','v15_reference')
+
+          def weed_ratio(obs,seat):
+              try: tiles=(obs.get('farms') or [])[seat].get('tiles') or []
+              except Exception: return None
+              usable=weeds=0
+              for row in tiles:
+                  for tile in row:
+                      kind=str(tile.get('kind','')).upper() if isinstance(tile,dict) else ''
+                      if tile == 'LOCKED' or kind == 'LOCKED': continue
+                      usable += 1; weeds += int(kind == 'WEED')
+              return weeds/max(1,usable)
+
+          def play(candidate,reference,seat,seed,series,telemetry_fn=None):
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              agents=[candidate,reference] if seat==0 else [reference,candidate]
+              started=time.perf_counter(); env.run(agents); runtime=time.perf_counter()-started
+              mine=env.state[seat]; other=env.state[1-seat]
+              cr=float(mine.reward or 0); rr=float(other.reward or 0)
+              weeds=[]
+              for step in getattr(env,'steps',[]) or []:
+                  try: obs=step[seat].observation
+                  except Exception: continue
+                  if isinstance(obs,dict):
+                      r=weed_ratio(obs,seat)
+                      if r is not None: weeds.append(r)
+              tele=telemetry_fn() if telemetry_fn else []
+              if not isinstance(tele,list): tele=[]
+              max_active=max([int(r.get('active_cows',0) or 0) for r in tele] or [0])
+              max_pastures=max([int(r.get('pastures',0) or 0) for r in tele] or [0])
+              max_target=max([int(r.get('target_cows',0) or 0) for r in tele] or [0])
+              max_unlocked=max([int(r.get('unlocked_count',0) or 0) for r in tele] or [0])
+              return {
+                  'series':series,'seat':seat,'seed':seed,
+                  'candidate_reward':cr,'reference_reward':rr,'delta':cr-rr,
+                  'result':'win' if cr>rr else 'loss' if cr<rr else 'tie',
+                  'candidate_status':str(mine.status),'reference_status':str(other.status),
+                  'max_weed_ratio':max(weeds) if weeds else 0.0,
+                  'mean_weed_ratio':statistics.fmean(weeds) if weeds else 0.0,
+                  'max_active_cows':max_active,'max_pastures':max_pastures,
+                  'max_target_cows':max_target,'max_unlocked':max_unlocked,
+                  'cow_buy_units':sum(int(r.get('cows_bought',0) or 0) for r in tele),
+                  'wheat_buy_units':sum(int(r.get('wheat_bought',0) or 0) for r in tele),
+                  'livestock_overrides':sum(int(r.get('livestock_overrides',0) or 0) for r in tele),
+                  'full_service_turns':sum(bool(r.get('full_service',False)) for r in tele),
+                  'runtime_seconds':runtime,
+              }
+
+          rows=[]
+          # Primary challenger fight: V19 must beat the already-strong V18 scale
+          # unlock, not merely the older V15 champion.
+          for seat in (0,1):
+              for offset in range(50):
+                  r=play(v19m.agent,v18m.agent,seat,810000+offset,'v19_vs_v18',v19m.get_telemetry)
+                  rows.append(r); print(r)
+
+          # Secondary pairwise check against V15.
+          for seat in (0,1):
+              for offset in range(35):
+                  r=play(v19m.agent,v15m.agent,seat,820000+offset,'v19_vs_v15',v19m.get_telemetry)
+                  rows.append(r); print(r)
+
+          # Absolute-economics distributions. Same seed ranges are diagnostic,
+          # not paired counterfactuals, because planner changes perturb coupled RNG.
+          for label,agent,telemetry in (
+              ('v19',v19m.agent,v19m.get_telemetry),
+              ('v18',v18m.agent,None),
+              ('v15',v15m.agent,None),
+          ):
+              for seat in (0,1):
+                  for offset in range(40):
+                      r=play(agent,'starter',seat,830000+offset,f'{label}_vs_starter',telemetry)
+                      rows.append(r); print(r)
+
+          with Path('artifacts/v19_gate_results.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+          def quantile(values,p):
+              values=sorted(values)
+              if not values: return 0.0
+              idx=max(0,min(len(values)-1,math.floor((len(values)-1)*p)))
+              return values[idx]
+
+          def summary(v):
+              rewards=[r['candidate_reward'] for r in v]
+              return {
+                  'games':len(v),
+                  'wins':sum(r['result']=='win' for r in v),
+                  'losses':sum(r['result']=='loss' for r in v),
+                  'ties':sum(r['result']=='tie' for r in v),
+                  'score_rate':sum(1 if r['result']=='win' else .5 if r['result']=='tie' else 0 for r in v)/len(v),
+                  'mean_reward':statistics.fmean(rewards),
+                  'median_reward':statistics.median(rewards),
+                  'p10_reward':quantile(rewards,.10),
+                  'p90_reward':quantile(rewards,.90),
+                  'max_reward':max(rewards),
+                  'ge_35000':sum(x>=35000 for x in rewards),
+                  'ge_40000':sum(x>=40000 for x in rewards),
+                  'ge_50000':sum(x>=50000 for x in rewards),
+                  'mean_delta':statistics.fmean(r['delta'] for r in v),
+                  'seat0_delta':statistics.fmean(r['delta'] for r in v if r['seat']==0),
+                  'seat1_delta':statistics.fmean(r['delta'] for r in v if r['seat']==1),
+                  'invalid':sum(r['candidate_status'] in BAD for r in v),
+                  'max_weed_ratio':max(r['max_weed_ratio'] for r in v),
+                  'mean_max_weed_ratio':statistics.fmean(r['max_weed_ratio'] for r in v),
+                  'games_with_2_cows':sum(r['max_active_cows']>=2 for r in v),
+                  'games_with_4_cows':sum(r['max_active_cows']>=4 for r in v),
+                  'mean_max_active_cows':statistics.fmean(r['max_active_cows'] for r in v),
+                  'mean_cow_buy_units':statistics.fmean(r['cow_buy_units'] for r in v),
+                  'mean_livestock_overrides':statistics.fmean(r['livestock_overrides'] for r in v),
+              }
+
+          d18=summary([r for r in rows if r['series']=='v19_vs_v18'])
+          d15=summary([r for r in rows if r['series']=='v19_vs_v15'])
+          s19=summary([r for r in rows if r['series']=='v19_vs_starter'])
+          s18=summary([r for r in rows if r['series']=='v18_vs_starter'])
+          s15=summary([r for r in rows if r['series']=='v15_vs_starter'])
+          ratio18=s19['mean_reward']/max(1.0,s18['mean_reward'])
+          ratio15=s19['mean_reward']/max(1.0,s15['mean_reward'])
+
+          # This is intentionally an economic gate. V19 must not pass by merely
+          # damaging an opponent's shared market. It must create substantially
+          # more terminal money in the starter control distribution.
+          promotion=(
+              d18['invalid']==0 and d15['invalid']==0 and s19['invalid']==0 and
+              d18['score_rate'] >= 0.52 and d18['mean_delta'] > 0 and
+              d15['score_rate'] >= 0.60 and d15['mean_delta'] > 0 and
+              s19['mean_reward'] >= 35000 and s19['median_reward'] >= 34000 and
+              s19['p10_reward'] >= 30000 and s19['p90_reward'] >= 40000 and
+              s19['ge_40000'] >= 8 and
+              ratio18 >= 1.10 and ratio15 >= 1.10 and
+              s19['games_with_2_cows'] >= 60 and
+              s19['max_weed_ratio'] <= 0.35
+          )
+
+          report={
+              'version':'19.0.0-rc1','champion':'v15','reference_challenger':'v18',
+              'direct_v19_vs_v18':d18,'direct_v19_vs_v15':d15,
+              'v19_vs_starter':s19,'v18_vs_starter':s18,'v15_vs_starter':s15,
+              'v19_to_v18_mean_reward_ratio':ratio18,
+              'v19_to_v15_mean_reward_ratio':ratio15,
+              'promotion_recommended':promotion,
+              'economic_gate':{
+                  'mean_reward_min':35000,'median_reward_min':34000,
+                  'p10_min':30000,'p90_min':40000,'games_ge_40000_min':8,
+                  'mean_ratio_vs_v18_min':1.10,
+              },
+          }
+          Path('artifacts/v19_gate_report.json').write_text(json.dumps(report,indent=2))
+          Path('artifacts/PROMOTE').write_text('1' if promotion else '0')
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Build standalone only if promoted
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          if Path('artifacts/PROMOTE').read_text().strip()!='1':
+              print('V19 did not clear the economic gate; no submission produced.')
+              raise SystemExit(0)
+          import agents.v15_champion as base
+          overlay=Path('agents/v19_livestock_compound.py').read_text()
+          replacement=(
+              'import base64, types, zlib\n'
+              '_v15 = types.ModuleType("_v15_embedded")\n'
+              f'_V15_PAYLOAD = {base._PAYLOAD!r}\n'
+              'exec(zlib.decompress(base64.b64decode(_V15_PAYLOAD)).decode("utf-8"), _v15.__dict__, _v15.__dict__)'
+          )
+          overlay=overlay.replace('from agents import v15_champion as _v15',replacement)
+          Path('dist/main.py').write_text(overlay)
+          PY
+          if [ -f dist/main.py ]; then
+            python -m py_compile dist/main.py
+            ! grep -Eq 'from agents|import agents' dist/main.py
+          fi
+      - name: Package promoted release
+        run: |
+          if [ "$(cat artifacts/PROMOTE)" != "1" ]; then exit 0; fi
+          (cd dist && zip -9 ../kaggriculture_adaptive_v19.0.0-rc1_submission.zip main.py)
+          python - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          z=Path('kaggriculture_adaptive_v19.0.0-rc1_submission.zip')
+          with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          report=json.loads(Path('artifacts/v19_gate_report.json').read_text())
+          manifest={
+              'version':'19.0.0-rc1','promotion_recommended':True,
+              'submission_sha256':hashlib.sha256(z.read_bytes()).hexdigest(),
+              'main_sha256':hashlib.sha256(Path('dist/main.py').read_bytes()).hexdigest(),
+          }
+          Path('release_manifest_v19.0.0-rc1.json').write_text(json.dumps(manifest,indent=2))
+          Path('RELEASE_NOTES_v19.0.0-rc1.md').write_text(
+              '# Kaggriculture v19.0.0-rc1\n\n'
+              'V15 opening + V18 scale unlock + capacity-gated 2-to-4 cow compounding.\n\n'
+              + json.dumps(report,indent=2)
+          )
+          PY
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v19-livestock-compound-gate
+          path: |
+            artifacts/v19_gate_results.csv
+            artifacts/v19_gate_report.json
+            artifacts/PROMOTE
+            dist/main.py
+            kaggriculture_adaptive_v19.0.0-rc1_submission.zip
+            RELEASE_NOTES_v19.0.0-rc1.md
+            release_manifest_v19.0.0-rc1.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Enforce economic promotion gate
+        if: always()
+        run: |
+          test -f artifacts/PROMOTE
+          test "$(cat artifacts/PROMOTE)" = "1"
