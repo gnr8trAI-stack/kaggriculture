@@ -89,6 +89,8 @@ jobs:
           assert summary['unique_episodes'] > 0, summary
           assert summary['trajectory_rows'] >= 2, summary
           assert summary['families'] > 0, summary
+          assert summary.get('identity_coverage', 0) >= 0.95, summary
+          assert summary.get('fit_rows', 0) > 0, summary
           print(json.dumps(summary, indent=2))
           PY
           echo 'Disk after ingest:'
@@ -112,7 +114,7 @@ jobs:
         run: |
           python trainer/generate_adaptive_agent.py \
             --routes artifacts/route_library.json \
-            --fallback agents/adaptive_agent.py \
+            --fallback agents/v11_agent.py \
             --output dist/main.py
           python -m py_compile dist/main.py
           ! grep -Eq 'from trainer|import trainer|from agents|import agents|from scripts|import scripts' dist/main.py
@@ -141,34 +143,70 @@ jobs:
           print([(s.reward, str(s.status)) for s in final])
           assert str(final[0].status) not in {'ERROR','INVALID','TIMEOUT'}
           PY
+      - name: Benchmark generated agent against repository population
+        run: |
+          python scripts/benchmark_adaptive_population.py \
+            --candidate dist/main.py \
+            --opponent v2_frozen=agents/v2_frozen.py \
+            --opponent v10_market_front_runner=agents/v10_market_front_runner.py \
+            --opponent v11_adaptive=agents/v11_agent.py \
+            --games-per-seat 4 \
+            --seed-start 620000 \
+            --output artifacts/adaptive_population_results.csv
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          rows=list(csv.DictReader(Path('artifacts/adaptive_population_results.csv').open()))
+          assert rows, 'population benchmark produced no games'
+          invalid=sum(r['candidate_status'] in {'ERROR','INVALID','TIMEOUT'} for r in rows)
+          wins=sum(r['result']=='win' for r in rows)
+          losses=sum(r['result']=='loss' for r in rows)
+          ties=sum(r['result']=='tie' for r in rows)
+          mean_delta=sum(float(r['delta']) for r in rows)/len(rows)
+          print({'games':len(rows),'wins':wins,'losses':losses,'ties':ties,'invalid':invalid,'mean_delta':mean_delta})
+          assert invalid == 0, 'candidate produced invalid/error/timeout games'
+          PY
       - name: Build provenance report
         run: |
           python - <<'PY'
-          import hashlib, json
+          import hashlib, json, csv
           from pathlib import Path
           harvest=json.loads(Path('raw_kaggle_replays/harvest_summary.json').read_text())
           corpus=json.loads(Path('replay_db/summary.json').read_text())
           routes=json.loads(Path('artifacts/route_library.json').read_text()).get('routes') or []
           agent=Path('dist/main.py')
+          rows=list(csv.DictReader(Path('artifacts/adaptive_population_results.csv').open()))
+          bench={
+            'games': len(rows),
+            'wins': sum(r['result']=='win' for r in rows),
+            'losses': sum(r['result']=='loss' for r in rows),
+            'ties': sum(r['result']=='tie' for r in rows),
+            'invalid': sum(r['candidate_status'] in {'ERROR','INVALID','TIMEOUT'} for r in rows),
+            'mean_delta': sum(float(r['delta']) for r in rows)/len(rows),
+          }
           report={
+            'generation': 2,
             'harvest': harvest,
             'corpus': corpus,
             'routes': len(routes),
             'route_strategies': sorted({r['strategy'] for r in routes}),
+            'fallback': 'agents/v11_agent.py',
+            'population_benchmark': bench,
             'agent_bytes': agent.stat().st_size,
             'agent_sha256': hashlib.sha256(agent.read_bytes()).hexdigest(),
           }
           Path('artifacts/build_report.json').write_text(json.dumps(report, indent=2))
           print(json.dumps(report, indent=2))
           PY
-      - name: Upload submit-ready agent
+      - name: Upload generation 2 candidate
         uses: actions/upload-artifact@v4
         with:
-          name: adaptive-kaggriculture-agent
+          name: adaptive-kaggriculture-agent-gen2
           path: |
             dist/main.py
             artifacts/route_library.json
             artifacts/build_report.json
+            artifacts/adaptive_population_results.csv
             replay_db/index.csv
             replay_db/summary.json
             raw_kaggle_replays/harvest_summary.json
