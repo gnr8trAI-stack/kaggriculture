@@ -6,7 +6,6 @@ import base64
 import csv
 import gzip
 import json
-import statistics
 import zlib
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -107,17 +106,65 @@ def _compress(value: Any) -> str:
     return base64.b85encode(zlib.compress(payload, 9)).decode("ascii")
 
 
+def _episode_id(value: Mapping[str, Any]) -> str:
+    for container in (value, value.get("metadata") or {}, value.get("info") or {}):
+        if isinstance(container, Mapping):
+            for key in ("episodeId", "episode_id", "id"):
+                item = container.get(key)
+                if item not in (None, ""):
+                    return str(item)
+    return ""
+
+
+def _find_episode(value: Any, episode_id: str) -> Mapping[str, Any] | None:
+    if isinstance(value, Mapping):
+        if isinstance(value.get("steps"), list) and value.get("steps"):
+            if not episode_id or _episode_id(value) in {"", episode_id}:
+                return value
+        for child in value.values():
+            found = _find_episode(child, episode_id)
+            if found is not None:
+                return found
+    elif isinstance(value, list):
+        for child in value:
+            found = _find_episode(child, episode_id)
+            if found is not None:
+                return found
+    return None
+
+
+def _load_source(path: Path, episode_id: str) -> Mapping[str, Any] | None:
+    try:
+        if path.suffix.lower() == ".gz":
+            with gzip.open(path, "rt", encoding="utf-8") as handle:
+                data = json.load(handle)
+        else:
+            data = json.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception:
+        return None
+    return _find_episode(data, episode_id)
+
+
 def build(corpus: Path, output: Path, max_routes_per_strategy: int = 4) -> None:
     index = list(csv.DictReader((corpus / "index.csv").open(encoding="utf-8")))
     fit_rows = [r for r in index if r.get("window") == "fit" and r.get("result") == "win"]
+
+    # Parse the strongest fit-window wins first. This still considers every
+    # submission family during indexing, but avoids decoding archive/holdout rows.
+    fit_rows.sort(key=lambda r: float(r.get("reward") or 0), reverse=True)
     candidates: Dict[str, list[Dict[str, Any]]] = defaultdict(list)
+    parsed = 0
 
     for row in fit_rows:
-        path = corpus / "episodes" / f"{row['episode_id']}.json.gz"
-        if not path.exists():
+        source = Path(str(row.get("source") or ""))
+        if not source.exists():
+            legacy = corpus / "episodes" / f"{row['episode_id']}.json.gz"
+            source = legacy
+        if not source.exists():
             continue
-        with gzip.open(path, "rt", encoding="utf-8") as handle:
-            episode = json.load(handle)
+        episode = _load_source(source, str(row.get("episode_id") or ""))
+        if episode is None:
+            continue
         seat = int(row["seat"])
         states, actions = [], []
         for step in episode.get("steps") or []:
@@ -131,24 +178,48 @@ def build(corpus: Path, output: Path, max_routes_per_strategy: int = 4) -> None:
             actions.append(_action(entry))
         if not states:
             continue
+        parsed += 1
         strategy = _strategy(states[-1])
         reward = float(row.get("reward") or 0)
         candidates[strategy].append({
             "episode_id": row["episode_id"],
+            "submission_id": row.get("submission_id") or "",
+            "team": row.get("team") or "",
             "strategy": strategy,
             "seat": seat,
             "reward": reward,
             "states": states,
             "actions": actions,
         })
+        if parsed % 50 == 0:
+            print(json.dumps({"fit_routes_parsed": parsed, "strategies_seen": sorted(candidates)}), flush=True)
 
     library = []
     for strategy, routes in candidates.items():
+        # Preserve route diversity by preferring a different submission family
+        # before taking multiple donors from the same family.
         routes.sort(key=lambda r: r["reward"], reverse=True)
-        selected = routes[:max_routes_per_strategy]
+        selected, families = [], set()
+        for route in routes:
+            family = route["submission_id"] or route["team"] or route["episode_id"]
+            if family in families and len(selected) < max_routes_per_strategy:
+                continue
+            selected.append(route)
+            families.add(family)
+            if len(selected) >= max_routes_per_strategy:
+                break
+        if len(selected) < max_routes_per_strategy:
+            for route in routes:
+                if route in selected:
+                    continue
+                selected.append(route)
+                if len(selected) >= max_routes_per_strategy:
+                    break
         for route in selected:
             library.append({
                 "episode_id": route["episode_id"],
+                "submission_id": route["submission_id"],
+                "team": route["team"],
                 "strategy": route["strategy"],
                 "seat": route["seat"],
                 "reward": route["reward"],
@@ -157,8 +228,12 @@ def build(corpus: Path, output: Path, max_routes_per_strategy: int = 4) -> None:
             })
 
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps({"schema_version": 1, "routes": library}, separators=(",", ":")), encoding="utf-8")
-    print(json.dumps({"routes": len(library), "strategies": Counter(r["strategy"] for r in library)}, default=dict, indent=2))
+    output.write_text(json.dumps({"schema_version": 2, "routes": library}, separators=(",", ":")), encoding="utf-8")
+    print(json.dumps({
+        "fit_routes_parsed": parsed,
+        "routes": len(library),
+        "strategies": Counter(r["strategy"] for r in library),
+    }, default=dict, indent=2))
 
 
 if __name__ == "__main__":
