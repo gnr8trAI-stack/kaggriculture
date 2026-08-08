@@ -1,0 +1,92 @@
+name: economic-v3
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v3_economic.py'
+      - '.github/workflows/economic-v3.yml'
+  workflow_dispatch:
+
+jobs:
+  validate-benchmark-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile and import v3
+        run: |
+          python -m py_compile agents/v3_economic.py
+          python - <<'PY'
+          import importlib.util
+          p='agents/v3_economic.py'
+          s=importlib.util.spec_from_file_location('v3',p)
+          m=importlib.util.module_from_spec(s); s.loader.exec_module(m)
+          assert callable(m.agent)
+          print('v3 import OK')
+          PY
+      - name: Smoke test both seats
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from kaggle_environments import make
+          s=importlib.util.spec_from_file_location('v3','agents/v3_economic.py')
+          m=importlib.util.module_from_spec(s); s.loader.exec_module(m)
+          for seat in (0,1):
+              env=make('kaggriculture',configuration={'episodeSteps':720},debug=True)
+              agents=[m.agent,'starter'] if seat==0 else ['starter',m.agent]
+              env.run(agents)
+              f=env.state
+              mine=f[seat]
+              print('seat',seat,[(x.reward,str(x.status)) for x in f])
+              assert str(mine.status) not in {'ERROR','INVALID','TIMEOUT'}
+          PY
+      - name: Benchmark v3 against repository baselines
+        run: |
+          python scripts/benchmark_adaptive_population.py \
+            --candidate agents/v3_economic.py \
+            --opponent v2_frozen=agents/v2_frozen.py \
+            --opponent adaptive_v2=agents/adaptive_agent.py \
+            --games-per-seat 8 \
+            --seed-start 630000 \
+            --output artifacts/v3_population_results.csv
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          rows=list(csv.DictReader(Path('artifacts/v3_population_results.csv').open()))
+          invalid=sum(r['candidate_status'] in {'ERROR','INVALID','TIMEOUT'} for r in rows)
+          wins=sum(r['result']=='win' for r in rows); losses=sum(r['result']=='loss' for r in rows); ties=sum(r['result']=='tie' for r in rows)
+          mean_delta=sum(float(r['delta']) for r in rows)/len(rows)
+          report={'version':'3.0.0-alpha','games':len(rows),'wins':wins,'losses':losses,'ties':ties,'invalid':invalid,'mean_delta':mean_delta}
+          Path('artifacts/v3_release_report.json').write_text(json.dumps(report,indent=2))
+          print(report)
+          assert invalid==0
+          PY
+      - name: Build Kaggle-ready versioned package
+        run: |
+          mkdir -p release
+          cp agents/v3_economic.py release/main.py
+          (cd release && zip -9 ../kaggriculture_adaptive_v3.0.0-alpha_submission.zip main.py)
+          python - <<'PY'
+          import zipfile
+          p='kaggriculture_adaptive_v3.0.0-alpha_submission.zip'
+          with zipfile.ZipFile(p) as z:
+              assert z.namelist()==['main.py'], z.namelist()
+          print('Kaggle ZIP root contract OK')
+          PY
+      - name: Upload v3 candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggriculture-adaptive-v3.0.0-alpha
+          path: |
+            kaggriculture_adaptive_v3.0.0-alpha_submission.zip
+            artifacts/v3_population_results.csv
+            artifacts/v3_release_report.json
+          retention-days: 14
