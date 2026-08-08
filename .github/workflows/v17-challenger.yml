@@ -1,0 +1,241 @@
+name: v17-challenger
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v17_catastrophe_guard.py'
+      - '.github/workflows/v17-challenger.yml'
+  pull_request:
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v17_catastrophe_guard.py'
+      - '.github/workflows/v17-challenger.yml'
+  workflow_dispatch:
+
+jobs:
+  v17-vs-v15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile champion and challenger
+        run: |
+          python -m py_compile agents/v15_champion.py agents/v17_catastrophe_guard.py
+      - name: Run V17 champion gate
+        run: |
+          mkdir -p artifacts dist
+          python - <<'PY'
+          import csv, importlib.util, json, math, statistics, time
+          from pathlib import Path
+          from kaggle_environments import make
+
+          BAD={'ERROR','INVALID','TIMEOUT'}
+
+          def load_module(path,name):
+              spec=importlib.util.spec_from_file_location(name,path)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+              return mod
+
+          v17m=load_module('agents/v17_catastrophe_guard.py','v17_candidate')
+          v15m=load_module('agents/v15_champion.py','v15_champion_isolated')
+          v2m=load_module('agents/v2_frozen.py','v2_control')
+          adpm=load_module('agents/adaptive_agent.py','adaptive_control')
+          v17=v17m.agent; v15=v15m.agent
+
+          def weed_ratio(obs,seat):
+              try:
+                  tiles=(obs.get('farms') or [])[seat].get('tiles') or []
+              except Exception:
+                  return None
+              usable=weeds=0
+              for row in tiles:
+                  for tile in row:
+                      kind=str(tile.get('kind','')).upper() if isinstance(tile,dict) else ''
+                      if tile == 'LOCKED' or kind == 'LOCKED':
+                          continue
+                      usable += 1
+                      weeds += int(kind == 'WEED')
+              return weeds/max(1,usable)
+
+          def play(candidate,opponent,seat,seed,series,telemetry_fn=None):
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              agents=[candidate,opponent] if seat==0 else [opponent,candidate]
+              started=time.perf_counter(); env.run(agents); runtime=time.perf_counter()-started
+              mine=env.state[seat]; other=env.state[1-seat]
+              cr=float(mine.reward or 0); rr=float(other.reward or 0)
+              weeds=[]
+              for step in getattr(env,'steps',[]) or []:
+                  try: obs=step[seat].observation
+                  except Exception: continue
+                  if isinstance(obs,dict):
+                      r=weed_ratio(obs,seat)
+                      if r is not None: weeds.append(r)
+              telemetry=telemetry_fn() if telemetry_fn else {}
+              return {
+                  'series':series,'seat':seat,'seed':seed,
+                  'candidate_reward':cr,'reference_reward':rr,'delta':cr-rr,
+                  'result':'win' if cr>rr else 'loss' if cr<rr else 'tie',
+                  'candidate_status':str(mine.status),'reference_status':str(other.status),
+                  'max_weed_ratio':max(weeds) if weeds else 0.0,
+                  'mean_weed_ratio':statistics.fmean(weeds) if weeds else 0.0,
+                  'crisis_entries':int(telemetry.get('crisis_entries',0)),
+                  'crisis_turns':int(telemetry.get('crisis_turns',0)),
+                  'cleanup_overrides':int(telemetry.get('cleanup_overrides',0)),
+                  'blocked_land':int(telemetry.get('blocked_land',0)),
+                  'blocked_seed':int(telemetry.get('blocked_seed',0)),
+                  'runtime_seconds':runtime,
+              }
+
+          rows=[]
+          # Primary pairwise gate: 120 games, 60 towns per seat.
+          for seat in (0,1):
+              for offset in range(60):
+                  r=play(v17,v15,seat,760000+offset,'v17_vs_v15',v17m.get_telemetry)
+                  rows.append(r); print(r)
+
+          # Distributional controls. Same seed ranges are used for V17 and V15,
+          # but conclusions are based on distributions because planner changes
+          # can perturb coupled town RNG.
+          controls=[('starter','starter'),('v2',v2m.agent),('adaptive',adpm.agent)]
+          for opp_name,opp in controls:
+              for label,agent,telemetry in (
+                  ('v17',v17,v17m.get_telemetry),
+                  ('v15',v15,None),
+              ):
+                  for seat in (0,1):
+                      for offset in range(15):
+                          r=play(agent,opp,seat,770000+offset,f'{label}_vs_{opp_name}',telemetry)
+                          rows.append(r); print(r)
+
+          with Path('artifacts/v17_gate_results.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+          def q(values,p):
+              values=sorted(values)
+              if not values: return 0.0
+              i=max(0,min(len(values)-1,math.floor((len(values)-1)*p)))
+              return values[i]
+
+          def summary(v):
+              rewards=[r['candidate_reward'] for r in v]
+              return {
+                  'games':len(v),
+                  'wins':sum(r['result']=='win' for r in v),
+                  'losses':sum(r['result']=='loss' for r in v),
+                  'ties':sum(r['result']=='tie' for r in v),
+                  'score_rate':sum(1 if r['result']=='win' else .5 if r['result']=='tie' else 0 for r in v)/len(v),
+                  'mean_reward':statistics.fmean(rewards),
+                  'p10_reward':q(rewards,.10),
+                  'mean_delta':statistics.fmean(r['delta'] for r in v),
+                  'seat0_delta':statistics.fmean(r['delta'] for r in v if r['seat']==0),
+                  'seat1_delta':statistics.fmean(r['delta'] for r in v if r['seat']==1),
+                  'max_weed_ratio':max(r['max_weed_ratio'] for r in v),
+                  'mean_max_weed_ratio':statistics.fmean(r['max_weed_ratio'] for r in v),
+                  'crisis_games':sum(r['crisis_entries']>0 for r in v),
+                  'crisis_entries':sum(r['crisis_entries'] for r in v),
+                  'crisis_turns':sum(r['crisis_turns'] for r in v),
+                  'cleanup_overrides':sum(r['cleanup_overrides'] for r in v),
+                  'invalid':sum(r['candidate_status'] in BAD for r in v),
+              }
+
+          direct=[r for r in rows if r['series']=='v17_vs_v15']
+          sd=summary(direct)
+          controls_report={}
+          ratios=[]; p10_ratios=[]
+          for opp_name,_ in controls:
+              a=summary([r for r in rows if r['series']==f'v17_vs_{opp_name}'])
+              b=summary([r for r in rows if r['series']==f'v15_vs_{opp_name}'])
+              ratio=a['mean_reward']/max(1.0,b['mean_reward'])
+              p10_ratio=a['p10_reward']/max(1.0,b['p10_reward'])
+              ratios.append(ratio); p10_ratios.append(p10_ratio)
+              controls_report[opp_name]={'v17':a,'v15':b,'mean_reward_ratio':ratio,'p10_reward_ratio':p10_ratio}
+
+          # V17 must be pairwise competitive with V15 and cannot trade away the
+          # champion's broad economic output. A rare-tail guard may tie often,
+          # so this is a non-regression gate rather than V16's inappropriate
+          # 55% requirement for a mostly dormant overlay.
+          promotion=(
+              sd['invalid']==0 and
+              sd['score_rate'] >= 0.49 and
+              sd['mean_delta'] >= -100 and
+              sd['seat0_delta'] >= -150 and sd['seat1_delta'] >= -150 and
+              min(ratios) >= 0.995 and min(p10_ratios) >= 0.98 and
+              all(v['v17']['invalid']==0 for v in controls_report.values())
+          )
+          report={
+              'version':'17.0.0-rc1','champion':'v15',
+              'direct_v17_vs_v15':sd,'controls':controls_report,
+              'promotion_recommended':promotion,
+              'note':'Promotion still requires live Kaggle replay validation; this CI gate only establishes non-regression.'
+          }
+          Path('artifacts/v17_gate_report.json').write_text(json.dumps(report,indent=2))
+          Path('artifacts/PROMOTE').write_text('1' if promotion else '0')
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Build standalone candidate only if gate passes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          if Path('artifacts/PROMOTE').read_text().strip()!='1':
+              print('V17 did not pass the V15 non-regression gate; no submission produced.')
+              raise SystemExit(0)
+          base=Path('agents/v15_champion.py').read_text()
+          overlay=Path('agents/v17_catastrophe_guard.py').read_text()
+          overlay=overlay.replace('from __future__ import annotations\n','')
+          overlay=overlay.replace('from agents.v15_champion import agent as _v15_agent','_v15_agent = agent')
+          Path('dist/main.py').write_text(base+'\n\n'+overlay)
+          PY
+          if [ -f dist/main.py ]; then python -m py_compile dist/main.py; fi
+      - name: Package evidence-approved candidate
+        run: |
+          if [ "$(cat artifacts/PROMOTE)" != "1" ]; then exit 0; fi
+          (cd dist && zip -9 ../kaggriculture_adaptive_v17.0.0-rc1_submission.zip main.py)
+          python - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          z=Path('kaggriculture_adaptive_v17.0.0-rc1_submission.zip')
+          with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          report=json.loads(Path('artifacts/v17_gate_report.json').read_text())
+          manifest={
+              'version':'17.0.0-rc1','champion':'v15','promotion_recommended':report['promotion_recommended'],
+              'submission_sha256':hashlib.sha256(z.read_bytes()).hexdigest(),
+              'main_sha256':hashlib.sha256(Path('dist/main.py').read_bytes()).hexdigest(),
+          }
+          Path('release_manifest_v17.0.0-rc1.json').write_text(json.dumps(manifest,indent=2))
+          Path('RELEASE_NOTES_v17.0.0-rc1.md').write_text(
+              '# Kaggriculture v17.0.0-rc1\n\n'
+              'Exact V15 champion with a catastrophe-only weed guard. Routine weed cleanup is intentionally disabled.\n\n'
+              'This is an RC only; live Kaggle replay evidence is required before champion promotion.\n\n'
+              + json.dumps(report,indent=2)
+          )
+          PY
+      - name: Upload V17 gate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-vs-v15-gate
+          path: |
+            artifacts/v17_gate_results.csv
+            artifacts/v17_gate_report.json
+            artifacts/PROMOTE
+            dist/main.py
+            kaggriculture_adaptive_v17.0.0-rc1_submission.zip
+            RELEASE_NOTES_v17.0.0-rc1.md
+            release_manifest_v17.0.0-rc1.json
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Enforce champion gate
+        if: always()
+        run: |
+          test -f artifacts/PROMOTE
+          test "$(cat artifacts/PROMOTE)" = "1"
