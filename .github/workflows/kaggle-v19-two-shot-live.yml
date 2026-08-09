@@ -1,11 +1,13 @@
 name: kaggle-v19-two-shot-live
 
 on:
-  push:
-    branches:
-      - agent/adaptive-replay-lab-final
+  pull_request:
     paths:
       - '.github/LIVE_TWO_SHOT_TRIGGER'
+
+concurrency:
+  group: kaggle-v19-two-shot-live
+  cancel-in-progress: false
 
 jobs:
   submit-two:
@@ -15,15 +17,33 @@ jobs:
       KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
     steps:
       - uses: actions/checkout@v6
+
+      - name: Check one-use arm
+        id: arm
+        shell: bash
+        run: |
+          if [ -f .github/LIVE_TWO_SHOT_TRIGGER ] && grep -q '^armed=true$' .github/LIVE_TWO_SHOT_TRIGGER; then
+            echo 'armed=true' >> "$GITHUB_OUTPUT"
+            echo 'Two-shot live campaign is ARMED.'
+          else
+            echo 'armed=false' >> "$GITHUB_OUTPUT"
+            echo 'Two-shot live campaign is not armed; no Kaggle submission will occur.'
+          fi
+
       - uses: actions/setup-python@v6
+        if: steps.arm.outputs.armed == 'true'
         with:
           python-version: '3.11'
+
       - name: Install tooling
+        if: steps.arm.outputs.armed == 'true'
         run: |
           python -m pip install --upgrade pip
           pip install kaggle kaggle-environments
           test -n "$KAGGLE_API_TOKEN"
+
       - name: Build standalone candidate ZIPs
+        if: steps.arm.outputs.armed == 'true'
         run: |
           mkdir -p live_two_shot artifacts
           python - <<'PY'
@@ -31,8 +51,7 @@ jobs:
           import hashlib, json, zipfile
           import agents.v15_champion as champ
 
-          root=Path('.')
-          v19=(root/'agents/v19_livestock_compound.py').read_text()
+          v19=Path('agents/v19_livestock_compound.py').read_text()
           marker='from agents import v15_champion as _v15'
           embedded=(
               'import base64 as _b64, zlib as _zl, types as _types\n'
@@ -71,7 +90,9 @@ jobs:
           Path('artifacts/two_shot_manifest.json').write_text(json.dumps(manifest,indent=2))
           print(json.dumps(manifest,indent=2))
           PY
+
       - name: Standalone mechanical smoke
+        if: steps.arm.outputs.armed == 'true'
         run: |
           python - <<'PY'
           import importlib.util, json
@@ -96,7 +117,9 @@ jobs:
                       raise RuntimeError(f"mechanical failure {row['version']} seat={seat} status={getattr(st,'status',None)}")
                   print(row['version'],seat,st.reward)
           PY
+
       - name: Enforce daily submission budget
+        if: steps.arm.outputs.armed == 'true'
         id: budget
         shell: bash
         run: |
@@ -117,7 +140,9 @@ jobs:
           if allowed < 2:
               raise SystemExit(f'Refusing two-shot run: only {allowed} submission slots remain')
           PY
+
       - name: Submit V19.1 feed-order guard
+        if: steps.arm.outputs.armed == 'true' && steps.budget.outputs.allowed == '2'
         id: shot1
         shell: bash
         run: |
@@ -127,13 +152,17 @@ jobs:
           REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot1_submit.txt | grep -Eo '[0-9]+' | tail -1)
           echo "$REF" > artifacts/shot1_ref.txt
           if [ -n "$REF" ]; then kaggle competitions submission "$REF" | tee artifacts/shot1_status.txt; fi
+
       - name: Snapshot after shot 1
+        if: steps.arm.outputs.armed == 'true' && steps.budget.outputs.allowed == '2'
         run: |
           kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after_shot1.csv
           kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_after_shot1.csv
           cat artifacts/competition_after_shot1.csv
           head -5 artifacts/submissions_after_shot1.csv
+
       - name: Submit V19.2 early-scale challenger
+        if: steps.arm.outputs.armed == 'true' && steps.budget.outputs.allowed == '2'
         id: shot2
         shell: bash
         run: |
@@ -143,15 +172,17 @@ jobs:
           REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot2_submit.txt | grep -Eo '[0-9]+' | tail -1)
           echo "$REF" > artifacts/shot2_ref.txt
           if [ -n "$REF" ]; then kaggle competitions submission "$REF" | tee artifacts/shot2_status.txt; fi
+
       - name: Final live snapshot
-        if: always()
+        if: always() && steps.arm.outputs.armed == 'true'
         run: |
           kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after.csv || true
           kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_after.csv || true
           cat artifacts/competition_after.csv || true
           head -8 artifacts/submissions_after.csv || true
+
       - name: Upload live evidence and packages
-        if: always()
+        if: always() && steps.arm.outputs.armed == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: kaggriculture-v19-two-shot-live
