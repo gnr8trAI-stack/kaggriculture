@@ -1,0 +1,196 @@
+name: v22-bounded-corrections
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v22_frontier_clone.py'
+      - 'agents/v22_1_active_herd.py'
+      - 'agents/v22_2_crop_throughput.py'
+      - '.github/workflows/v22-bounded-corrections.yml'
+  pull_request:
+    paths:
+      - 'agents/v22_frontier_clone.py'
+      - 'agents/v22_1_active_herd.py'
+      - 'agents/v22_2_crop_throughput.py'
+      - '.github/workflows/v22-bounded-corrections.yml'
+  workflow_dispatch:
+
+jobs:
+  bounded-frontier-corrections:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile bounded candidates
+        run: |
+          python -m py_compile \
+            agents/v15_champion.py \
+            agents/v19_livestock_compound.py \
+            agents/v22_frontier_clone.py \
+            agents/v22_1_active_herd.py \
+            agents/v22_2_crop_throughput.py
+      - name: Run bounded V22.1 and V22.2 evaluation
+        run: |
+          mkdir -p artifacts dist
+          python - <<'PY'
+          import csv, importlib.util, json, math, statistics, time
+          from pathlib import Path
+          from kaggle_environments import make
+
+          BAD={'ERROR','INVALID','TIMEOUT'}
+          def load(path,name):
+              spec=importlib.util.spec_from_file_location(name,path)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod); return mod
+          v221=load('agents/v22_1_active_herd.py','v221')
+          v222=load('agents/v22_2_crop_throughput.py','v222')
+          v19=load('agents/v19_livestock_compound.py','v19')
+
+          def reset(mod):
+              fn=getattr(mod,'reset_state',None)
+              if callable(fn): fn()
+          def telemetry(mod):
+              fn=getattr(mod,'get_telemetry',None)
+              if not callable(fn): return []
+              try: x=fn(clear=True)
+              except TypeError: x=fn()
+              return x if isinstance(x,list) else []
+          def first_day(rows,pred):
+              vals=[int(r.get('day',99)) for r in rows if pred(r)]
+              return min(vals) if vals else 99
+          def play(mod,ref,seat,seed,series):
+              reset(mod)
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              agents=[mod.agent,ref] if seat==0 else [ref,mod.agent]
+              t=time.perf_counter(); env.run(agents); runtime=time.perf_counter()-t
+              mine=env.state[seat]; other=env.state[1-seat]; tele=telemetry(mod)
+              cr=float(mine.reward or 0); rr=float(other.reward or 0)
+              return {
+                  'series':series,'seat':seat,'seed':seed,'candidate_reward':cr,'reference_reward':rr,
+                  'delta':cr-rr,'result':'win' if cr>rr else 'loss' if cr<rr else 'tie',
+                  'candidate_status':str(mine.status),'reference_status':str(other.status),
+                  'max_hands':max([int(r.get('hands',0) or 0) for r in tele] or [0]),
+                  'max_land':max([int(r.get('land',0) or 0) for r in tele] or [0]),
+                  'max_pastures':max([int(r.get('pastures',0) or 0) for r in tele] or [0]),
+                  'max_active_animals':max([int(r.get('active_animals',0) or 0) for r in tele] or [0]),
+                  'max_active_cows':max([int(r.get('active_cows',0) or 0) for r in tele] or [0]),
+                  'max_active_sheep':max([int(r.get('active_sheep',0) or 0) for r in tele] or [0]),
+                  'max_strawberries':max([int(r.get('crop_strawberry',r.get('v22_2_strawberry',0)) or 0) for r in tele] or [0]),
+                  'full_active_herd_day':first_day(tele,lambda r:int(r.get('active_animals',0) or 0)>=14 and int(r.get('active_cows',0) or 0)>=8 and int(r.get('active_sheep',0) or 0)>=6),
+                  'pasture14_day':first_day(tele,lambda r:int(r.get('pastures',0) or 0)>=14),
+                  'strawberry35_day':first_day(tele,lambda r:int(r.get('crop_strawberry',r.get('v22_2_strawberry',0)) or 0)>=35),
+                  'runtime_seconds':runtime,
+              }
+
+          rows=[]
+          # Independent town distributions. Same seed is not treated as paired causal evidence.
+          for label,mod,base_seed in [('v22_1',v221,970000),('v22_2',v222,980000)]:
+              for seat in (0,1):
+                  for off in range(20):
+                      r=play(mod,'starter',seat,base_seed+off,f'{label}_vs_starter'); rows.append(r); print(r)
+          for seat in (0,1):
+              for off in range(10):
+                  r=play(v222,v19.agent,seat,990000+off,'v22_2_vs_v19'); rows.append(r); print(r)
+
+          with Path('artifacts/v22_bounded_results.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+          def q(vals,p):
+              vals=sorted(float(v) for v in vals)
+              if not vals:return 0.0
+              x=(len(vals)-1)*p; lo=math.floor(x); hi=math.ceil(x)
+              return vals[lo] if lo==hi else vals[lo]+(vals[hi]-vals[lo])*(x-lo)
+          def summ(g):
+              rewards=[r['candidate_reward'] for r in g]
+              return {
+                  'games':len(g),'wins':sum(r['result']=='win' for r in g),'losses':sum(r['result']=='loss' for r in g),
+                  'score_rate':sum(1 if r['result']=='win' else .5 if r['result']=='tie' else 0 for r in g)/len(g),
+                  'mean_reward':statistics.fmean(rewards),'median_reward':statistics.median(rewards),
+                  'p10_reward':q(rewards,.1),'p90_reward':q(rewards,.9),'max_reward':max(rewards),
+                  'ge_100k':sum(v>=100000 for v in rewards),'ge_150k':sum(v>=150000 for v in rewards),'ge_175k':sum(v>=175000 for v in rewards),'ge_200k':sum(v>=200000 for v in rewards),
+                  'invalid':sum(r['candidate_status'] in BAD for r in g),
+                  'games_14_active':sum(r['max_active_animals']>=14 and r['max_active_cows']>=8 and r['max_active_sheep']>=6 for r in g),
+                  'games_14_pastures':sum(r['max_pastures']>=14 for r in g),
+                  'games_35_strawberries':sum(r['max_strawberries']>=35 for r in g),
+                  'median_full_active_herd_day':statistics.median(r['full_active_herd_day'] for r in g),
+                  'median_pasture14_day':statistics.median(r['pasture14_day'] for r in g),
+                  'median_strawberry35_day':statistics.median(r['strawberry35_day'] for r in g),
+                  'mean_delta':statistics.fmean(r['delta'] for r in g),
+                  'seat0_delta':statistics.fmean(r['delta'] for r in g if r['seat']==0),
+                  'seat1_delta':statistics.fmean(r['delta'] for r in g if r['seat']==1),
+              }
+
+          s1=summ([r for r in rows if r['series']=='v22_1_vs_starter'])
+          s2=summ([r for r in rows if r['series']=='v22_2_vs_starter'])
+          direct=summ([r for r in rows if r['series']=='v22_2_vs_v19'])
+          structure_pass=(s1['invalid']==0 and s1['games_14_active']>=32 and s1['games_14_pastures']>=32 and s1['median_full_active_herd_day']<=13 and s1['mean_reward']>=40000)
+          crop_pass=(s2['invalid']==0 and s2['games_14_active']>=32 and s2['games_35_strawberries']>=28 and s2['median_strawberry35_day']<=17 and s2['p10_reward']>=40000 and (s2['mean_reward']>=65000 or s2['mean_reward']>=1.25*s1['mean_reward']))
+          credible_download=(crop_pass and s2['median_reward']>=120000 and s2['p90_reward']>=150000 and s2['max_reward']>=175000 and direct['invalid']==0)
+          clone_continue=structure_pass and crop_pass
+          report={
+              'program':'bounded-frontier-clone','hard_limit':'V22.1 herd fix + V22.2 crop fix; no further clone versions if crop_pass is false',
+              'v22_1_vs_starter':s1,'v22_2_vs_starter':s2,'v22_2_vs_v19':direct,
+              'structure_pass':structure_pass,'crop_pass':crop_pass,'clone_continue':clone_continue,'credible_download':credible_download,
+              'decision':('PACKAGE_V22_2' if credible_download else 'CONTINUE_TO_200K_OPTIMIZATION' if clone_continue else 'STOP_CLONE_SWITCH_TO_DONOR_POLICY_EXTRACTION')
+          }
+          Path('artifacts/v22_bounded_report.json').write_text(json.dumps(report,indent=2))
+          Path('artifacts/CLONE_CONTINUE').write_text('1' if clone_continue else '0')
+          Path('artifacts/DOWNLOAD_READY').write_text('1' if credible_download else '0')
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Build standalone only if economically credible
+        run: |
+          if [ "$(cat artifacts/DOWNLOAD_READY)" != "1" ]; then exit 0; fi
+          python - <<'PY'
+          from pathlib import Path
+          import agents.v15_champion as champ
+          v22=Path('agents/v22_frontier_clone.py').read_text()
+          v221=Path('agents/v22_1_active_herd.py').read_text()
+          v222=Path('agents/v22_2_crop_throughput.py').read_text()
+          emb=('import base64,types,zlib\n_v15=types.ModuleType("_v15_embedded")\n'+f'_V15_PAYLOAD={champ._PAYLOAD!r}\n'+'exec(zlib.decompress(base64.b64decode(_V15_PAYLOAD)).decode("utf-8"),_v15.__dict__,_v15.__dict__)')
+          v22=v22.replace('from agents import v15_champion as _v15',emb)
+          prefix='import types\n_base=types.ModuleType("_v22_embedded")\nexec('+repr(v22)+',_base.__dict__,_base.__dict__)\n'
+          v221=v221.replace('from agents import v22_frontier_clone as _base','')
+          prefix+='\n_herd=types.ModuleType("_v221_embedded")\n_herd.__dict__["_base"]=_base\nexec('+repr(v221)+',_herd.__dict__,_herd.__dict__)\n'
+          v222=v222.replace('from agents import v22_1_active_herd as _herd','')
+          Path('dist/main.py').write_text(prefix+'\n'+v222)
+          PY
+          python -m py_compile dist/main.py
+          ! grep -Eq '^from agents|^import agents' dist/main.py
+      - name: Package only if economically credible
+        run: |
+          if [ "$(cat artifacts/DOWNLOAD_READY)" != "1" ]; then exit 0; fi
+          (cd dist && zip -9 ../kaggriculture_adaptive_v22.2.0-rc1_submission.zip main.py)
+          python - <<'PY'
+          import hashlib,json,zipfile
+          from pathlib import Path
+          z=Path('kaggriculture_adaptive_v22.2.0-rc1_submission.zip')
+          with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          report=json.loads(Path('artifacts/v22_bounded_report.json').read_text())
+          Path('RELEASE_NOTES_v22.2.0-rc1.md').write_text('# V22.2 rc1\n\nBounded frontier correction build.\n\n'+json.dumps(report,indent=2))
+          Path('release_manifest_v22.2.0-rc1.json').write_text(json.dumps({'version':'22.2.0-rc1','submission_sha256':hashlib.sha256(z.read_bytes()).hexdigest(),'credible_download':True},indent=2))
+          PY
+      - name: Upload bounded evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v22-bounded-corrections
+          path: |
+            artifacts/v22_bounded_results.csv
+            artifacts/v22_bounded_report.json
+            artifacts/CLONE_CONTINUE
+            artifacts/DOWNLOAD_READY
+            dist/main.py
+            kaggriculture_adaptive_v22.2.0-rc1_submission.zip
+            RELEASE_NOTES_v22.2.0-rc1.md
+            release_manifest_v22.2.0-rc1.json
+          if-no-files-found: ignore
+          retention-days: 30
