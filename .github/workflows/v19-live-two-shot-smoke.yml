@@ -5,6 +5,8 @@ on:
     paths:
       - 'agents/v19_1_feed_order_guard.py'
       - 'agents/v19_2_early_scale8.py'
+      - 'agents/v19_3_crew_feed_guard.py'
+      - 'agents/v19_4_three_land_crop_scale.py'
       - '.github/workflows/v19-live-two-shot-smoke.yml'
   push:
     branches:
@@ -12,6 +14,8 @@ on:
     paths:
       - 'agents/v19_1_feed_order_guard.py'
       - 'agents/v19_2_early_scale8.py'
+      - 'agents/v19_3_crew_feed_guard.py'
+      - 'agents/v19_4_three_land_crop_scale.py'
       - '.github/workflows/v19-live-two-shot-smoke.yml'
 
 jobs:
@@ -29,7 +33,7 @@ jobs:
           pip install kaggle-environments
       - name: Compile challengers
         run: |
-          python -m py_compile agents/v19_1_feed_order_guard.py agents/v19_2_early_scale8.py agents/v19_livestock_compound.py agents/v15_champion.py
+          python -m py_compile agents/v19_1_feed_order_guard.py agents/v19_2_early_scale8.py agents/v19_3_crew_feed_guard.py agents/v19_4_three_land_crop_scale.py agents/v19_livestock_compound.py agents/v15_champion.py
       - name: Mechanical both-seat smoke
         run: |
           python - <<'PY'
@@ -40,14 +44,17 @@ jobs:
               farm=obs['farms'][obs['player']]
               return {'farmer':['PASS'],'hands':[['PASS'] for _ in farm.get('hands',[])],'market':[]}
 
-          mods=['agents.v19_1_feed_order_guard','agents.v19_2_early_scale8']
+          mods=[
+              'agents.v19_3_crew_feed_guard',
+              'agents.v19_4_three_land_crop_scale',
+          ]
           for name in mods:
               m=importlib.import_module(name)
               results=[]
               for seed in range(4):
                   for seat in (0,1):
                       if hasattr(m,'reset_state'): m.reset_state()
-                      env=make('kaggriculture',configuration={'seed':910000+seed},debug=True)
+                      env=make('kaggriculture',configuration={'seed':920000+seed},debug=True)
                       agents=[m.agent,passive] if seat==0 else [passive,m.agent]
                       env.run(agents)
                       st=env.state[seat]
