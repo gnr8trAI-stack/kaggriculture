@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-09T18:12:17.949502+00:00",
+  "competition": {
+    "rank": 2006,
+    "team_count": 3444,
+    "deadline": "2026-09-30 23:59:00",
+    "entered": true
+  },
+  "quota": {
+    "date_utc": "2026-08-09",
+    "daily_limit": 5,
+    "used": 5,
+    "remaining": 0,
+    "reserved_slots": 1
+  },
+  "latest_submission": {
+    "submission_id": 55383465,
+    "fileName": "kaggriculture_adaptive_v19.2-early-scale8_submission.zip",
+    "submitted_at_utc": "2026-08-09 15:46:22.860000",
+    "public_score": 621.8
+  },
+  "best_historical_submission": {
+    "submission_id": 55358894,
+    "fileName": "kaggriculture_adaptive_v19.0.0-rc1_submission.zip",
+    "submitted_at_utc": "2026-08-08 19:32:46.693000",
+    "public_score": 631.2
+  },
+  "today_submission_stats": {
+    "55383465": {"candidate":"v19.2-early-scale8","games":20,"wins":11,"losses":9,"win_rate":0.55,"mean_reward":45073.1,"mean_opponent_reward":42170.15,"mean_margin":2902.95},
+    "55383460": {"candidate":"v19.1-feed-order-guard","games":20,"wins":10,"losses":10,"win_rate":0.5,"mean_reward":40574.3,"mean_opponent_reward":40037.5,"mean_margin":536.8},
+    "55382036": {"candidate":"v19.0.0-live-rc1","games":15,"wins":7,"losses":8,"win_rate":0.4666666667,"mean_reward":39712.3333,"mean_opponent_reward":48999.6667,"mean_margin":-9287.3333},
+    "55381890": {"candidate":"v21.0.0-alpha2-live","games":17,"wins":8,"losses":9,"win_rate":0.4705882353,"mean_reward":42226.1765,"mean_opponent_reward":52658.6471,"mean_margin":-10432.4706},
+    "55381784": {"candidate":"v23.0.0-alpha2-live","games":3,"wins":1,"losses":2,"win_rate":0.3333333333,"mean_reward":1293.3333,"mean_opponent_reward":5292.0,"mean_margin":-3998.6667}
+  },
+  "recent_public_episodes": {"games":174,"wins":84,"losses":90,"ties":0},
+  "automation": {
+    "next_action": "quota_exhausted_observe_only",
+    "one_challenger_at_a_time": true,
+    "minimum_public_games_before_rotation": 10,
+    "auto_submit_allowed_by_quota": false
+  }
+}
