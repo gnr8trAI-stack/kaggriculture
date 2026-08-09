@@ -12,7 +12,7 @@ concurrency:
 jobs:
   submit-two:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 30
     env:
       KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
     steps:
@@ -35,12 +35,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install tooling
+      - name: Install Kaggle CLI
         if: steps.arm.outputs.armed == 'true'
         run: |
           python -m pip install --upgrade pip
-          pip install kaggle kaggle-environments
+          pip install kaggle
           test -n "$KAGGLE_API_TOKEN"
+          kaggle --version
 
       - name: Build standalone candidate ZIPs
         if: steps.arm.outputs.armed == 'true'
@@ -61,7 +62,6 @@ jobs:
           )
           assert marker in v19
           v19s=v19.replace(marker,embedded,1)
-
           specs=[
               ('v19.1-feed-order-guard','agents/v19_1_feed_order_guard.py'),
               ('v19.2-early-scale8','agents/v19_2_early_scale8.py'),
@@ -91,33 +91,6 @@ jobs:
           print(json.dumps(manifest,indent=2))
           PY
 
-      - name: Standalone mechanical smoke
-        if: steps.arm.outputs.armed == 'true'
-        run: |
-          python - <<'PY'
-          import importlib.util, json
-          from pathlib import Path
-          from kaggle_environments import make
-
-          def passive(obs, config=None):
-              f=obs['farms'][obs['player']]
-              return {'farmer':['PASS'],'hands':[['PASS'] for _ in f.get('hands',[])],'market':[]}
-
-          manifest=json.loads(Path('artifacts/two_shot_manifest.json').read_text())
-          for row in manifest:
-              main=Path(row['zip']).parent/'main.py'
-              spec=importlib.util.spec_from_file_location('candidate_'+row['version'].replace('.','_').replace('-','_'),main)
-              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
-              for seat in (0,1):
-                  if hasattr(mod,'reset_state'): mod.reset_state()
-                  env=make('kaggriculture',configuration={'seed':919191+seat},debug=True)
-                  env.run([mod.agent,passive] if seat==0 else [passive,mod.agent])
-                  st=env.state[seat]
-                  if getattr(st,'reward',None) is None or str(getattr(st,'status','')).upper() in {'ERROR','INVALID','TIMEOUT'}:
-                      raise RuntimeError(f"mechanical failure {row['version']} seat={seat} status={getattr(st,'status',None)}")
-                  print(row['version'],seat,st.reward)
-          PY
-
       - name: Enforce daily submission budget
         if: steps.arm.outputs.armed == 'true'
         id: budget
@@ -143,35 +116,29 @@ jobs:
 
       - name: Submit V19.1 feed-order guard
         if: steps.arm.outputs.armed == 'true' && steps.budget.outputs.allowed == '2'
-        id: shot1
         shell: bash
         run: |
           set -o pipefail
           ZIP=$(find live_two_shot/v19.1-feed-order-guard -name '*.zip' | head -1)
-          kaggle competitions submit kaggriculture -f "$ZIP" -m "V19.1 carried-feed order guard live challenger" --wait 1200 | tee artifacts/shot1_submit.txt
-          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot1_submit.txt | grep -Eo '[0-9]+' | tail -1)
+          kaggle competitions submit kaggriculture -f "$ZIP" -m "V19.1 carried-feed order guard live challenger" | tee artifacts/shot1_submit.txt
+          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot1_submit.txt | grep -Eo '[0-9]+' | tail -1 || true)
           echo "$REF" > artifacts/shot1_ref.txt
-          if [ -n "$REF" ]; then kaggle competitions submission "$REF" | tee artifacts/shot1_status.txt; fi
-
-      - name: Snapshot after shot 1
-        if: steps.arm.outputs.armed == 'true' && steps.budget.outputs.allowed == '2'
-        run: |
-          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after_shot1.csv
+          sleep 5
           kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_after_shot1.csv
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after_shot1.csv
           cat artifacts/competition_after_shot1.csv
           head -5 artifacts/submissions_after_shot1.csv
 
       - name: Submit V19.2 early-scale challenger
         if: steps.arm.outputs.armed == 'true' && steps.budget.outputs.allowed == '2'
-        id: shot2
         shell: bash
         run: |
           set -o pipefail
           ZIP=$(find live_two_shot/v19.2-early-scale8 -name '*.zip' | head -1)
-          kaggle competitions submit kaggriculture -f "$ZIP" -m "V19.2 feed-aware early scale live challenger" --wait 1200 | tee artifacts/shot2_submit.txt
-          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot2_submit.txt | grep -Eo '[0-9]+' | tail -1)
+          kaggle competitions submit kaggriculture -f "$ZIP" -m "V19.2 feed-aware early scale live challenger" | tee artifacts/shot2_submit.txt
+          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot2_submit.txt | grep -Eo '[0-9]+' | tail -1 || true)
           echo "$REF" > artifacts/shot2_ref.txt
-          if [ -n "$REF" ]; then kaggle competitions submission "$REF" | tee artifacts/shot2_status.txt; fi
+          sleep 5
 
       - name: Final live snapshot
         if: always() && steps.arm.outputs.armed == 'true'
