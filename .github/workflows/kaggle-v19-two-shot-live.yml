@@ -1,0 +1,161 @@
+name: kaggle-v19-two-shot-live
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - '.github/LIVE_TWO_SHOT_TRIGGER'
+
+jobs:
+  submit-two:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle kaggle-environments
+          test -n "$KAGGLE_API_TOKEN"
+      - name: Build standalone candidate ZIPs
+        run: |
+          mkdir -p live_two_shot artifacts
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, zipfile
+          import agents.v15_champion as champ
+
+          root=Path('.')
+          v19=(root/'agents/v19_livestock_compound.py').read_text()
+          marker='from agents import v15_champion as _v15'
+          embedded=(
+              'import base64 as _b64, zlib as _zl, types as _types\n'
+              '_v15=_types.ModuleType("_v15_embedded")\n'
+              f'_V15_PAYLOAD={champ._PAYLOAD!r}\n'
+              'exec(_zl.decompress(_b64.b64decode(_V15_PAYLOAD)).decode("utf-8"),_v15.__dict__,_v15.__dict__)'
+          )
+          assert marker in v19
+          v19s=v19.replace(marker,embedded,1)
+
+          specs=[
+              ('v19.1-feed-order-guard','agents/v19_1_feed_order_guard.py'),
+              ('v19.2-early-scale8','agents/v19_2_early_scale8.py'),
+          ]
+          manifest=[]
+          for version,path in specs:
+              src=Path(path).read_text()
+              mark='from agents import v19_livestock_compound as _v19'
+              assert mark in src, path
+              replacement=(
+                  'import types as _types_live\n'
+                  '_v19=_types_live.ModuleType("_v19_embedded")\n'
+                  'exec('+repr(v19s)+',_v19.__dict__,_v19.__dict__)'
+              )
+              standalone=src.replace(mark,replacement,1)
+              compile(standalone,'main.py','exec')
+              d=Path('live_two_shot')/version
+              d.mkdir(parents=True,exist_ok=True)
+              main=d/'main.py'; main.write_text(standalone)
+              z=d/f'kaggriculture_adaptive_{version}_submission.zip'
+              with zipfile.ZipFile(z,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as f:
+                  f.write(main,'main.py')
+              with zipfile.ZipFile(z) as f:
+                  assert f.namelist()==['main.py']
+              manifest.append({'version':version,'zip':str(z),'sha256':hashlib.sha256(z.read_bytes()).hexdigest()})
+          Path('artifacts/two_shot_manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(json.dumps(manifest,indent=2))
+          PY
+      - name: Standalone mechanical smoke
+        run: |
+          python - <<'PY'
+          import importlib.util, json
+          from pathlib import Path
+          from kaggle_environments import make
+
+          def passive(obs, config=None):
+              f=obs['farms'][obs['player']]
+              return {'farmer':['PASS'],'hands':[['PASS'] for _ in f.get('hands',[])],'market':[]}
+
+          manifest=json.loads(Path('artifacts/two_shot_manifest.json').read_text())
+          for row in manifest:
+              main=Path(row['zip']).parent/'main.py'
+              spec=importlib.util.spec_from_file_location('candidate_'+row['version'].replace('.','_').replace('-','_'),main)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+              for seat in (0,1):
+                  if hasattr(mod,'reset_state'): mod.reset_state()
+                  env=make('kaggriculture',configuration={'seed':919191+seat},debug=True)
+                  env.run([mod.agent,passive] if seat==0 else [passive,mod.agent])
+                  st=env.state[seat]
+                  if getattr(st,'reward',None) is None or str(getattr(st,'status','')).upper() in {'ERROR','INVALID','TIMEOUT'}:
+                      raise RuntimeError(f"mechanical failure {row['version']} seat={seat} status={getattr(st,'status',None)}")
+                  print(row['version'],seat,st.reward)
+          PY
+      - name: Enforce daily submission budget
+        id: budget
+        shell: bash
+        run: |
+          kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_before.csv
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_before.csv
+          python - <<'PY'
+          import csv,datetime,json,os
+          from pathlib import Path
+          rows=list(csv.DictReader(Path('artifacts/submissions_before.csv').open()))
+          today=datetime.datetime.utcnow().date().isoformat()
+          used=sum(str(r.get('date','')).startswith(today) for r in rows)
+          remaining=max(0,5-used)
+          allowed=min(2,remaining)
+          payload={'utc_date':today,'used_today':used,'remaining_today':remaining,'allowed_now':allowed}
+          Path('artifacts/submission_budget.json').write_text(json.dumps(payload,indent=2))
+          print(json.dumps(payload,indent=2))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f: f.write(f'allowed={allowed}\n')
+          if allowed < 2:
+              raise SystemExit(f'Refusing two-shot run: only {allowed} submission slots remain')
+          PY
+      - name: Submit V19.1 feed-order guard
+        id: shot1
+        shell: bash
+        run: |
+          set -o pipefail
+          ZIP=$(find live_two_shot/v19.1-feed-order-guard -name '*.zip' | head -1)
+          kaggle competitions submit kaggriculture -f "$ZIP" -m "V19.1 carried-feed order guard live challenger" --wait 1200 | tee artifacts/shot1_submit.txt
+          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot1_submit.txt | grep -Eo '[0-9]+' | tail -1)
+          echo "$REF" > artifacts/shot1_ref.txt
+          if [ -n "$REF" ]; then kaggle competitions submission "$REF" | tee artifacts/shot1_status.txt; fi
+      - name: Snapshot after shot 1
+        run: |
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after_shot1.csv
+          kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_after_shot1.csv
+          cat artifacts/competition_after_shot1.csv
+          head -5 artifacts/submissions_after_shot1.csv
+      - name: Submit V19.2 early-scale challenger
+        id: shot2
+        shell: bash
+        run: |
+          set -o pipefail
+          ZIP=$(find live_two_shot/v19.2-early-scale8 -name '*.zip' | head -1)
+          kaggle competitions submit kaggriculture -f "$ZIP" -m "V19.2 feed-aware early scale live challenger" --wait 1200 | tee artifacts/shot2_submit.txt
+          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/shot2_submit.txt | grep -Eo '[0-9]+' | tail -1)
+          echo "$REF" > artifacts/shot2_ref.txt
+          if [ -n "$REF" ]; then kaggle competitions submission "$REF" | tee artifacts/shot2_status.txt; fi
+      - name: Final live snapshot
+        if: always()
+        run: |
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after.csv || true
+          kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_after.csv || true
+          cat artifacts/competition_after.csv || true
+          head -8 artifacts/submissions_after.csv || true
+      - name: Upload live evidence and packages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggriculture-v19-two-shot-live
+          path: |
+            artifacts/
+            live_two_shot/*/*.zip
+          retention-days: 30
