@@ -6,6 +6,9 @@ on:
       - agent/adaptive-replay-lab-final
     paths:
       - '.github/workflows/kaggle-live-surface-probe.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/kaggle-live-surface-probe.yml'
   workflow_dispatch:
 
 jobs:
