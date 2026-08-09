@@ -1,0 +1,147 @@
+name: kaggle-live-submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: Candidate to submit live
+        required: true
+        type: choice
+        options:
+          - v19.0.0-live-rc1
+          - v21.0.0-alpha2-live
+          - v23.0.0-alpha2-live
+          - v15.0.0-live-control
+      message:
+        description: Kaggle submission message
+        required: false
+        default: Live field evaluation
+        type: string
+      wait_seconds:
+        description: Max seconds to wait for Kaggle scoring
+        required: false
+        default: '1800'
+        type: string
+      confirm:
+        description: Type SUBMIT to make a real Kaggle submission
+        required: true
+        type: string
+
+jobs:
+  submit-live:
+    if: ${{ inputs.confirm == 'SUBMIT' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+      COMPETITION: kaggriculture
+      CANDIDATE: ${{ inputs.candidate }}
+      SUBMISSION_MESSAGE: ${{ inputs.message }}
+      WAIT_SECONDS: ${{ inputs.wait_seconds }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle
+          test -n "$KAGGLE_API_TOKEN"
+      - name: Build selected standalone candidate
+        run: |
+          mkdir -p live_submit artifacts
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, zipfile
+          import agents.v15_champion as champ
+
+          candidate=os.environ['CANDIDATE']
+          v15=Path('agents/v15_champion.py').read_text()
+
+          v19=Path('agents/v19_livestock_compound.py').read_text()
+          marker='from agents import v15_champion as _v15'
+          embedded=(
+              'import base64 as _b64, zlib as _zl, types as _types\n'
+              '_v15=_types.ModuleType("_v15_embedded")\n'
+              f'_V15_PAYLOAD={champ._PAYLOAD!r}\n'
+              'exec(_zl.decompress(_b64.b64decode(_V15_PAYLOAD)).decode("utf-8"),_v15.__dict__,_v15.__dict__)'
+          )
+          assert marker in v19
+          v19s=v19.replace(marker,embedded,1)
+
+          v21=Path('agents/v21_scarcity_safe.py').read_text()
+          marker21='from agents import v19_livestock_compound as _v19'
+          assert marker21 in v21
+          v21s=v21.replace(marker21,
+              'import types as _types_v21\n_v19=_types_v21.ModuleType("_v19_embedded")\nexec('+repr(v19s)+',_v19.__dict__,_v19.__dict__)',1)
+
+          v23=Path('agents/v23_direct_donor_clock.py').read_text()
+          old='_SCHEDULE=json.loads(zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8"))'
+          new='''\ndef _decode_schedule_payload(payload):\n    data=base64.b64decode(payload)\n    try: raw=zlib.decompress(data)\n    except zlib.error: raw=zlib.decompress(data[2:-4], -zlib.MAX_WBITS)\n    value=json.loads(raw.decode("utf-8"))\n    if not isinstance(value,list) or len(value)!=720: raise ValueError("donor schedule integrity failure")\n    return value\n_SCHEDULE=_decode_schedule_payload(_PAYLOAD)'''
+          assert old in v23
+          v23s=v23.replace(old,new,1)
+
+          sources={
+              'v15.0.0-live-control': v15,
+              'v19.0.0-live-rc1': v19s,
+              'v21.0.0-alpha2-live': v21s,
+              'v23.0.0-alpha2-live': v23s,
+          }
+          src=sources[candidate]
+          compile(src,'main.py','exec')
+          main=Path('live_submit/main.py'); main.write_text(src)
+          z=Path('live_submit')/f'kaggriculture_adaptive_{candidate}_submission.zip'
+          with zipfile.ZipFile(z,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as f:
+              f.write(main,'main.py')
+          with zipfile.ZipFile(z) as f:
+              assert f.namelist()==['main.py']
+          manifest={'candidate':candidate,'zip':str(z),'sha256':hashlib.sha256(z.read_bytes()).hexdigest(),'members':['main.py']}
+          Path('artifacts/live_submit_manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(json.dumps(manifest,indent=2))
+          PY
+      - name: Submit to real Kaggriculture competition and wait
+        shell: bash
+        run: |
+          set -o pipefail
+          FILE=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('artifacts/live_submit_manifest.json').read_text())['zip'])
+          PY
+          )
+          kaggle competitions submit "$COMPETITION" -f "$FILE" -m "$SUBMISSION_MESSAGE" --wait "$WAIT_SECONDS" | tee artifacts/submit_output.txt
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          text=Path('artifacts/submit_output.txt').read_text(errors='replace')
+          m=re.search(r'Submission ref:\s*(\d+)',text,re.I)
+          if m:
+              Path('artifacts/submission_ref.txt').write_text(m.group(1))
+              print('submission_ref',m.group(1))
+          else:
+              print('No submission ref parsed from output; submission history will be used as fallback.')
+          PY
+      - name: Capture live submission status and leaderboard
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          if [ -s artifacts/submission_ref.txt ]; then
+            REF=$(cat artifacts/submission_ref.txt)
+            kaggle competitions submission "$REF" > artifacts/submission_status.txt 2> artifacts/submission_status.err
+            echo $? > artifacts/submission_status.exit
+          fi
+          kaggle competitions submissions "$COMPETITION" -v -q > artifacts/submissions.csv 2> artifacts/submissions.err
+          echo $? > artifacts/submissions.exit
+          kaggle competitions leaderboard "$COMPETITION" -s -v -q > artifacts/leaderboard.csv 2> artifacts/leaderboard.err
+          echo $? > artifacts/leaderboard.exit
+      - name: Upload live field evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-live-${{ inputs.candidate }}
+          path: |
+            artifacts/
+            live_submit/*.zip
+          retention-days: 30
