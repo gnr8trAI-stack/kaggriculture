@@ -1,6 +1,0 @@
-armed=true
-campaign=2026-08-09-two-shot
-candidate_1=v19.1-feed-order-guard
-candidate_2=v19.2-early-scale8
-expected_slots_remaining=2
-daily_limit=5
