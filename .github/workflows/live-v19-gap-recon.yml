@@ -7,6 +7,10 @@ on:
     paths:
       - 'trainer/analyze_live_v19_gap.py'
       - '.github/workflows/live-v19-gap-recon.yml'
+  pull_request:
+    paths:
+      - 'trainer/analyze_live_v19_gap.py'
+      - '.github/workflows/live-v19-gap-recon.yml'
   workflow_dispatch:
 
 jobs:
@@ -38,6 +42,7 @@ jobs:
           kaggle competitions leaderboard kaggriculture -d -p artifacts/leaderboard -q
           cat artifacts/competitions.csv
           head -20 artifacts/submissions.csv
+          find artifacts/leaderboard -type f -maxdepth 2 -print
       - name: Harvest freshest replay datasets
         run: |
           python trainer/harvest_kaggle_replays.py --output raw_kaggle_replays --max-datasets 2
@@ -55,6 +60,7 @@ jobs:
           path: |
             artifacts/competitions.csv
             artifacts/submissions.csv
+            artifacts/leaderboard/
             artifacts/live_gap/live_v19_gap.json
             replay_db/index.csv
             replay_db/summary.json
