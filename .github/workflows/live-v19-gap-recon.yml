@@ -1,0 +1,62 @@
+name: live-v19-gap-recon
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'trainer/analyze_live_v19_gap.py'
+      - '.github/workflows/live-v19-gap-recon.yml'
+  workflow_dispatch:
+
+jobs:
+  recon:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Reclaim disk
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL || true
+          docker system prune -af || true
+      - name: Install tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle
+          test -n "$KAGGLE_API_TOKEN"
+          python -m py_compile trainer/harvest_kaggle_replays.py trainer/ingest_replays.py trainer/analyze_score_frontier.py trainer/analyze_live_v19_gap.py
+      - name: Capture current live state
+        run: |
+          mkdir -p artifacts/leaderboard
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competitions.csv
+          kaggle competitions submissions kaggriculture -v -q > artifacts/submissions.csv
+          kaggle competitions leaderboard kaggriculture -d -p artifacts/leaderboard -q
+          cat artifacts/competitions.csv
+          head -20 artifacts/submissions.csv
+      - name: Harvest freshest replay datasets
+        run: |
+          python trainer/harvest_kaggle_replays.py --output raw_kaggle_replays --max-datasets 2
+      - name: Index fresh replays
+        run: |
+          python trainer/ingest_replays.py --input raw_kaggle_replays --output replay_db
+      - name: Analyze V19 live gap
+        run: |
+          python trainer/analyze_live_v19_gap.py --corpus replay_db --leaderboard-dir artifacts/leaderboard --competition-csv artifacts/competitions.csv --submissions-csv artifacts/submissions.csv --output artifacts/live_gap
+      - name: Upload recon evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: live-v19-gap-recon
+          path: |
+            artifacts/competitions.csv
+            artifacts/submissions.csv
+            artifacts/live_gap/live_v19_gap.json
+            replay_db/index.csv
+            replay_db/summary.json
+            raw_kaggle_replays/harvest_summary.json
+          retention-days: 7
