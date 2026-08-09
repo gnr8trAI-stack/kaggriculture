@@ -1,0 +1,20 @@
+{
+  "attempted_at_utc": "2026-08-09T21:21:16Z",
+  "status": "blocked",
+  "last_successful_snapshot_at_utc": "2026-08-09T18:18:26.444622+00:00",
+  "last_successful_snapshot_path": "telemetry/kaggle/latest.json",
+  "last_known_rank": 2020,
+  "last_known_team_count": 3444,
+  "last_known_quota": {"date_utc": "2026-08-09", "daily_limit": 5, "used": 5, "remaining": 0},
+  "last_known_latest_submission": {"submission_id": 55383465, "candidate": "v19.2-early-scale8", "public_score": 599.4, "games": 22, "wins": 11, "losses": 11},
+  "last_known_new_episode_ids": [91397740, 91397543],
+  "live_refresh_errors": [
+    "No Kaggle CLI or Kaggle credentials are present in the execution runtime.",
+    "No installable/connected Kaggle plugin is available.",
+    "Direct container network access to kaggle.com is unavailable due DNS/network isolation.",
+    "The web-accessible Kaggriculture leaderboard page renders without structured leaderboard rows, so authenticated rank/submission/episode state cannot be refreshed reliably."
+  ],
+  "material_change_status": "unknown_not_refreshed",
+  "recommended_action": "restore_authenticated_kaggle_read_access_before_resuming_live_watch",
+  "submission_performed": false
+}
