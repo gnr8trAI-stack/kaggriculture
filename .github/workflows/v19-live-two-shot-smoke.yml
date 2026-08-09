@@ -1,0 +1,60 @@
+name: v19-live-two-shot-smoke
+
+on:
+  pull_request:
+    paths:
+      - 'agents/v19_1_feed_order_guard.py'
+      - 'agents/v19_2_early_scale8.py'
+      - '.github/workflows/v19-live-two-shot-smoke.yml'
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v19_1_feed_order_guard.py'
+      - 'agents/v19_2_early_scale8.py'
+      - '.github/workflows/v19-live-two-shot-smoke.yml'
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile challengers
+        run: |
+          python -m py_compile agents/v19_1_feed_order_guard.py agents/v19_2_early_scale8.py agents/v19_livestock_compound.py agents/v15_champion.py
+      - name: Mechanical both-seat smoke
+        run: |
+          python - <<'PY'
+          import importlib
+          from kaggle_environments import make
+
+          def passive(obs, config=None):
+              farm=obs['farms'][obs['player']]
+              return {'farmer':['PASS'],'hands':[['PASS'] for _ in farm.get('hands',[])],'market':[]}
+
+          mods=['agents.v19_1_feed_order_guard','agents.v19_2_early_scale8']
+          for name in mods:
+              m=importlib.import_module(name)
+              results=[]
+              for seed in range(4):
+                  for seat in (0,1):
+                      if hasattr(m,'reset_state'): m.reset_state()
+                      env=make('kaggriculture',configuration={'seed':910000+seed},debug=True)
+                      agents=[m.agent,passive] if seat==0 else [passive,m.agent]
+                      env.run(agents)
+                      st=env.state[seat]
+                      status=str(getattr(st,'status',''))
+                      reward=getattr(st,'reward',None)
+                      if status.upper() in {'ERROR','INVALID','TIMEOUT'} or reward is None:
+                          raise RuntimeError(f'{name} seed={seed} seat={seat} status={status} reward={reward}')
+                      results.append(float(reward))
+              print(name, 'games',len(results),'min',min(results),'mean',sum(results)/len(results),'max',max(results))
+          PY
