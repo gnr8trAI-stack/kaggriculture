@@ -7,6 +7,10 @@ on:
     paths:
       - 'trainer/analyze_live_v19_gap.py'
       - '.github/workflows/live-v19-gap-recon.yml'
+  pull_request:
+    paths:
+      - 'trainer/analyze_live_v19_gap.py'
+      - '.github/workflows/live-v19-gap-recon.yml'
   workflow_dispatch:
 
 jobs:
