@@ -1,43 +1,25 @@
 {
-  "schema_version": 1,
-  "generated_at_utc": "2026-08-09T18:12:17.949502+00:00",
-  "competition": {
-    "rank": 2006,
-    "team_count": 3444,
-    "deadline": "2026-09-30 23:59:00",
-    "entered": true
-  },
-  "quota": {
-    "date_utc": "2026-08-09",
-    "daily_limit": 5,
-    "used": 5,
-    "remaining": 0,
-    "reserved_slots": 1
-  },
-  "latest_submission": {
-    "submission_id": 55383465,
-    "fileName": "kaggriculture_adaptive_v19.2-early-scale8_submission.zip",
-    "submitted_at_utc": "2026-08-09 15:46:22.860000",
-    "public_score": 621.8
-  },
-  "best_historical_submission": {
-    "submission_id": 55358894,
-    "fileName": "kaggriculture_adaptive_v19.0.0-rc1_submission.zip",
-    "submitted_at_utc": "2026-08-08 19:32:46.693000",
-    "public_score": 631.2
-  },
-  "today_submission_stats": {
-    "55383465": {"candidate":"v19.2-early-scale8","games":20,"wins":11,"losses":9,"win_rate":0.55,"mean_reward":45073.1,"mean_opponent_reward":42170.15,"mean_margin":2902.95},
-    "55383460": {"candidate":"v19.1-feed-order-guard","games":20,"wins":10,"losses":10,"win_rate":0.5,"mean_reward":40574.3,"mean_opponent_reward":40037.5,"mean_margin":536.8},
-    "55382036": {"candidate":"v19.0.0-live-rc1","games":15,"wins":7,"losses":8,"win_rate":0.4666666667,"mean_reward":39712.3333,"mean_opponent_reward":48999.6667,"mean_margin":-9287.3333},
-    "55381890": {"candidate":"v21.0.0-alpha2-live","games":17,"wins":8,"losses":9,"win_rate":0.4705882353,"mean_reward":42226.1765,"mean_opponent_reward":52658.6471,"mean_margin":-10432.4706},
-    "55381784": {"candidate":"v23.0.0-alpha2-live","games":3,"wins":1,"losses":2,"win_rate":0.3333333333,"mean_reward":1293.3333,"mean_opponent_reward":5292.0,"mean_margin":-3998.6667}
-  },
-  "recent_public_episodes": {"games":174,"wins":84,"losses":90,"ties":0},
-  "automation": {
-    "next_action": "quota_exhausted_observe_only",
-    "one_challenger_at_a_time": true,
-    "minimum_public_games_before_rotation": 10,
-    "auto_submit_allowed_by_quota": false
-  }
+  "schema_version": 2,
+  "generated_at_utc": "2026-08-09T18:18:26.444622+00:00",
+  "competition": {"rank": 2020, "team_count": 3444, "previous_rank": 2006, "rank_delta": 14},
+  "quota": {"date_utc": "2026-08-09", "daily_limit": 5, "used": 5, "remaining": 0, "reserved_slots": 1},
+  "latest_submission": {"submission_id": 55383465, "candidate": "v19.2-early-scale8", "submitted_at_utc": "2026-08-09 15:46:22.860000", "public_score": 599.4, "previous_public_score": 621.8, "score_delta": -22.4, "games": 22, "wins": 11, "losses": 11, "win_rate": 0.5, "mean_reward": 43454.09, "mean_opponent_reward": 42994.5, "mean_margin": 459.59},
+  "best_historical_submission": {"submission_id": 55358894, "candidate": "v19.0.0-rc1", "submitted_at_utc": "2026-08-08 19:32:46.693000", "public_score": 631.2, "games": 38, "wins": 20, "losses": 18, "win_rate": 0.5263},
+  "today_submissions": [
+    {"submission_id": 55383465, "candidate": "v19.2-early-scale8", "submitted_at_utc": "2026-08-09 15:46:22.860000", "public_score": 599.4, "games": 22, "wins": 11, "losses": 11},
+    {"submission_id": 55383460, "candidate": "v19.1-feed-order-guard", "submitted_at_utc": "2026-08-09 15:46:13.910000", "public_score": 616.8, "games": 20, "wins": 10, "losses": 10},
+    {"submission_id": 55382036, "candidate": "v19.0.0-live-rc1", "submitted_at_utc": "2026-08-09 14:48:37.413000", "public_score": 604.3, "games": 15, "wins": 7, "losses": 8},
+    {"submission_id": 55381890, "candidate": "v21.0.0-alpha2-live", "submitted_at_utc": "2026-08-09 14:43:17.310000", "public_score": 631.0, "games": 17, "wins": 8, "losses": 9},
+    {"submission_id": 55381784, "candidate": "v23.0.0-alpha2-live", "submitted_at_utc": "2026-08-09 14:38:56.503000", "public_score": 385.7, "games": 3, "wins": 1, "losses": 2}
+  ],
+  "recent_public_episodes": {"games": 176, "wins": 84, "losses": 92, "ties": 0, "new_since_previous": 2},
+  "new_episodes": [
+    {"episode_id": 91397740, "submission_id": 55383465, "result": "loss", "our_reward": 22019, "opponent_reward": 54899, "opponent": "Daniel Wu", "opponent_submission_id": 55353639},
+    {"episode_id": 91397543, "submission_id": 55383465, "result": "loss", "our_reward": 32509, "opponent_reward": 47577, "opponent": "Borys Tymchenko", "opponent_submission_id": 55385985}
+  ],
+  "replay_signatures": [
+    {"episode_id": 91397740, "result": "loss", "ours": {"first_land2_day": 10, "first_land3_day": null, "peak_hands": 7, "peak_land": 2, "peak_crops": 25, "peak_strawberries": 1, "peak_animals": 4, "peak_cows": 4, "peak_sheep": 0, "peak_money": 22240}, "opponent": {"team": "Daniel Wu", "first_land2_day": 9, "first_land3_day": 10, "peak_hands": 10, "peak_land": 3, "peak_crops": 12, "peak_strawberries": 5, "peak_animals": 14, "peak_cows": 8, "peak_sheep": 6, "peak_money": 54899, "top_market_actions": {"HIRE":270,"SELL_FERTILIZER":56,"SELL_MILK":56,"SELL_WHEAT":55,"BUY_PRODUCT_WHEAT":51}}},
+    {"episode_id": 91397543, "result": "loss", "ours": {"first_land2_day": 10, "first_land3_day": null, "peak_hands": 7, "peak_land": 2, "peak_crops": 26, "peak_strawberries": 2, "peak_animals": 4, "peak_cows": 4, "peak_sheep": 0, "peak_money": 32691}, "opponent": {"team": "Borys Tymchenko", "first_land2_day": 6, "first_land3_day": 11, "peak_hands": 10, "peak_land": 3, "peak_crops": 0, "peak_strawberries": 0, "peak_animals": 20, "peak_cows": 10, "peak_sheep": 10, "peak_money": 47577, "top_market_actions": {"HIRE":276,"BUY_PRODUCT_WHEAT":243,"SELL_FERTILIZER":144,"SELL_MILK":26,"SELL_WOOL":19}}}
+  ],
+  "automation": {"next_action": "quota_exhausted_observe_only", "auto_submit_allowed_by_quota": false, "recommendation": "Do not submit today. Latest V19.2 evidence regressed; next testing cycle should prioritize third-land/greater-livestock throughput challengers against elite replay-derived opponents before consuming a new live slot."}
 }
