@@ -1,6 +1,6 @@
 name: V30 Kaggle Gate Check
 
-# refreshed 2026-08-10 for full leaderboard/rank + quota
+# refreshed 2026-08-10 for authenticated userRank/teamCount + quota
 on:
   push:
     branches: [v30-economic-compounder]
@@ -30,54 +30,39 @@ jobs:
           set -e
           test -n "$KAGGLE_API_TOKEN"
           kaggle competitions submissions kaggriculture --csv > /tmp/submissions.csv
-          mkdir -p /tmp/lb
-          kaggle competitions leaderboard kaggriculture -d -p /tmp/lb -q
+          kaggle competitions list --group entered -v > /tmp/entered.csv
           python - <<'PY'
           import csv, json
           from datetime import datetime, timezone
           from pathlib import Path
 
-          now = datetime.now(timezone.utc)
-          with open('/tmp/submissions.csv', newline='', encoding='utf-8-sig') as f:
+          now=datetime.now(timezone.utc)
+          with open('/tmp/submissions.csv',newline='',encoding='utf-8-sig') as f:
               subs=list(csv.DictReader(f))
+          with open('/tmp/entered.csv',newline='',encoding='utf-8-sig') as f:
+              entered=list(csv.DictReader(f))
+          comp=next((r for r in entered if (r.get('ref') or '').strip()=='kaggriculture'),{})
 
           def parse_date(r):
               for k in ('date','Date','submittedAt','submitted_at'):
                   v=r.get(k)
                   if not v: continue
                   for fmt in ('%Y-%m-%d %H:%M:%S.%f','%Y-%m-%d %H:%M:%S','%Y-%m-%dT%H:%M:%S.%fZ','%Y-%m-%dT%H:%M:%SZ'):
-                      try: return datetime.strptime(v,fmt).replace(tzinfo=timezone.utc)
-                      except Exception: pass
+                      try:return datetime.strptime(v,fmt).replace(tzinfo=timezone.utc)
+                      except Exception:pass
               return None
-
-          today=[r for r in subs if (parse_date(r) and parse_date(r).date()==now.date())]
+          today=[r for r in subs if parse_date(r) and parse_date(r).date()==now.date()]
           hard_limit=5
-          remaining=max(0,hard_limit-len(today))
-
-          csvs=list(Path('/tmp/lb').glob('*.csv'))
-          if not csvs:
-              raise RuntimeError('Downloaded leaderboard CSV not found')
-          lb_path=csvs[0]
-          with lb_path.open(newline='',encoding='utf-8-sig') as f:
-              lb=list(csv.DictReader(f))
-          team_count=len(lb)
-          target=None
-          rank=None
-          for i,row in enumerate(lb,1):
-              name=(row.get('teamName') or row.get('TeamName') or row.get('team_name') or '').strip()
-              if name.lower()=='gnr8tr':
-                  target=row; rank=i; break
           payload={
               'utc_now':now.isoformat(),
+              'gnr8tr_rank':int(comp.get('userRank') or 0),
+              'team_count':int(comp.get('teamCount') or 0),
+              'competition_row':comp,
               'submissions_today_utc':len(today),
               'hard_daily_limit':hard_limit,
-              'remaining_today':remaining,
-              'gate_open':remaining>0,
-              'team_count':team_count,
-              'gnr8tr_rank':rank,
-              'gnr8tr_row':target,
+              'remaining_today':max(0,hard_limit-len(today)),
+              'gate_open':len(today)<hard_limit,
               'recent_submissions':subs[:15],
-              'leaderboard_file':lb_path.name,
           }
           Path('/tmp/gate.json').write_text(json.dumps(payload,indent=2,default=str))
           print(json.dumps(payload,indent=2,default=str))
