@@ -9,7 +9,7 @@ permissions:
 jobs:
   submit:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     env:
       KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
       KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
@@ -23,89 +23,123 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: pip install -q kaggle kaggle-environments
-      - name: Compile and smoke V32.4
+      - name: Build single-file standalone V32.4
         run: |
-          python -m py_compile agents/v32_4_surplus_land.py agents/v19_2_early_scale8.py agents/v19_livestock_compound.py agents/v15_champion.py
+          mkdir -p dist
+          python - <<'PY'
+          from pathlib import Path
+          import base64, zlib
+          mods = [
+              ('agents.v15_champion','agents/v15_champion.py'),
+              ('agents.v19_livestock_compound','agents/v19_livestock_compound.py'),
+              ('agents.v19_2_early_scale8','agents/v19_2_early_scale8.py'),
+              ('agents.v32_4_surplus_land','agents/v32_4_surplus_land.py'),
+          ]
+          payloads=[]
+          for name,path in mods:
+              src=Path(path).read_text(encoding='utf-8')
+              payloads.append((name, base64.b64encode(zlib.compress(src.encode(),9)).decode()))
+          out = [
+              'import sys, types, base64, zlib',
+              "agents = types.ModuleType('agents')",
+              "agents.__path__ = []",
+              "sys.modules['agents'] = agents",
+              f'_PAYLOADS = {payloads!r}',
+              'for _name, _blob in _PAYLOADS:',
+              '    _mod = types.ModuleType(_name)',
+              "    _mod.__package__ = 'agents'",
+              '    sys.modules[_name] = _mod',
+              "    setattr(agents, _name.rsplit('.',1)[1], _mod)",
+              "    exec(compile(zlib.decompress(base64.b64decode(_blob)).decode('utf-8'), '<embedded:'+_name+'>', 'exec'), _mod.__dict__)",
+              "agent = sys.modules['agents.v32_4_surplus_land'].agent",
+          ]
+          Path('dist/kaggriculture_v32.4_standalone.py').write_text('\n'.join(out)+'\n',encoding='utf-8')
+          PY
+          python -m py_compile dist/kaggriculture_v32.4_standalone.py
+          wc -c dist/kaggriculture_v32.4_standalone.py
+      - name: Test exact file through Kaggle Environments agent loader
+        run: |
+          rm -rf /tmp/v324clean && mkdir /tmp/v324clean
+          cp dist/kaggriculture_v32.4_standalone.py /tmp/v324clean/submission.py
+          cd /tmp/v324clean
           python - <<'PY'
           from kaggle_environments import make
-          import agents.v32_4_surplus_land as a
-          a.reset_state()
-          env=make('kaggriculture',configuration={'seed':329004},debug=True)
-          env.run([a.agent,'starter'])
+          env=make('kaggriculture',configuration={'seed':329104},debug=True)
+          env.run(['submission.py','starter'])
           st=env.state[0]
-          print('status=',st.status,'reward=',st.reward)
+          print('FILE-LOADER status=',st.status,'reward=',st.reward)
           assert str(st.status) not in {'ERROR','INVALID','TIMEOUT'}
           PY
-      - name: Build submission zip
-        run: |
-          rm -rf dist /tmp/v324pkg /tmp/v324smoke
-          mkdir -p dist /tmp/v324pkg/agents /tmp/v324smoke
-          printf 'from agents.v32_4_surplus_land import agent\n' > /tmp/v324pkg/main.py
-          cp agents/*.py /tmp/v324pkg/agents/
-          (cd /tmp/v324pkg && zip -qr "$GITHUB_WORKSPACE/dist/kaggriculture_v32.4_surplus-land_submission.zip" main.py agents)
-          (cd /tmp/v324smoke && unzip -q "$GITHUB_WORKSPACE/dist/kaggriculture_v32.4_surplus-land_submission.zip")
-          PYTHONPATH=/tmp/v324smoke python - <<'PY'
-          import main
-          assert callable(main.agent)
-          print('packaged main import OK')
-          PY
-      - name: Check Kaggle auth and current submissions
+      - name: Capture pre-submit rows
         run: |
           kaggle competitions submissions -c kaggriculture -v > /tmp/before.txt 2>&1
-          head -20 /tmp/before.txt
-      - name: Submit V32.4 and capture response
+          head -15 /tmp/before.txt
+      - name: Submit standalone V32.4
         id: submit
-        continue-on-error: true
         run: |
           set +e
           kaggle competitions submit -c kaggriculture \
-            -f dist/kaggriculture_v32.4_surplus-land_submission.zip \
-            -m 'V32.4 surplus-funded second-land live test' \
-            > /tmp/submit.txt 2>&1
+            -f dist/kaggriculture_v32.4_standalone.py \
+            -m 'V32.4 standalone surplus-land live test' > /tmp/submit.txt 2>&1
           rc=$?
           cat /tmp/submit.txt
           echo "rc=$rc" >> "$GITHUB_OUTPUT"
           exit "$rc"
-      - name: Refresh live submission rows
-        if: always()
+      - name: Poll Kaggle until terminal status
+        id: poll
+        if: success()
         run: |
-          sleep 15
-          set +e
-          kaggle competitions submissions -c kaggriculture -v > /tmp/after.txt 2>&1
-          head -25 /tmp/after.txt
-          exit 0
-      - name: Post exact result to issue 16
+          set -e
+          for i in $(seq 1 18); do
+            kaggle competitions submissions -c kaggriculture -v > /tmp/after.txt 2>&1
+            row=$(grep 'V32.4 standalone surplus-land live test' /tmp/after.txt | head -1 || true)
+            echo "$row"
+            if echo "$row" | grep -q 'SubmissionStatus.COMPLETE'; then
+              echo 'terminal=COMPLETE' >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            if echo "$row" | grep -q 'SubmissionStatus.ERROR'; then
+              echo 'terminal=ERROR' >> "$GITHUB_OUTPUT"
+              exit 2
+            fi
+            sleep 20
+          done
+          echo 'terminal=PENDING_TIMEOUT' >> "$GITHUB_OUTPUT"
+          exit 3
+      - name: Post exact terminal result to issue 16
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           SUBMIT_RC: ${{ steps.submit.outputs.rc }}
+          TERMINAL: ${{ steps.poll.outputs.terminal }}
         run: |
+          kaggle competitions submissions -c kaggriculture -v > /tmp/final.txt 2>&1 || true
           {
-            echo '## V32.4 Kaggle live submission retry'
+            echo '## V32.4 standalone Kaggle retry'
             echo
-            echo '**Source:** `agent/v32.4-surplus-land`'
-            echo '**File:** `kaggriculture_v32.4_surplus-land_submission.zip`'
-            echo "**Submit exit code:** \`${SUBMIT_RC:-unknown}\`"
+            echo '**File:** `kaggriculture_v32.4_standalone.py`'
+            echo "**Upload rc:** \`${SUBMIT_RC:-unknown}\`"
+            echo "**Terminal status:** \`${TERMINAL:-unknown}\`"
             echo
-            echo '### Submit response'
+            echo '### Upload response'
             echo '```text'
-            if [ -f /tmp/submit.txt ]; then cat /tmp/submit.txt; else echo 'No submit output captured'; fi
+            cat /tmp/submit.txt 2>/dev/null || true
             echo '```'
-            echo
-            echo '### Newest Kaggle submission rows'
+            echo '### Current matching row'
             echo '```text'
-            if [ -f /tmp/after.txt ]; then head -25 /tmp/after.txt; else echo 'No post-submit listing captured'; fi
+            grep 'V32.4 standalone surplus-land live test' /tmp/final.txt | head -1 || true
             echo '```'
-          } > /tmp/v324.md
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v324.md
+          } > /tmp/result.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/result.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v32-4-live-submission-package-retry
+          name: v32-4-standalone-live
           path: |
             dist/
             /tmp/before.txt
             /tmp/submit.txt
             /tmp/after.txt
+            /tmp/final.txt
           if-no-files-found: ignore
           retention-days: 14
