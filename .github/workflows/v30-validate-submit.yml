@@ -1,10 +1,9 @@
-name: V30 Validate and Submit
+name: V30.1 Validate and Submit
 
 on:
   push:
     branches: [v30-economic-compounder]
-    paths:
-      - '.github/workflows/v30-validate-submit.yml'
+    paths: ['.github/workflows/v30-validate-submit.yml']
   workflow_dispatch:
 
 permissions:
@@ -21,225 +20,175 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
-        with:
-          python-version: '3.11'
+        with: {python-version: '3.11'}
 
-      - name: Install Kaggle and pinned environment
+      - name: Install pinned Kaggriculture environment
         run: |
           set -euo pipefail
           test -n "$KAGGLE_API_TOKEN"
-          python -m pip install -q --upgrade pip
-          python -m pip install -q kaggle
+          python -m pip install -q --upgrade pip kaggle
           git clone -q https://github.com/Kaggle/kaggle-environments.git /tmp/kaggle-environments
           git -C /tmp/kaggle-environments checkout -q 3fe0e0b58eb6ac1aaffcb60bf19726a65377b4a2
           python -m pip install -q /tmp/kaggle-environments
 
-      - name: Reconstruct candidate and proxy baseline
+      - name: Reconstruct V19 proxy and build V30.1 overlay
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64, zlib
+          import base64,zlib
           root=Path('research/v30/payload')
-          for name in ('v30','v19'):
-              payload=''.join((root/f'{name}.part{i}').read_text().strip() for i in range(4))
-              data=zlib.decompress(base64.b64decode(payload))
-              Path(f'/tmp/{name}.py').write_bytes(data)
-              print(name, len(data))
+          payload=''.join((root/f'v19.part{i}').read_text().strip() for i in range(4))
+          base=zlib.decompress(base64.b64decode(payload)).decode()
+          overlay=r'''
+
+# V30.1 conservative compounder overlay on the proven V19 execution core.
+_V30_BASE_AGENT = agent
+
+def _v30_productive_count(farm):
+    tiles=farm.get("tiles",[]) if isinstance(farm,Mapping) else []
+    productive=occupied=empties=0
+    if isinstance(tiles,list):
+        for row in tiles:
+            if not isinstance(row,list): continue
+            for tile in row:
+                if tile is None: empties+=1
+                elif tile != "LOCKED":
+                    occupied+=1
+                    if isinstance(tile,Mapping) and str(tile.get("kind","")).upper() in ("PLANT","COOP","PASTURE"):
+                        productive+=1
+    return productive,occupied,empties
+
+def _v30_open_land_orders(obs,farm,orders):
+    day=int(obs.get("day",0) or 0); money=float(farm.get("money",0) or 0)
+    unlocked=farm.get("unlocked_quadrants",[]); n=len(unlocked) if isinstance(unlocked,list) else 1
+    productive,occupied,_=_v30_productive_count(farm)
+    if any(isinstance(o,list) and o[:1]==["BUY_LAND"] for o in orders): return orders
+    buy=(n==1 and 5<=day<=15 and occupied>=18 and money>=3500) or (n==2 and 9<=day<=19 and productive>=34 and money>=6500)
+    if buy:
+        i=0
+        while i<len(orders) and isinstance(orders[i],list) and orders[i][:1]==["SELL"]: i+=1
+        orders.insert(i,["BUY_LAND"])
+    return orders
+
+def _v30_incremental_hiring(obs,farm,orders):
+    day=int(obs.get("day",0) or 0); hour=int(obs.get("hour",0) or 0)
+    if hour>1 or day>=26: return orders
+    unlocked=farm.get("unlocked_quadrants",[]); n=len(unlocked) if isinstance(unlocked,list) else 1
+    money=float(farm.get("money",0) or 0); tasks=_count_assignable_tasks(obs,farm)
+    hands=farm.get("hands",[]); current=len(hands) if isinstance(hands,list) else 0
+    already=sum(1 for o in orders if isinstance(o,list) and o[:1]==["HIRE"])
+    target=4
+    if n>=2 and money>=2500 and tasks>=26: target=5
+    if n>=3 and money>=5000 and tasks>=36: target=6
+    for _ in range(min(max(0,target-current-already),2)):
+        if len(orders)<10: orders.append(["HIRE"])
+    return orders
+
+def agent(observation: Any, configuration: Any=None) -> Dict[str,Any]:
+    obs=_obs(observation); result=dict(_V30_BASE_AGENT(observation,configuration))
+    player=int(obs.get("player",0) or 0); farms=obs.get("farms",[])
+    if not isinstance(farms,list) or player>=len(farms): return result
+    farm=_m(farms[player]); orders=[list(o) for o in result.get("market",[]) if isinstance(o,list)]
+    orders=_v30_open_land_orders(obs,farm,orders)
+    orders=_v30_incremental_hiring(obs,farm,orders)
+    return {"farmer":result.get("farmer",["PASS"]),"hands":result.get("hands",[]),"market":orders[:10]}
+'''
+          Path('/tmp/v19.py').write_text(base)
+          Path('/tmp/v30.py').write_text(base+overlay)
           PY
-          python -m py_compile /tmp/v30.py /tmp/v19.py
+          python -m py_compile /tmp/v19.py /tmp/v30.py
 
-      - name: Import and smoke test
-        run: |
-          python - <<'PY'
-          import importlib.util
-          def load(path,name):
-              spec=importlib.util.spec_from_file_location(name,path)
-              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
-              assert callable(getattr(mod,'agent',None)), name
-              return mod
-          load('/tmp/v30.py','v30_smoke')
-          load('/tmp/v19.py','v19_smoke')
-          print('compile/import/callable: PASS')
-          PY
-
-      - name: Paired challenger benchmark
-        run: |
-          python - <<'PY'
-          import importlib.util, json, statistics, time, traceback
-          from pathlib import Path
-          from kaggle_environments import make
-
-          BAD={'ERROR','INVALID','TIMEOUT'}
-          seeds=list(range(61000,61005))
-          rows=[]
-
-          def load(path,name):
-              spec=importlib.util.spec_from_file_location(name,path)
-              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
-              return mod
-
-          for seat in (0,1):
-              for seed in seeds:
-                  v30=load('/tmp/v30.py',f'v30_{seat}_{seed}_{time.time_ns()}')
-                  v19=load('/tmp/v19.py',f'v19_{seat}_{seed}_{time.time_ns()}')
-                  agents=[v30.agent,v19.agent] if seat==0 else [v19.agent,v30.agent]
-                  env=make('kaggriculture',configuration={'seed':seed,'actTimeout':1},debug=False)
-                  err=None
-                  try:
-                      env.run(agents)
-                  except Exception:
-                      err=traceback.format_exc()
-                  cs=env.state[seat]; os=env.state[1-seat]
-                  cr=float(cs.reward or 0); orw=float(os.reward or 0)
-                  rows.append({
-                      'seed':seed,'candidate_seat':seat,
-                      'v30_reward':cr,'v19_reward':orw,'delta':cr-orw,
-                      'v30_status':str(cs.status),'v19_status':str(os.status),
-                      'environment_error':err,
-                  })
-                  print(rows[-1])
-
-          wins=sum(r['delta']>0 for r in rows)
-          losses=sum(r['delta']<0 for r in rows)
-          ties=len(rows)-wins-losses
-          mean30=statistics.mean(r['v30_reward'] for r in rows)
-          mean19=statistics.mean(r['v19_reward'] for r in rows)
-          median_delta=statistics.median(r['delta'] for r in rows)
-          bad=sum((r['v30_status'] in BAD) or bool(r['environment_error']) for r in rows)
-          # Never ship a known regression. With 10 paired games, require a positive
-          # match record and non-inferior mean terminal cash versus the available V19 proxy.
-          promote=(bad==0 and wins>losses and mean30>=mean19)
-          summary={
-              'games':len(rows),'wins':wins,'losses':losses,'ties':ties,
-              'mean_v30':mean30,'mean_v19_proxy':mean19,
-              'mean_delta':mean30-mean19,'median_delta':median_delta,
-              'bad_games':bad,'promotion_pass':promote,
-              'baseline_note':'available standalone V19 proxy; exact V19.2 submitted artifact unavailable locally',
-          }
-          Path('/tmp/benchmark.json').write_text(json.dumps({'summary':summary,'games':rows},indent=2))
-          print(json.dumps(summary,indent=2))
-          if not promote:
-              raise SystemExit(42)
-          PY
+      - name: Paired both-seat promotion benchmark
         id: benchmark
         continue-on-error: true
+        run: |
+          python - <<'PY'
+          import importlib.util,json,statistics,time,traceback
+          from pathlib import Path
+          from kaggle_environments import make
+          BAD={'ERROR','INVALID','TIMEOUT'}; rows=[]; seeds=range(61200,61206)
+          def load(path,name):
+              s=importlib.util.spec_from_file_location(name,path); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); return m
+          for seat in (0,1):
+            for seed in seeds:
+              a=load('/tmp/v30.py',f'a{seat}_{seed}_{time.time_ns()}'); b=load('/tmp/v19.py',f'b{seat}_{seed}_{time.time_ns()}')
+              env=make('kaggriculture',configuration={'seed':seed,'actTimeout':1},debug=False)
+              err=None
+              try: env.run([a.agent,b.agent] if seat==0 else [b.agent,a.agent])
+              except Exception: err=traceback.format_exc()
+              cs,os=env.state[seat],env.state[1-seat]; cr=float(cs.reward or 0); br=float(os.reward or 0)
+              rows.append({'seed':seed,'seat':seat,'v30_reward':cr,'v19_reward':br,'delta':cr-br,'v30_status':str(cs.status),'v19_status':str(os.status),'error':err})
+          wins=sum(r['delta']>0 for r in rows); losses=sum(r['delta']<0 for r in rows); ties=len(rows)-wins-losses
+          m30=statistics.mean(r['v30_reward'] for r in rows); m19=statistics.mean(r['v19_reward'] for r in rows)
+          bad=sum(r['v30_status'] in BAD or bool(r['error']) for r in rows)
+          promote=bad==0 and wins>losses and m30>=m19
+          summary={'candidate':'V30.1 conservative compounder','games':len(rows),'wins':wins,'losses':losses,'ties':ties,'mean_v30':m30,'mean_v19_proxy':m19,'mean_delta':m30-m19,'median_delta':statistics.median(r['delta'] for r in rows),'bad_games':bad,'promotion_pass':promote,'baseline_note':'standalone V19 proxy; exact V19.2 submitted artifact unavailable locally'}
+          Path('/tmp/benchmark.json').write_text(json.dumps({'summary':summary,'games':rows},indent=2)); print(json.dumps(summary,indent=2))
+          if not promote: raise SystemExit(42)
+          PY
 
-      - name: Query live rank and quota
+      - name: Query authenticated rank and quota
         if: always()
         run: |
-          set -euo pipefail
-          kaggle competitions submissions kaggriculture --csv > /tmp/submissions_pre.csv
+          kaggle competitions submissions kaggriculture --csv > /tmp/subs_pre.csv
           kaggle competitions list --group entered -v > /tmp/entered.csv
           python - <<'PY'
           import csv,json
           from datetime import datetime,timezone
           from pathlib import Path
           now=datetime.now(timezone.utc)
-          with open('/tmp/submissions_pre.csv',newline='',encoding='utf-8-sig') as f: subs=list(csv.DictReader(f))
-          with open('/tmp/entered.csv',newline='',encoding='utf-8-sig') as f: entered=list(csv.DictReader(f))
-          comp=next((r for r in entered if any('kaggriculture' in str(v).lower() for v in r.values())),{})
-          low={str(k).lower():v for k,v in comp.items()}
-          def dt(r):
-              v=r.get('date') or r.get('Date') or ''
-              for fmt in ('%Y-%m-%d %H:%M:%S.%f','%Y-%m-%d %H:%M:%S'):
-                  try:return datetime.strptime(v,fmt).replace(tzinfo=timezone.utc)
-                  except:pass
-          today=[r for r in subs if dt(r) and dt(r).date()==now.date()]
-          state={
-              'utc_now':now.isoformat(),
-              'rank':int(low.get('userrank') or 0),
-              'team_count':int(low.get('teamcount') or 0),
-              'used_today':len(today),'remaining_today':max(0,5-len(today)),
-              'gate_open':len(today)<5,
-              'recent_submissions':subs[:10],
-          }
-          Path('/tmp/live_pre.json').write_text(json.dumps(state,indent=2))
-          print(json.dumps(state,indent=2))
+          subs=list(csv.DictReader(open('/tmp/subs_pre.csv',encoding='utf-8-sig'))); entered=list(csv.DictReader(open('/tmp/entered.csv',encoding='utf-8-sig')))
+          comp=next((r for r in entered if any('kaggriculture' in str(v).lower() for v in r.values())),{}); low={str(k).lower():v for k,v in comp.items()}
+          def d(r):
+            v=r.get('date') or r.get('Date') or ''
+            for f in ('%Y-%m-%d %H:%M:%S.%f','%Y-%m-%d %H:%M:%S'):
+              try:return datetime.strptime(v,f).replace(tzinfo=timezone.utc)
+              except:pass
+          used=sum(1 for r in subs if d(r) and d(r).date()==now.date())
+          state={'rank':int(low.get('userrank') or 0),'team_count':int(low.get('teamcount') or 0),'used_today':used,'remaining_today':max(0,5-used),'gate_open':used<5,'recent_submissions':subs[:10]}
+          Path('/tmp/live.json').write_text(json.dumps(state,indent=2)); print(json.dumps(state,indent=2))
           PY
 
-      - name: Package V30
-        if: steps.benchmark.outcome == 'success'
-        run: |
-          set -euo pipefail
-          rm -rf /tmp/v30pkg && mkdir -p /tmp/v30pkg
-          cp /tmp/v30.py /tmp/v30pkg/main.py
-          (cd /tmp/v30pkg && zip -q /tmp/kaggriculture_v30.0.0-alpha1-economic-compounder_submission.zip main.py)
-          unzip -l /tmp/kaggriculture_v30.0.0-alpha1-economic-compounder_submission.zip
-
-      - name: Submit V30 if gate remains open
+      - name: Package and submit V30.1
         if: steps.benchmark.outcome == 'success'
         run: |
           set -euo pipefail
           python - <<'PY'
           import json,sys
-          state=json.load(open('/tmp/live_pre.json'))
-          if not state['gate_open']:
-              print('Submission gate closed; refusing to submit.')
-              sys.exit(43)
+          if not json.load(open('/tmp/live.json'))['gate_open']: sys.exit(43)
           PY
-          kaggle competitions submit kaggriculture \
-            -f /tmp/kaggriculture_v30.0.0-alpha1-economic-compounder_submission.zip \
-            -m 'V30.0.0 alpha1 economic compounder - ROI gated scaling' \
-            | tee /tmp/submit_output.txt
+          mkdir -p /tmp/pkg && cp /tmp/v30.py /tmp/pkg/main.py
+          (cd /tmp/pkg && zip -q /tmp/kaggriculture_v30.1-conservative-compounder_submission.zip main.py)
+          kaggle competitions submit kaggriculture -f /tmp/kaggriculture_v30.1-conservative-compounder_submission.zip -m 'V30.1 conservative compounder - V19 core plus utilization gated scaling' | tee /tmp/submit.txt
           sleep 15
-          kaggle competitions submissions kaggriculture --csv > /tmp/submissions_post.csv
+          kaggle competitions submissions kaggriculture --csv > /tmp/subs_post.csv
 
-      - name: Build result report
+      - name: Report
         if: always()
         run: |
           python - <<'PY'
-          import csv,json,os
+          import csv,json
           from pathlib import Path
+          from datetime import datetime,timezone
           bench=json.loads(Path('/tmp/benchmark.json').read_text()) if Path('/tmp/benchmark.json').exists() else {'summary':{'promotion_pass':False}}
-          live=json.loads(Path('/tmp/live_pre.json').read_text()) if Path('/tmp/live_pre.json').exists() else {}
-          submitted=Path('/tmp/submissions_post.csv').exists()
-          post=[]
-          if submitted:
-              with open('/tmp/submissions_post.csv',newline='',encoding='utf-8-sig') as f: post=list(csv.DictReader(f))
-          new=post[0] if post else None
-          if post:
-              # Count UTC-day submissions using the same calendar day as live query.
-              from datetime import datetime,timezone
-              now=datetime.now(timezone.utc)
-              def dt(r):
-                  v=r.get('date') or r.get('Date') or ''
-                  for fmt in ('%Y-%m-%d %H:%M:%S.%f','%Y-%m-%d %H:%M:%S'):
-                      try:return datetime.strptime(v,fmt).replace(tzinfo=timezone.utc)
-                      except:pass
-              used=sum(1 for r in post if dt(r) and dt(r).date()==now.date())
-              remaining=max(0,5-used)
-          else:
-              used=live.get('used_today'); remaining=live.get('remaining_today')
-          report={
-              'rank_before_submit':live.get('rank'),
-              'team_count':live.get('team_count'),
-              'benchmark':bench.get('summary'),
-              'submitted':submitted,
-              'new_submission':new,
-              'used_today_after':used,
-              'remaining_today_after':remaining,
-              'submit_output':Path('/tmp/submit_output.txt').read_text(errors='replace') if Path('/tmp/submit_output.txt').exists() else None,
-          }
-          Path('/tmp/result.json').write_text(json.dumps(report,indent=2,default=str))
-          print(json.dumps(report,indent=2,default=str))
+          live=json.loads(Path('/tmp/live.json').read_text()) if Path('/tmp/live.json').exists() else {}
+          post=list(csv.DictReader(open('/tmp/subs_post.csv',encoding='utf-8-sig'))) if Path('/tmp/subs_post.csv').exists() else []
+          now=datetime.now(timezone.utc)
+          def d(r):
+            v=r.get('date') or ''
+            for f in ('%Y-%m-%d %H:%M:%S.%f','%Y-%m-%d %H:%M:%S'):
+              try:return datetime.strptime(v,f).replace(tzinfo=timezone.utc)
+              except:pass
+          used=sum(1 for r in post if d(r) and d(r).date()==now.date()) if post else live.get('used_today',0)
+          report={'rank_before_submit':live.get('rank'),'team_count':live.get('team_count'),'benchmark':bench.get('summary'),'submitted':bool(post),'new_submission':post[0] if post else None,'used_today_after':used,'remaining_today_after':max(0,5-used),'submit_output':Path('/tmp/submit.txt').read_text(errors='replace') if Path('/tmp/submit.txt').exists() else None}
+          Path('/tmp/result.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
           PY
-
-      - name: Comment result on PR 15
+      - name: Comment result
         if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
+        env: {GH_TOKEN: '${{ github.token }}'}
         run: |
-          {
-            echo '### V30 validation / submission result'
-            echo
-            echo '```json'
-            cat /tmp/result.json
-            echo '```'
-          } > /tmp/result-comment.md
-          gh pr comment 15 --repo "$GITHUB_REPOSITORY" --body-file /tmp/result-comment.md
-
-      - name: Enforce validation gate
+          { echo '### V30.1 validation / submission result'; echo; echo '```json'; cat /tmp/result.json; echo '```'; } > /tmp/c.md
+          gh pr comment 15 --repo "$GITHUB_REPOSITORY" --body-file /tmp/c.md
+      - name: Enforce gate
         if: steps.benchmark.outcome != 'success'
-        run: |
-          echo 'V30 failed challenger gate; no Kaggle submission was made.'
-          exit 1
+        run: exit 1
