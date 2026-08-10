@@ -5,6 +5,11 @@ crop/livestock/labour logic. Once two quadrants are already unlocked, permit
 additional land purchases only while substantial cash surplus and enough game
 horizon remain. The purpose is to test whether V19.2's ~50k ceiling is caused by
 artificially stopping after the second quadrant.
+
+V33.0.1 fixes one observation bug only: owned quadrant count is inferred from
+the live tile grid instead of relying on an optional `unlocked_quadrants` field.
+The original 26k/36k surplus gates remain unchanged so the economic mechanism
+is still isolated.
 """
 from __future__ import annotations
 from typing import Any, Dict, Mapping
@@ -17,6 +22,40 @@ _LAST_STEP = -1
 
 def _m(v: Any) -> Mapping[str, Any]:
     return v if isinstance(v, Mapping) else {}
+
+
+def _kind(tile: Any) -> str:
+    if tile is None:
+        return "EMPTY"
+    if tile == "LOCKED":
+        return "LOCKED"
+    if isinstance(tile, Mapping):
+        return str(tile.get("kind", tile.get("type", "UNKNOWN"))).upper()
+    return "UNKNOWN"
+
+
+def _owned_quadrants(tiles: Any) -> int:
+    """Infer purchased quadrants from actual unlocked cells.
+
+    The four central shed cells can appear as unlocked across quadrant
+    boundaries, so a quadrant counts as owned only when it has more than four
+    non-LOCKED cells.
+    """
+    if not isinstance(tiles, list) or not tiles:
+        return 1
+    n = len(tiles)
+    h = n // 2
+    counts = [0, 0, 0, 0]
+    for y, row in enumerate(tiles):
+        if not isinstance(row, list):
+            continue
+        for x, tile in enumerate(row):
+            if _kind(tile) == "LOCKED":
+                continue
+            q = 0 if x < h and y < h else 1 if x >= h and y < h else 2 if x < h and y >= h else 3
+            counts[q] += 1
+    owned = sum(c > 4 for c in counts)
+    return max(1, owned)
 
 
 def reset_state() -> None:
@@ -54,7 +93,7 @@ def agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
     _LAST_STEP = step
 
     money = float(farm.get("money", 0) or 0)
-    unlocked = list(farm.get("unlocked_quadrants") or ["NW"])
+    unlocked_count = _owned_quadrants(farm.get("tiles") or [])
     health = _v192._v19._farm_health(farm)
 
     # Base V19.2 owns the first expansion and all operating decisions.
@@ -63,8 +102,7 @@ def agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
 
     serial_expand = False
     threshold = None
-    if len(unlocked) == 2:
-        # Third quadrant: only from strong operating surplus, with ample horizon.
+    if unlocked_count == 2:
         threshold = 26000
         serial_expand = (
             13 <= day <= 20
@@ -72,9 +110,7 @@ def agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
             and int(health.get("weeds", 0) or 0) <= 4
             and int(health.get("danger", 0) or 0) <= 2
         )
-    elif len(unlocked) == 3:
-        # Fourth quadrant: require an even larger surplus so prior districts are
-        # already self-funding before the final scale step.
+    elif unlocked_count == 3:
         threshold = 36000
         serial_expand = (
             15 <= day <= 22
@@ -93,7 +129,7 @@ def agent(observation: Any, configuration: Any = None) -> Dict[str, Any]:
         "day": day,
         "hour": hour,
         "money": money,
-        "unlocked_count": len(unlocked),
+        "unlocked_count": unlocked_count,
         "serial_expand": serial_expand,
         "serial_threshold": threshold,
         "health": dict(health),
