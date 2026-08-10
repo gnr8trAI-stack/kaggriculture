@@ -1,0 +1,106 @@
+name: run-v34-1-crew4-isolated
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/run-v34-1-crew4-isolated.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout V19.2 control
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v32.4-surplus-land
+          path: baseline
+      - name: Checkout V34.1 candidate
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v34.1-crew4-isolated
+          path: candidate
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install environment
+        run: pip install -q kaggle-environments
+      - name: Run isolated V19.2 control
+        working-directory: baseline
+        run: |
+          python - <<'PY'
+          import json
+          from kaggle_environments import make
+          import agents.v19_2_early_scale8 as a
+          rows=[]
+          for seed in range(341000,341016):
+              for seat in (0,1):
+                  a.reset_state()
+                  env=make('kaggriculture', configuration={'seed':seed}, debug=True)
+                  env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+                  st=env.state[seat]
+                  tel=a.get_telemetry(); last=tel[-1] if tel else {}
+                  rows.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
+                               'cow_count':int(last.get('cow_count',0) or 0),'active_cows':int(last.get('active_cows',0) or 0),
+                               'unlocked_count':int(last.get('unlocked_count',0) or 0)})
+          open('/tmp/v341_base.json','w').write(json.dumps(rows))
+          PY
+      - name: Run isolated V34.1 candidate
+        working-directory: candidate
+        run: |
+          python - <<'PY'
+          import json
+          from kaggle_environments import make
+          import agents.v34_1_crew4_isolated as a
+          rows=[]
+          for seed in range(341000,341016):
+              for seat in (0,1):
+                  a.reset_state()
+                  env=make('kaggriculture', configuration={'seed':seed}, debug=True)
+                  env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+                  st=env.state[seat]
+                  tel=a.get_telemetry(); last=tel[-1] if tel else {}
+                  rows.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
+                               'cow_count':int(last.get('cow_count',0) or 0),'active_cows':int(last.get('active_cows',0) or 0),
+                               'unlocked_count':int(last.get('unlocked_count',0) or 0)})
+          open('/tmp/v341_cand.json','w').write(json.dumps(rows))
+          PY
+      - name: Summarize paired benchmark
+        run: |
+          python - <<'PY'
+          import json, statistics
+          b=json.load(open('/tmp/v341_base.json')); c=json.load(open('/tmp/v341_cand.json'))
+          def s(rows):
+              r=[x['reward'] for x in rows]; sr=sorted(r)
+              return {'games':len(rows),'invalid':sum(x['status'] in ('ERROR','INVALID','TIMEOUT') for x in rows),
+                      'mean':statistics.mean(r),'median':statistics.median(r),'min':min(r),
+                      'p10':sr[max(0,int(len(sr)*.1)-1)],'max':max(r),
+                      'median_cows':statistics.median(x['cow_count'] for x in rows),
+                      'median_active_cows':statistics.median(x['active_cows'] for x in rows),
+                      'active8_games':sum(x['active_cows']>=8 for x in rows),
+                      'multi_land_games':sum(x['unlocked_count']>=2 for x in rows)}
+          bs=s(b); cs=s(c); d=[c[i]['reward']-b[i]['reward'] for i in range(len(b))]
+          report={'version':'34.1.0-crew4-isolated',
+                  'mechanism':'V34.0 4->8 cow target unchanged; only livestock service crew 2->4 hands',
+                  'baseline_v19_2':bs,'candidate_v34_1':cs,
+                  'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),
+                            'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
+                  'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000}
+          open('/tmp/v341_report.json','w').write(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
+          PY
+      - name: Record result in issue 16
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo '## V34.1 isolated livestock-service benchmark'; echo; echo '```json'; cat /tmp/v341_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v341.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v341.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v34-1-crew4-isolated-benchmark
+          path: /tmp/v341_report.json
+          if-no-files-found: ignore
+          retention-days: 14
