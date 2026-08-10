@@ -1,5 +1,4 @@
-name: run-v33.1.1-grid-industrial-milk
-# trigger: v3311-merge-20260811
+name: run-v33.1.2-grid-industrial-milk
 on:
   push:
     branches: [main]
@@ -16,18 +15,24 @@ jobs:
       - name: Announce benchmark start
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V33.1.1 benchmark started\n\nRun: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\n\nRef under test: \`agent/v33.1-industrial-milk\`"
+        run: gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V33.1.2 benchmark started\nRun: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
       - uses: actions/checkout@v6
         with:
-          ref: agent/v33.1-industrial-milk
+          ref: agent/v32.4-surplus-land
+          fetch-depth: 0
+      - name: Overlay V33.1 onto dependency-complete base
+        run: |
+          git fetch origin agent/v33.1-industrial-milk
+          git checkout FETCH_HEAD -- agents/v33_industrial.py agents/v33_1_industrial_milk.py
+          test -f agents/v19_2_early_scale8.py
+          test -f agents/v19_livestock_compound.py
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install
         run: pip install -q kaggle-environments
-      - name: Compile corrected V33.1
-        run: python -m py_compile agents/v33_1_industrial_milk.py agents/v33_industrial.py
+      - name: Compile
+        run: python -m py_compile agents/v33_1_industrial_milk.py agents/v33_industrial.py agents/v19_2_early_scale8.py agents/v19_livestock_compound.py
       - name: Run 32-game industrial benchmark
         run: |
           python - <<'PY'
@@ -35,45 +40,29 @@ jobs:
           from kaggle_environments import make
           import agents.v33_1_industrial_milk as a
           results=[]
-          for seed in range(331100,331116):
+          for seed in range(331200,331216):
               for seat in (0,1):
                   a.reset_state(); env=make('kaggriculture',configuration={'seed':seed},debug=True)
                   env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
                   st=env.state[seat]; tel=a.get_telemetry(); last=tel[-1] if tel else {}
                   qs=[last.get(f'q{i}',{}) for i in range(1,5)]
-                  unlocked=[int(q.get('unlocked',0) or 0) for q in qs]
-                  productive=[int(q.get('productive',0) or 0) for q in qs]
-                  total_u=sum(unlocked); total_p=sum(productive)
-                  results.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
-                    'lands':int(last.get('lands',0) or 0),'hands':int(last.get('hands',0) or 0),
-                    'productive':total_p,'utilization':total_p/max(1,total_u),
-                    'q_productive':productive,'q_unlocked':unlocked,'q3_animals':int(qs[2].get('animals',0) or 0),
-                    'q3_pasture':int(qs[2].get('pasture',0) or 0),'money':float(last.get('money',0) or 0),
-                    'should_expand':bool(last.get('should_expand',False))})
-          rewards=[r['reward'] for r in results]
-          invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
-          report={'version':'33.1.1-grid-industrial-milk','games':len(results),'invalid':invalid,
-            'mean_reward':statistics.mean(rewards),'median_reward':statistics.median(rewards),'min_reward':min(rewards),'p10_reward':sorted(rewards)[max(0,int(len(rewards)*.1)-1)],'max_reward':max(rewards),
-            'two_land_games':sum(r['lands']>=2 for r in results),'three_land_games':sum(r['lands']>=3 for r in results),'four_land_games':sum(r['lands']>=4 for r in results),
-            'q3_active_games':sum(r['q_productive'][2]>=4 for r in results),'q4_active_games':sum(r['q_productive'][3]>=6 for r in results),
-            'median_utilization':statistics.median(r['utilization'] for r in results),'median_hands':statistics.median(r['hands'] for r in results),
-            'median_q3_animals':statistics.median(r['q3_animals'] for r in results),'median_q3_pasture':statistics.median(r['q3_pasture'] for r in results),
-            'industrial_gate': invalid==0 and sum(r['lands']>=4 for r in results)>=24 and sum(r['q_productive'][2]>=4 for r in results)>=24 and sum(r['q_productive'][3]>=6 for r in results)>=24 and statistics.median(r['hands'] for r in results)>=8 and statistics.median(r['q3_animals'] for r in results)>=8,
-            'ready_150k': invalid==0 and statistics.median(rewards)>=150000 and min(rewards)>=100000,
-            'games_detail':results}
-          open('/tmp/v331_report.json','w').write(json.dumps(report,indent=2)); print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+                  u=[int(q.get('unlocked',0) or 0) for q in qs]; p=[int(q.get('productive',0) or 0) for q in qs]
+                  results.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),'lands':int(last.get('lands',0) or 0),'hands':int(last.get('hands',0) or 0),'utilization':sum(p)/max(1,sum(u)),'q_productive':p,'q3_animals':int(qs[2].get('animals',0) or 0),'q3_pasture':int(qs[2].get('pasture',0) or 0),'money':float(last.get('money',0) or 0)})
+          rewards=[r['reward'] for r in results]; invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
+          report={'version':'33.1.2-grid-industrial-milk','games':len(results),'invalid':invalid,'mean_reward':statistics.mean(rewards),'median_reward':statistics.median(rewards),'min_reward':min(rewards),'p10_reward':sorted(rewards)[max(0,int(len(rewards)*.1)-1)],'max_reward':max(rewards),'two_land_games':sum(r['lands']>=2 for r in results),'three_land_games':sum(r['lands']>=3 for r in results),'four_land_games':sum(r['lands']>=4 for r in results),'q3_active_games':sum(r['q_productive'][2]>=4 for r in results),'q4_active_games':sum(r['q_productive'][3]>=6 for r in results),'median_utilization':statistics.median(r['utilization'] for r in results),'median_hands':statistics.median(r['hands'] for r in results),'median_q3_animals':statistics.median(r['q3_animals'] for r in results),'median_q3_pasture':statistics.median(r['q3_pasture'] for r in results),'industrial_gate':invalid==0 and sum(r['lands']>=4 for r in results)>=24 and sum(r['q_productive'][2]>=4 for r in results)>=24 and sum(r['q_productive'][3]>=6 for r in results)>=24 and statistics.median(r['hands'] for r in results)>=8 and statistics.median(r['q3_animals'] for r in results)>=8,'ready_150k':invalid==0 and statistics.median(rewards)>=150000 and min(rewards)>=100000,'games_detail':results}
+          open('/tmp/v3312_report.json','w').write(json.dumps(report,indent=2)); print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
-      - name: Post result to issue 16
+      - name: Post result
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V33.1.1 Grid Industrial Milk benchmark'; echo; echo "Run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo; echo '```json'; cat /tmp/v331_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v331.md
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v331.md
+          { echo '## V33.1.2 Grid Industrial Milk benchmark'; echo "Run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo '```json'; cat /tmp/v3312_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v3312.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v3312.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-1-1-grid-industrial-milk-benchmark
-          path: /tmp/v331_report.json
+          name: v33-1-2-grid-industrial-milk-benchmark
+          path: /tmp/v3312_report.json
           if-no-files-found: ignore
           retention-days: 14
