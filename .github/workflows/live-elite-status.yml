@@ -22,11 +22,11 @@ jobs:
           mkdir -p artifacts
           kaggle competitions submissions kaggriculture -v -q > artifacts/submissions.csv
           kaggle competitions leaderboard kaggriculture -s gnr8trAI-stack --csv > artifacts/leaderboard.csv || true
-          head -12 artifacts/submissions.csv > artifacts/submissions_head.txt
+          head -14 artifacts/submissions.csv > artifacts/submissions_head.txt
           cat artifacts/leaderboard.csv > artifacts/leaderboard_head.txt || true
       - name: Post status to issue
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## Elite live status'; echo; echo '```text'; cat artifacts/submissions_head.txt; echo '```'; echo; echo '```text'; cat artifacts/leaderboard_head.txt; echo '```'; } > /tmp/status.md
+          { echo '## Elite live status refresh'; echo; echo '```text'; cat artifacts/submissions_head.txt; echo '```'; echo; echo '```text'; cat artifacts/leaderboard_head.txt; echo '```'; } > /tmp/status.md
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/status.md
