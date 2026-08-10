@@ -1,0 +1,32 @@
+name: live-elite-status
+on:
+  push:
+    branches: [live/elite-industrial-180k]
+    paths: ['.github/workflows/live-elite-status.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle
+      - name: Capture live status
+        run: |
+          mkdir -p artifacts
+          kaggle competitions submissions kaggriculture -v -q > artifacts/submissions.csv
+          kaggle competitions leaderboard kaggriculture -s gnr8trAI-stack --csv > artifacts/leaderboard.csv || true
+          head -12 artifacts/submissions.csv > artifacts/submissions_head.txt
+          cat artifacts/leaderboard.csv > artifacts/leaderboard_head.txt || true
+      - name: Post status to issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo '## Elite live status'; echo; echo '```text'; cat artifacts/submissions_head.txt; echo '```'; echo; echo '```text'; cat artifacts/leaderboard_head.txt; echo '```'; } > /tmp/status.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/status.md
