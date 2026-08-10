@@ -1,0 +1,64 @@
+name: v33-crop-probe
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/v33-crop-probe.yml']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33-industrial
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - name: Run crop lifecycle probe
+        run: |
+          python - <<'PY'
+          import json, os
+          from kaggle_environments import make
+          rows=[]
+          target=(3,4); shed=(4,4)
+          def kind(t):
+            if t is None:return 'EMPTY'
+            if t=='LOCKED':return 'LOCKED'
+            if isinstance(t,dict):return str(t.get('kind',t.get('type','UNKNOWN'))).upper()
+            return 'UNKNOWN'
+          def agent(obs,config=None):
+            o=obs if isinstance(obs,dict) else {k:getattr(obs,k) for k in ('player','step','day','hour','farms','private','market','town') if hasattr(obs,k)}
+            p=int(o.get('player',0)); farm=(o.get('farms') or [{}])[p]; prv=o.get('private') or {}; pos=tuple(farm.get('farmer') or [0,0]); t=(farm.get('tiles') or [[None]])[target[1]][target[0]]; inv=(prv.get('inventories') or [{}])[0]; sh=prv.get('shed') or {}; sd=prv.get('seeds') or {}
+            rec={'step':int(o.get('step',0) or 0),'day':int(o.get('day',0) or 0),'hour':int(o.get('hour',0) or 0),'money':farm.get('money'),'pos':pos,'target':t,'inv':inv,'shed':sh,'seeds':sd}
+            if len(rows)<8 or kind(t)!='EMPTY' or inv or int(sh.get('WHEAT',0) or 0)>0: rows.append(rec)
+            market=[]; action=['PASS']
+            if int(o.get('step',0) or 0)==0: market=[['BUY_SEED','WHEAT',5]]
+            if inv:
+              if pos==shed: action=['DROP']
+              elif pos[0]<shed[0]:action=['EAST']
+              elif pos[0]>shed[0]:action=['WEST']
+              elif pos[1]<shed[1]:action=['SOUTH']
+              else:action=['NORTH']
+            elif pos!=target and kind(t)=='EMPTY':
+              if pos[0]>target[0]:action=['WEST']
+              elif pos[0]<target[0]:action=['EAST']
+              elif pos[1]>target[1]:action=['NORTH']
+              else:action=['SOUTH']
+            elif pos==target and kind(t)=='EMPTY' and int(sd.get('WHEAT',0) or 0)>0: action=['PLANT','WHEAT']
+            elif pos==target and kind(t)=='PLANT':
+              if int((t or {}).get('yield_units',(t or {}).get('yield',0)) or 0)>0:action=['HARVEST']
+              elif not bool((t or {}).get('watered_today',(t or {}).get('watered',False))):action=['WATER']
+            return {'farmer':action,'hands':[['PASS'] for _ in (farm.get('hands') or [])],'market':market}
+          env=make('kaggriculture',configuration={'seed':335300},debug=True); env.run([agent,'starter'])
+          os.makedirs('benchmarks',exist_ok=True); open('benchmarks/v33_crop_probe.json','w').write(json.dumps({'rows':rows,'status':str(env.state[0].status),'reward':env.state[0].reward},indent=2,default=str))
+          PY
+      - name: Persist probe
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v33_crop_probe.json
+          git commit -m 'Record V33 crop lifecycle probe' || true
+          git push origin HEAD:agent/v33-industrial
