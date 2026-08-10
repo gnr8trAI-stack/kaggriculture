@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  issues: write
 jobs:
   benchmark:
     runs-on: ubuntu-latest
@@ -79,3 +80,16 @@ jobs:
           name: v32-state-adaptive-frontier
           path: artifacts/
           retention-days: 14
+      - name: Publish V32 result to issue 16
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -f artifacts/v32_report.json ]; then
+            { echo '## V32 benchmark result'; echo; echo '```json'; cat artifacts/v32_report.json; echo '```'; } > /tmp/v32.md
+          else
+            echo '## V32 benchmark result
+
+Benchmark failed before producing v32_report.json.' > /tmp/v32.md
+          fi
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v32.md
