@@ -1,0 +1,1609 @@
+{
+  "hire": {
+    "order": [
+      "HIRE"
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2999.0
+  },
+  "hire_qty": {
+    "order": [
+      "HIRE",
+      1
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {},
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2999.0
+  },
+  "land": {
+    "order": [
+      "BUY_LAND"
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2000.0
+  },
+  "seed": {
+    "order": [
+      "BUY_SEED",
+      "WHEAT",
+      5
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2950.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2950.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2950.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2950.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2950.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2950.0
+  },
+  "seed_melon": {
+    "order": [
+      "BUY_SEED",
+      "MELON",
+      5
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 5
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 5
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 5
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 5
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 5
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2600.0
+  },
+  "product": {
+    "order": [
+      "BUY_PRODUCT",
+      "WHEAT",
+      5
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2867.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2867.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2867.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2867.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2867.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2867.0
+  },
+  "cow": {
+    "order": [
+      "BUY_ANIMAL",
+      "COW",
+      1
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "day": 0,
+        "hour": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 0,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 1,
+        "day": 0,
+        "hour": 1,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 1,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 2,
+        "day": 0,
+        "hour": 2,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 1,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 3,
+        "day": 0,
+        "hour": 3,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 1,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 4,
+        "day": 0,
+        "hour": 4,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 1,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      },
+      {
+        "step": 5,
+        "day": 0,
+        "hour": 5,
+        "money": 2600.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        },
+        "shed": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0,
+          "EGG": 0,
+          "MILK": 0,
+          "WOOL": 0,
+          "FERTILIZER": 0,
+          "GOOSE": 0,
+          "COW": 1,
+          "SHEEP": 0
+        },
+        "inventories": [
+          {}
+        ]
+      }
+    ],
+    "status": "DONE",
+    "reward": 2600.0
+  }
+}
