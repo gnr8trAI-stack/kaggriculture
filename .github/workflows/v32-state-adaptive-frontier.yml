@@ -1,0 +1,81 @@
+name: v32-state-adaptive-frontier
+on:
+  push:
+    branches: [agent/v32-state-adaptive-frontier]
+    paths:
+      - 'agents/v32_state_adaptive_frontier.py'
+      - '.github/workflows/v32-state-adaptive-frontier.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - name: Compile and import
+        run: |
+          python -m py_compile agents/v32_state_adaptive_frontier.py
+          python - <<'PY'
+          import agents.v32_state_adaptive_frontier as a
+          assert callable(a.agent)
+          print('V32 import OK')
+          PY
+      - name: Multi-seed benchmark
+        run: |
+          mkdir -p artifacts
+          python - <<'PY'
+          import json,statistics
+          from pathlib import Path
+          from kaggle_environments import make
+          import agents.v32_state_adaptive_frontier as v32
+          import agents.v19_2_early_scale8 as v19
+          BAD={'ERROR','INVALID','TIMEOUT'}
+          def reset(m):
+              f=getattr(m,'reset_state',None)
+              if callable(f): f()
+          def play(mine,opp,seat,seed,series):
+              reset(mine); reset(v19)
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run([mine.agent,opp] if seat==0 else [opp,mine.agent])
+              a=env.state[seat]; b=env.state[1-seat]
+              tele=getattr(mine,'get_telemetry',lambda clear=False:[])(clear=True) or []
+              day_money={}
+              for r in tele:
+                  d=int(r.get('day',-1)); day_money[d]=float(r.get('money',0) or 0)
+              rr=float(a.reward or 0); ro=float(b.reward or 0)
+              return {'series':series,'seat':seat,'seed':seed,'reward':rr,'opp':ro,'delta':rr-ro,
+                      'result':'win' if rr>ro else 'loss' if rr<ro else 'tie','status':str(a.status),
+                      'd12':day_money.get(12,0),'d15':day_money.get(15,0),'d20':day_money.get(20,0),'d25':day_money.get(25,0),
+                      'max_land':max([int(x.get('land',0) or 0) for x in tele] or [0]),
+                      'max_cows':max([int(x.get('cows',0) or 0) for x in tele] or [0]),
+                      'max_sheep':max([int(x.get('sheep',0) or 0) for x in tele] or [0]),
+                      'max_hands':max([int(x.get('hands',0) or 0) for x in tele] or [0])}
+          rows=[]
+          for seat in (0,1):
+              for i in range(12): rows.append(play(v32,'starter',seat,320000+i,'starter'))
+          for seat in (0,1):
+              for i in range(10): rows.append(play(v32,v19.agent,seat,321000+i,'v19.2'))
+          Path('artifacts/v32_rows.json').write_text(json.dumps(rows,indent=2))
+          def summary(series):
+              g=[r for r in rows if r['series']==series]
+              return {'games':len(g),'wins':sum(r['result']=='win' for r in g),'losses':sum(r['result']=='loss' for r in g),'ties':sum(r['result']=='tie' for r in g),
+                      'mean':statistics.fmean(r['reward'] for r in g),'median':statistics.median(r['reward'] for r in g),'mean_delta':statistics.fmean(r['delta'] for r in g),
+                      'invalid':sum(r['status'] in BAD for r in g),'median_d12':statistics.median(r['d12'] for r in g),'median_d20':statistics.median(r['d20'] for r in g),'median_d25':statistics.median(r['d25'] for r in g),
+                      'three_land':sum(r['max_land']>=3 for r in g),'herd8_6':sum(r['max_cows']>=8 and r['max_sheep']>=6 for r in g),'max_reward':max(r['reward'] for r in g)}
+          s=summary('starter'); h=summary('v19.2')
+          promote=(s['invalid']==0 and h['invalid']==0 and s['median']>=70000 and s['median_d20']>=30000 and h['mean_delta']>0 and h['wins']>=12)
+          report={'version':'32.0.0-alpha1','starter':s,'vs_v19_2':h,'promotion_pass':promote}
+          Path('artifacts/v32_report.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v32-state-adaptive-frontier
+          path: artifacts/
+          retention-days: 14
