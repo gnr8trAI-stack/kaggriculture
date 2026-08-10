@@ -1,4 +1,4 @@
-name: run-v33-2-1-isolated-cow-unlock
+name: run-v33-2-1-frontier-livestock-fix
 on:
   push:
     branches: [main]
@@ -12,16 +12,20 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
+      - name: Announce benchmark start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V33.2.1 Frontier Livestock benchmark started\n\nRun: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
       - uses: actions/checkout@v6
         with:
-          ref: agent/v33.2.1-cow-unlock
+          ref: agent/v33.2.1-frontier-livestock-fix
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install
         run: pip install -q kaggle-environments
       - name: Compile candidate and control
-        run: python -m py_compile agents/v33_2_1_cow_unlock.py agents/v19_2_early_scale8.py
+        run: python -m py_compile agents/v33_2_1_frontier_livestock_fix.py agents/v19_2_early_scale8.py
       - name: Run isolated 24-game paired benchmark
         run: |
           python - <<'PY'
@@ -38,13 +42,16 @@ jobs:
           env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
           st=env.state[seat]
           tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
-          last=tel[-1] if tel else {}
-          qs=[last.get(f'q{i}',{}) for i in range(1,5)] if isinstance(last,dict) else [{},{},{},{}]
-          animals=sum(int(q.get('animals',0) or 0) for q in qs if isinstance(q,dict))
-          out={'status':str(st.status),'reward':float(st.reward or 0),'animals':animals,
-               'lands':int(last.get('lands',0) or 0) if isinstance(last,dict) else 0,
-               'hands':int(last.get('hands',0) or 0) if isinstance(last,dict) else 0,
-               'productive':int(last.get('productive',0) or 0) if isinstance(last,dict) else 0}
+          peak_animals=peak_lands=peak_hands=peak_productive=0
+          for row in tel:
+              if not isinstance(row,dict): continue
+              qs=[row.get(f'q{i}',{}) for i in range(1,5)]
+              peak_animals=max(peak_animals,sum(int(q.get('animals',0) or 0) for q in qs if isinstance(q,dict)))
+              peak_lands=max(peak_lands,int(row.get('lands',0) or 0))
+              peak_hands=max(peak_hands,int(row.get('hands',0) or 0))
+              peak_productive=max(peak_productive,int(row.get('productive',0) or 0))
+          out={'status':str(st.status),'reward':float(st.reward or 0),'peak_animals':peak_animals,
+               'peak_lands':peak_lands,'peak_hands':peak_hands,'peak_productive':peak_productive}
           print('RESULTJSON='+json.dumps(out,separators=(',',':')))
           '''
 
@@ -52,32 +59,40 @@ jobs:
               p=subprocess.run([sys.executable,'-c',CHILD,mod,str(seed),str(seat)],text=True,capture_output=True,timeout=150)
               line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
               if p.returncode or not line:
-                  return {'status':'ERROR','reward':0.0,'animals':0,'lands':0,'hands':0,'productive':0,'stderr':p.stderr[-1000:]}
+                  return {'status':'ERROR','reward':0.0,'peak_animals':0,'peak_lands':0,'peak_hands':0,'peak_productive':0,'stderr':p.stderr[-1200:]}
               return json.loads(line.split('=',1)[1])
 
-          seeds=list(range(332110,332122))
+          seeds=list(range(332121,332133))
           rows=[]
           for seed in seeds:
               for seat in (0,1):
-                  cand=one('agents.v33_2_1_cow_unlock',seed,seat)
+                  cand=one('agents.v33_2_1_frontier_livestock_fix',seed,seat)
                   ctrl=one('agents.v19_2_early_scale8',seed,seat)
                   rows.append({'seed':seed,'seat':seat,'candidate':cand,'control':ctrl,'delta':cand['reward']-ctrl['reward']})
-                  print(seed,seat,cand['reward'],ctrl['reward'],cand['animals'])
+                  print(seed,seat,cand['reward'],ctrl['reward'],cand['peak_animals'],cand['peak_lands'])
 
           def summary(which):
               rs=[r[which] for r in rows]; rewards=[r['reward'] for r in rs]
               invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in rs)
               return {'games':len(rs),'invalid':invalid,'mean':statistics.mean(rewards),'median':statistics.median(rewards),
-                      'min':min(rewards),'p10':sorted(rewards)[max(0,int(len(rewards)*.1)-1)],'max':max(rewards),
-                      'median_animals':statistics.median(r['animals'] for r in rs),
-                      'max_animals':max(r['animals'] for r in rs),'median_lands':statistics.median(r['lands'] for r in rs),
-                      'median_hands':statistics.median(r['hands'] for r in rs),'median_productive':statistics.median(r['productive'] for r in rs)}
+                      'min':min(rewards),'max':max(rewards),
+                      'median_peak_animals':statistics.median(r['peak_animals'] for r in rs),
+                      'max_peak_animals':max(r['peak_animals'] for r in rs),
+                      'games_gt4_animals':sum(r['peak_animals']>4 for r in rs),
+                      'games_ge12_animals':sum(r['peak_animals']>=12 for r in rs),
+                      'median_peak_lands':statistics.median(r['peak_lands'] for r in rs),
+                      'games_ge3_land':sum(r['peak_lands']>=3 for r in rs),
+                      'median_peak_hands':statistics.median(r['peak_hands'] for r in rs),
+                      'median_peak_productive':statistics.median(r['peak_productive'] for r in rs)}
           c=summary('candidate'); b=summary('control'); deltas=[r['delta'] for r in rows]
-          report={'version':'33.2.1-cow-unlock','mechanism':'remove inherited V19 4-cow and unlocked_quadrants target gates only',
-                  'candidate':c,'control_v19_2':b,'paired':{'wins':sum(d>0 for d in deltas),'losses':sum(d<0 for d in deltas),'ties':sum(d==0 for d in deltas),
-                  'mean_delta':statistics.mean(deltas),'median_delta':statistics.median(deltas)},
-                  'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
-          Path('/tmp/v3321.json').write_text(json.dumps(report,indent=2))
+          report={'version':'33.2.1-frontier-livestock-fix',
+                  'candidate':c,'control_v19_2':b,
+                  'paired':{'wins':sum(d>0 for d in deltas),'losses':sum(d<0 for d in deltas),'ties':sum(d==0 for d in deltas),
+                            'mean_delta':statistics.mean(deltas),'median_delta':statistics.median(deltas)},
+                  'herd_gate_pass':c['invalid']==0 and c['games_gt4_animals']>=18 and c['median_peak_animals']>=10,
+                  'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,
+                  'games_detail':rows}
+          Path('/tmp/v3321_frontier.json').write_text(json.dumps(report,indent=2))
           print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
       - name: Record candidate result to issue 16
@@ -85,12 +100,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V33.2.1 isolated cow-unlock benchmark'; echo; echo '**Mechanism:** remove inherited V19 four-cow + unreliable unlocked_quadrants livestock target gates only; V19.2 remains isolated control.'; echo; echo '```json'; cat /tmp/v3321.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/comment.md
+          { echo '## V33.2.1 Frontier Livestock benchmark'; echo; echo '```json'; cat /tmp/v3321_frontier.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/comment.md
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/comment.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-2-1-isolated-cow-unlock
-          path: /tmp/v3321.json
+          name: v33-2-1-frontier-livestock
+          path: /tmp/v3321_frontier.json
           if-no-files-found: ignore
           retention-days: 14
