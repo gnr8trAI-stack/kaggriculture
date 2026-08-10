@@ -1,0 +1,2188 @@
+{
+  "version": "33.3.0-independent-industrial",
+  "source_commit": "0a0997fdd75b607214e49c2cc2a29d7d0772bf64",
+  "games": 24,
+  "invalid": 0,
+  "mean_reward": 1008.25,
+  "median_reward": 1007.0,
+  "min_reward": 982.0,
+  "p10_reward": 992.0,
+  "max_reward": 1042.0,
+  "four_land_games": 0,
+  "q3_active_games": 0,
+  "q4_active_games": 0,
+  "median_hands": 0.0,
+  "median_animals": 0.0,
+  "median_productive": 0.0,
+  "median_utilization": 0.0,
+  "median_d12_money": 1132.0,
+  "median_d20_money": 1062.0,
+  "median_d25_money": 1017.0,
+  "median_d12_productive": 1.0,
+  "median_d20_productive": 1.0,
+  "median_d25_productive": 1.0,
+  "stage_a_pass": false,
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 333000,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 992.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 45,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1002.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 63,
+        "move_to_plant": 18,
+        "plant_wheat": 47,
+        "harvest_crop": 829,
+        "dig": 196
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333000,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1002.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 44,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 960.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1012.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 68,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 863,
+        "dig": 156
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333001,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1002.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 45,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 960.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1012.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 64,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 786,
+        "dig": 237
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333001,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1002.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 45,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 960.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1062.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1012.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 66,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 879,
+        "dig": 142
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333002,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 992.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 46,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1002.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 63,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 749,
+        "dig": 275
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333002,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 992.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 46,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1002.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 66,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 832,
+        "dig": 189
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333003,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1002.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 45,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 960.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1062.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1012.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 58,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 811,
+        "dig": 218
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333003,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1012.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 44,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 950.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1072.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1022.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 61,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 882,
+        "dig": 144
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333004,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1042.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 41,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 920.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1142.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1092.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 64,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 738,
+        "dig": 285
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333004,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1042.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 40,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 920.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1142.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1072.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1042.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 66,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 822,
+        "dig": 199
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333005,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 982.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 46,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 980.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1042.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 992.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 67,
+        "move_to_plant": 18,
+        "plant_wheat": 47,
+        "harvest_crop": 854,
+        "dig": 167
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333005,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 992.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 46,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1002.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 65,
+        "move_to_plant": 16,
+        "plant_wheat": 47,
+        "harvest_crop": 853,
+        "dig": 172
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333006,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1002.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 44,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 960.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1052.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1012.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 62,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 872,
+        "dig": 153
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333006,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1012.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 43,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 950.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1142.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1062.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1022.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 56,
+        "move_to_plant": 15,
+        "plant_wheat": 47,
+        "harvest_crop": 774,
+        "dig": 261
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333007,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1022.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 43,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1062.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1032.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 65,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 807,
+        "dig": 215
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333007,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1022.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 43,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1142.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1072.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1032.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 64,
+        "move_to_plant": 15,
+        "plant_wheat": 47,
+        "harvest_crop": 795,
+        "dig": 232
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333008,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1022.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 43,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1142.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1082.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1032.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 54,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 818,
+        "dig": 215
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333008,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1012.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 44,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 950.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1072.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1022.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 64,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 800,
+        "dig": 223
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333009,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1012.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 44,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 950.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1142.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1062.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1022.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 66,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 827,
+        "dig": 194
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333009,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 992.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 46,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1042.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1002.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 65,
+        "move_to_plant": 16,
+        "plant_wheat": 47,
+        "harvest_crop": 775,
+        "dig": 250
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333010,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1022.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 42,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1072.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1032.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 64,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 799,
+        "dig": 224
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333010,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 1012.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 43,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 950.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1062.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1022.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 69,
+        "move_to_plant": 19,
+        "plant_wheat": 47,
+        "harvest_crop": 891,
+        "dig": 127
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333011,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 1022.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 43,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1132.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1072.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1032.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 69,
+        "move_to_plant": 16,
+        "plant_wheat": 47,
+        "harvest_crop": 887,
+        "dig": 134
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    },
+    {
+      "seed": 333011,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 992.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 46,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_plants": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 1
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 10000.0,
+        "crop": 970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "reinvestment_ratio": 1.0,
+      "d12": {
+        "money": 1122.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 1042.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1002.0,
+        "productive": 1,
+        "lands": 2,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 66,
+        "move_to_plant": 16,
+        "plant_wheat": 47,
+        "harvest_crop": 817,
+        "dig": 207
+      },
+      "last_allocator": {
+        "land": 0,
+        "hires": 0,
+        "cows": 0,
+        "feed": 0,
+        "seeds": {},
+        "sell_qty": 0,
+        "reserve": 450,
+        "ranked": [
+          [
+            "labour",
+            -0.76
+          ],
+          [
+            "cow",
+            -1.0
+          ]
+        ]
+      }
+    }
+  ]
+}
