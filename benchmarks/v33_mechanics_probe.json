@@ -1,0 +1,2722 @@
+[
+  {
+    "seat": 0,
+    "observations": [
+      {
+        "remainingOverageTime": 60,
+        "step": 0,
+        "player": 0,
+        "farms": [
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "market": {
+          "inventory": {
+            "WHEAT": 10000,
+            "CARROT": 10000,
+            "TOMATO": 10000,
+            "STRAWBERRY": 10000,
+            "MELON": 10000,
+            "EGG": 10000,
+            "MILK": 10000,
+            "WOOL": 10000,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 25,
+            "CARROT": 35,
+            "TOMATO": 60,
+            "STRAWBERRY": 120,
+            "MELON": 250,
+            "EGG": 50,
+            "MILK": 160,
+            "WOOL": 200,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 0
+      },
+      {
+        "remainingOverageTime": 60,
+        "step": 1,
+        "player": 0,
+        "farms": [
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 2980.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "market": {
+          "inventory": {
+            "WHEAT": 9999,
+            "CARROT": 9999,
+            "TOMATO": 9999,
+            "STRAWBERRY": 9999,
+            "MELON": 9999,
+            "EGG": 9999,
+            "MILK": 9999,
+            "WOOL": 9999,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 26,
+            "CARROT": 36,
+            "TOMATO": 60,
+            "STRAWBERRY": 128,
+            "MELON": 256,
+            "EGG": 50,
+            "MILK": 169,
+            "WOOL": 206,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 1
+      },
+      {
+        "remainingOverageTime": 60,
+        "step": 2,
+        "player": 0,
+        "farms": [
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 2980.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                {
+                  "kind": "PLANT",
+                  "crop": "CARROT",
+                  "planted_day": 0,
+                  "watered_today": false,
+                  "consecutive_unwatered": 1,
+                  "yield_units": 1,
+                  "max_lifespan_step": 96,
+                  "fertilized_until_day": -1
+                },
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "market": {
+          "inventory": {
+            "WHEAT": 9999,
+            "CARROT": 9999,
+            "TOMATO": 9999,
+            "STRAWBERRY": 9999,
+            "MELON": 9999,
+            "EGG": 9999,
+            "MILK": 9999,
+            "WOOL": 9999,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 26,
+            "CARROT": 36,
+            "TOMATO": 60,
+            "STRAWBERRY": 128,
+            "MELON": 256,
+            "EGG": 50,
+            "MILK": 169,
+            "WOOL": 206,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 2
+      },
+      {
+        "remainingOverageTime": 60,
+        "step": 3,
+        "player": 0,
+        "farms": [
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 2960.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                {
+                  "kind": "PLANT",
+                  "crop": "CARROT",
+                  "planted_day": 0,
+                  "watered_today": true,
+                  "consecutive_unwatered": 1,
+                  "yield_units": 1,
+                  "max_lifespan_step": 96,
+                  "fertilized_until_day": -1
+                },
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "market": {
+          "inventory": {
+            "WHEAT": 9999,
+            "CARROT": 9999,
+            "TOMATO": 9999,
+            "STRAWBERRY": 9999,
+            "MELON": 9999,
+            "EGG": 9999,
+            "MILK": 9999,
+            "WOOL": 9999,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 26,
+            "CARROT": 36,
+            "TOMATO": 60,
+            "STRAWBERRY": 128,
+            "MELON": 256,
+            "EGG": 50,
+            "MILK": 169,
+            "WOOL": 206,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 3
+      }
+    ],
+    "configuration": {
+      "seed": null,
+      "episodeSteps": 720,
+      "actTimeout": 1,
+      "runTimeout": 1200,
+      "boardSize": 10,
+      "startingMoney": 3000,
+      "maxMarketOrdersPerTurn": 10,
+      "turnsPerDay": 24,
+      "shedCapacity": 100,
+      "weedSpawnChance": 0.005,
+      "townShopUnlockInterval": 3,
+      "townShopSellInterval": 4,
+      "townCenterSellInterval": 24,
+      "farmHandCostMult": 1,
+      "marketParams": {}
+    }
+  },
+  {
+    "seat": 1,
+    "observations": [
+      {
+        "remainingOverageTime": 60,
+        "player": 1,
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "farms": [
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "market": {
+          "inventory": {
+            "WHEAT": 10000,
+            "CARROT": 10000,
+            "TOMATO": 10000,
+            "STRAWBERRY": 10000,
+            "MELON": 10000,
+            "EGG": 10000,
+            "MILK": 10000,
+            "WOOL": 10000,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 25,
+            "CARROT": 35,
+            "TOMATO": 60,
+            "STRAWBERRY": 120,
+            "MELON": 250,
+            "EGG": 50,
+            "MILK": 160,
+            "WOOL": 200,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 0,
+        "step": 0
+      },
+      {
+        "remainingOverageTime": 60,
+        "player": 1,
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "farms": [
+          {
+            "money": 2980.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "market": {
+          "inventory": {
+            "WHEAT": 9999,
+            "CARROT": 9999,
+            "TOMATO": 9999,
+            "STRAWBERRY": 9999,
+            "MELON": 9999,
+            "EGG": 9999,
+            "MILK": 9999,
+            "WOOL": 9999,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 26,
+            "CARROT": 36,
+            "TOMATO": 60,
+            "STRAWBERRY": 128,
+            "MELON": 256,
+            "EGG": 50,
+            "MILK": 169,
+            "WOOL": 206,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 1,
+        "step": 1
+      },
+      {
+        "remainingOverageTime": 60,
+        "player": 1,
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "farms": [
+          {
+            "money": 2980.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                {
+                  "kind": "PLANT",
+                  "crop": "CARROT",
+                  "planted_day": 0,
+                  "watered_today": false,
+                  "consecutive_unwatered": 1,
+                  "yield_units": 1,
+                  "max_lifespan_step": 96,
+                  "fertilized_until_day": -1
+                },
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "market": {
+          "inventory": {
+            "WHEAT": 9999,
+            "CARROT": 9999,
+            "TOMATO": 9999,
+            "STRAWBERRY": 9999,
+            "MELON": 9999,
+            "EGG": 9999,
+            "MILK": 9999,
+            "WOOL": 9999,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 26,
+            "CARROT": 36,
+            "TOMATO": 60,
+            "STRAWBERRY": 128,
+            "MELON": 256,
+            "EGG": 50,
+            "MILK": 169,
+            "WOOL": 206,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 2,
+        "step": 2
+      },
+      {
+        "remainingOverageTime": 60,
+        "player": 1,
+        "private": {
+          "shed": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0,
+            "EGG": 0,
+            "MILK": 0,
+            "WOOL": 0,
+            "FERTILIZER": 0,
+            "GOOSE": 0,
+            "COW": 0,
+            "SHEEP": 0
+          },
+          "seeds": {
+            "WHEAT": 0,
+            "CARROT": 0,
+            "TOMATO": 0,
+            "STRAWBERRY": 0,
+            "MELON": 0
+          },
+          "inventories": [
+            {}
+          ]
+        },
+        "farms": [
+          {
+            "money": 2960.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                {
+                  "kind": "PLANT",
+                  "crop": "CARROT",
+                  "planted_day": 0,
+                  "watered_today": true,
+                  "consecutive_unwatered": 1,
+                  "yield_units": 1,
+                  "max_lifespan_step": 96,
+                  "fertilized_until_day": -1
+                },
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          },
+          {
+            "money": 3000.0,
+            "tiles": [
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                null,
+                null,
+                null,
+                null,
+                null,
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ],
+              [
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED",
+                "LOCKED"
+              ]
+            ],
+            "farmer": [
+              4,
+              4
+            ],
+            "hands": [],
+            "unlocked_quadrants": [
+              "NW"
+            ],
+            "hires_today": 0
+          }
+        ],
+        "market": {
+          "inventory": {
+            "WHEAT": 9999,
+            "CARROT": 9999,
+            "TOMATO": 9999,
+            "STRAWBERRY": 9999,
+            "MELON": 9999,
+            "EGG": 9999,
+            "MILK": 9999,
+            "WOOL": 9999,
+            "FERTILIZER": 10000
+          },
+          "prices": {
+            "WHEAT": 26,
+            "CARROT": 36,
+            "TOMATO": 60,
+            "STRAWBERRY": 128,
+            "MELON": 256,
+            "EGG": 50,
+            "MILK": 169,
+            "WOOL": 206,
+            "FERTILIZER": 100
+          }
+        },
+        "town": {
+          "unlocked_shops": []
+        },
+        "day": 0,
+        "hour": 3,
+        "step": 3
+      }
+    ],
+    "configuration": {
+      "seed": null,
+      "episodeSteps": 720,
+      "actTimeout": 1,
+      "runTimeout": 1200,
+      "boardSize": 10,
+      "startingMoney": 3000,
+      "maxMarketOrdersPerTurn": 10,
+      "turnsPerDay": 24,
+      "shedCapacity": 100,
+      "weedSpawnChance": 0.005,
+      "townShopUnlockInterval": 3,
+      "townShopSellInterval": 4,
+      "townCenterSellInterval": 24,
+      "farmHandCostMult": 1,
+      "marketParams": {}
+    }
+  }
+]
