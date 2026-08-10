@@ -1,0 +1,614 @@
+{
+  "two_hires": {
+    "orders": [
+      [
+        "HIRE"
+      ],
+      [
+        "HIRE"
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 1,
+        "money": 2998.0,
+        "hands": [
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "hires_today": 2,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 2,
+        "money": 2998.0,
+        "hands": [
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "hires_today": 2,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 3,
+        "money": 2998.0,
+        "hands": [
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "hires_today": 2,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      }
+    ],
+    "status": "DONE",
+    "reward": 2998.0
+  },
+  "hire_seed": {
+    "orders": [
+      [
+        "HIRE"
+      ],
+      [
+        "BUY_SEED",
+        "WHEAT",
+        5
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 1,
+        "money": 2949.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 2,
+        "money": 2949.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 3,
+        "money": 2949.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      }
+    ],
+    "status": "DONE",
+    "reward": 2949.0
+  },
+  "seed_hire": {
+    "orders": [
+      [
+        "BUY_SEED",
+        "WHEAT",
+        5
+      ],
+      [
+        "HIRE"
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 1,
+        "money": 2949.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 2,
+        "money": 2949.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 3,
+        "money": 2949.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 5,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      }
+    ],
+    "status": "DONE",
+    "reward": 2949.0
+  },
+  "land_hire": {
+    "orders": [
+      [
+        "BUY_LAND"
+      ],
+      [
+        "HIRE"
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 1,
+        "money": 1999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 2,
+        "money": 1999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 3,
+        "money": 1999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      }
+    ],
+    "status": "DONE",
+    "reward": 1999.0
+  },
+  "hire_land": {
+    "orders": [
+      [
+        "HIRE"
+      ],
+      [
+        "BUY_LAND"
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 1,
+        "money": 1999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 2,
+        "money": 1999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 3,
+        "money": 1999.0,
+        "hands": [
+          [
+            5,
+            4
+          ]
+        ],
+        "hires_today": 1,
+        "unlocked": [
+          "NW",
+          "NE"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      }
+    ],
+    "status": "DONE",
+    "reward": 1999.0
+  },
+  "hire3_seed": {
+    "orders": [
+      [
+        "HIRE"
+      ],
+      [
+        "HIRE"
+      ],
+      [
+        "HIRE"
+      ],
+      [
+        "BUY_SEED",
+        "WHEAT",
+        10
+      ]
+    ],
+    "rows": [
+      {
+        "step": 0,
+        "money": 3000.0,
+        "hands": [],
+        "hires_today": 0,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 0,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 1,
+        "money": 2896.0,
+        "hands": [
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "hires_today": 3,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 10,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 2,
+        "money": 2896.0,
+        "hands": [
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "hires_today": 3,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 10,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      },
+      {
+        "step": 3,
+        "money": 2896.0,
+        "hands": [
+          [
+            5,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            5,
+            5
+          ]
+        ],
+        "hires_today": 3,
+        "unlocked": [
+          "NW"
+        ],
+        "seeds": {
+          "WHEAT": 10,
+          "CARROT": 0,
+          "TOMATO": 0,
+          "STRAWBERRY": 0,
+          "MELON": 0
+        }
+      }
+    ],
+    "status": "DONE",
+    "reward": 2896.0
+  }
+}
