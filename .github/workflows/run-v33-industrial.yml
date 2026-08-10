@@ -1,4 +1,4 @@
-name: run-v33-industrial-150k-gate
+name: run-v33-industrial-150k-gate-r1
 on:
   push:
     branches: [main]
