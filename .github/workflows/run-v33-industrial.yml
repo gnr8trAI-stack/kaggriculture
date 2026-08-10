@@ -1,96 +1,96 @@
-name: run-v33-industrial-150k-gate-r1
+name: run-v33-2-1-isolated-cow-unlock
 on:
   push:
     branches: [main]
     paths: ['.github/workflows/run-v33-industrial.yml']
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
+  issues: write
 jobs:
   benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: agent/v33-industrial
-          fetch-depth: 0
+          ref: agent/v33.2.1-cow-unlock
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install
         run: pip install -q kaggle-environments
-      - name: Compile independent V33
-        run: python -m py_compile agents/v33_industrial.py
-      - name: Run clean 24-game both-seat industrial gate
+      - name: Compile candidate and control
+        run: python -m py_compile agents/v33_2_1_cow_unlock.py agents/v19_2_early_scale8.py
+      - name: Run isolated 24-game paired benchmark
         run: |
           python - <<'PY'
-          import json, statistics, subprocess
-          from kaggle_environments import make
-          import agents.v33_industrial as a
+          import json, statistics, subprocess, sys
+          from pathlib import Path
 
-          results=[]
-          for seed in range(333000,333012):
+          CHILD = r'''
+          import importlib, json, sys
+          from kaggle_environments import make
+          modname, seed, seat = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+          a = importlib.import_module(modname)
+          if hasattr(a,'reset_state'): a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=False)
+          env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat]
+          tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          last=tel[-1] if tel else {}
+          qs=[last.get(f'q{i}',{}) for i in range(1,5)] if isinstance(last,dict) else [{},{},{},{}]
+          animals=sum(int(q.get('animals',0) or 0) for q in qs if isinstance(q,dict))
+          out={'status':str(st.status),'reward':float(st.reward or 0),'animals':animals,
+               'lands':int(last.get('lands',0) or 0) if isinstance(last,dict) else 0,
+               'hands':int(last.get('hands',0) or 0) if isinstance(last,dict) else 0,
+               'productive':int(last.get('productive',0) or 0) if isinstance(last,dict) else 0}
+          print('RESULTJSON='+json.dumps(out,separators=(',',':')))
+          '''
+
+          def one(mod,seed,seat):
+              p=subprocess.run([sys.executable,'-c',CHILD,mod,str(seed),str(seat)],text=True,capture_output=True,timeout=150)
+              line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
+              if p.returncode or not line:
+                  return {'status':'ERROR','reward':0.0,'animals':0,'lands':0,'hands':0,'productive':0,'stderr':p.stderr[-1000:]}
+              return json.loads(line.split('=',1)[1])
+
+          seeds=list(range(332110,332122))
+          rows=[]
+          for seed in seeds:
               for seat in (0,1):
-                  a.reset_state()
-                  env=make('kaggriculture',configuration={'seed':seed},debug=True)
-                  env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
-                  st=env.state[seat]
-                  tel=a.get_telemetry()
-                  last=tel[-1] if tel else {}
-                  qs=[last.get(f'q{i}',{}) for i in range(1,5)]
-                  def snap(day):
-                      rows=[r for r in tel if int(r.get('day',-1))<=day]
-                      r=rows[-1] if rows else {}
-                      return {'money':float(r.get('money',0) or 0),'productive':int(r.get('productive',0) or 0),'lands':int(r.get('lands',0) or 0),'hands':int(r.get('hands',0) or 0),'animals':int(r.get('animals',0) or 0)}
-                  results.append({
-                    'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
-                    'lands':int(last.get('lands',0) or 0),'hands':int(last.get('hands',0) or 0),
-                    'animals':int(last.get('animals',0) or 0),'productive':int(last.get('productive',0) or 0),
-                    'idle':int(last.get('idle',0) or 0),'utilization':float(last.get('utilization',0) or 0),
-                    'q_productive':[int(q.get('productive',0) or 0) for q in qs],
-                    'q_animals':[int(q.get('animals',0) or 0) for q in qs],
-                    'q_plants':[int(q.get('plants',0) or 0) for q in qs],
-                    'unlock_steps':last.get('land_unlock_steps',{}),
-                    'capex':last.get('cumulative_capex',{}),'revenue_proxy':float(last.get('cumulative_revenue_proxy',0) or 0),
-                    'reinvestment_ratio':float(last.get('reinvestment_ratio',0) or 0),
-                    'd12':snap(12),'d20':snap(20),'d25':snap(25),
-                    'action_counts':last.get('action_counts',{}),'last_allocator':last.get('allocator',{})
-                  })
-          rewards=[r['reward'] for r in results]
-          invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
-          med=lambda xs: statistics.median(xs) if xs else 0
-          report={
-            'version':'33.3.0-independent-industrial','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
-            'games':len(results),'invalid':invalid,
-            'mean_reward':statistics.mean(rewards),'median_reward':med(rewards),'min_reward':min(rewards),'p10_reward':sorted(rewards)[max(0,int(len(rewards)*.1)-1)],'max_reward':max(rewards),
-            'four_land_games':sum(r['lands']>=4 for r in results),'q3_active_games':sum(r['q_productive'][2]>=4 for r in results),'q4_active_games':sum(r['q_productive'][3]>=6 for r in results),
-            'median_hands':med([r['hands'] for r in results]),'median_animals':med([r['animals'] for r in results]),'median_productive':med([r['productive'] for r in results]),'median_utilization':med([r['utilization'] for r in results]),
-            'median_d12_money':med([r['d12']['money'] for r in results]),'median_d20_money':med([r['d20']['money'] for r in results]),'median_d25_money':med([r['d25']['money'] for r in results]),
-            'median_d12_productive':med([r['d12']['productive'] for r in results]),'median_d20_productive':med([r['d20']['productive'] for r in results]),'median_d25_productive':med([r['d25']['productive'] for r in results]),
-            'stage_a_pass':invalid==0 and sum(r['lands']>=4 for r in results)>=18 and sum(r['q_productive'][2]>=4 for r in results)>=18 and sum(r['q_productive'][3]>=6 for r in results)>=18,
-            'ready_150k':invalid==0 and len(results)>=24 and med(rewards)>=150000 and min(rewards)>=100000,
-            'games_detail':results
-          }
-          import os
-          os.makedirs('benchmarks',exist_ok=True)
-          open('benchmarks/v33_latest.json','w').write(json.dumps(report,indent=2))
+                  cand=one('agents.v33_2_1_cow_unlock',seed,seat)
+                  ctrl=one('agents.v19_2_early_scale8',seed,seat)
+                  rows.append({'seed':seed,'seat':seat,'candidate':cand,'control':ctrl,'delta':cand['reward']-ctrl['reward']})
+                  print(seed,seat,cand['reward'],ctrl['reward'],cand['animals'])
+
+          def summary(which):
+              rs=[r[which] for r in rows]; rewards=[r['reward'] for r in rs]
+              invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in rs)
+              return {'games':len(rs),'invalid':invalid,'mean':statistics.mean(rewards),'median':statistics.median(rewards),
+                      'min':min(rewards),'p10':sorted(rewards)[max(0,int(len(rewards)*.1)-1)],'max':max(rewards),
+                      'median_animals':statistics.median(r['animals'] for r in rs),
+                      'max_animals':max(r['animals'] for r in rs),'median_lands':statistics.median(r['lands'] for r in rs),
+                      'median_hands':statistics.median(r['hands'] for r in rs),'median_productive':statistics.median(r['productive'] for r in rs)}
+          c=summary('candidate'); b=summary('control'); deltas=[r['delta'] for r in rows]
+          report={'version':'33.2.1-cow-unlock','mechanism':'remove inherited V19 4-cow and unlocked_quadrants target gates only',
+                  'candidate':c,'control_v19_2':b,'paired':{'wins':sum(d>0 for d in deltas),'losses':sum(d<0 for d in deltas),'ties':sum(d==0 for d in deltas),
+                  'mean_delta':statistics.mean(deltas),'median_delta':statistics.median(deltas)},
+                  'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
+          Path('/tmp/v3321.json').write_text(json.dumps(report,indent=2))
           print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
-      - name: Persist benchmark report on V33 branch
+      - name: Record candidate result to issue 16
         if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -f benchmarks/v33_latest.json ]; then
-            git config user.name github-actions[bot]
-            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-            git add benchmarks/v33_latest.json
-            git commit -m 'Record V33 industrial gate benchmark' || true
-            git push origin HEAD:agent/v33-industrial
-          fi
+          { echo '## V33.2.1 isolated cow-unlock benchmark'; echo; echo '**Mechanism:** remove inherited V19 four-cow + unreliable unlocked_quadrants livestock target gates only; V19.2 remains isolated control.'; echo; echo '```json'; cat /tmp/v3321.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/comment.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/comment.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-industrial-150k-gate
-          path: benchmarks/v33_latest.json
+          name: v33-2-1-isolated-cow-unlock
+          path: /tmp/v3321.json
           if-no-files-found: ignore
           retention-days: 14
