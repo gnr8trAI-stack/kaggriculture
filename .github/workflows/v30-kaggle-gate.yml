@@ -5,9 +5,12 @@ on:
     branches: [v30-economic-compounder]
     paths:
       - '.github/workflows/v30-kaggle-gate.yml'
-  pull_request:
-    branches: [main, master]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   gate:
@@ -21,19 +24,78 @@ jobs:
           python-version: '3.11'
       - name: Install Kaggle CLI
         run: pip install -q kaggle
-      - name: Verify auth
+      - name: Query Kaggle
         run: |
+          set -e
           test -n "$KAGGLE_API_TOKEN"
-          kaggle competitions list -s kaggriculture --csv
-      - name: Current submissions
+          kaggle competitions list -s kaggriculture --csv > /tmp/competition.csv
+          kaggle competitions submissions kaggriculture --csv > /tmp/submissions.csv
+          kaggle competitions leaderboard kaggriculture -s -v > /tmp/leaderboard.txt 2>&1 || true
+          python - <<'PY'
+          import csv, json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from kaggle.api.kaggle_api_extended import KaggleApi
+
+          now = datetime.now(timezone.utc)
+          api = KaggleApi(); api.authenticate()
+          max_daily = None
+          comp_dump = {}
+          try:
+              comp = api.competition_view('kaggriculture')
+              if hasattr(comp, 'to_dict'):
+                  comp_dump = comp.to_dict()
+              elif hasattr(comp, '__dict__'):
+                  comp_dump = dict(comp.__dict__)
+              for key in ('maxDailySubmissions','max_daily_submissions','dailySubmissionLimit','daily_submission_limit'):
+                  val = comp_dump.get(key)
+                  if val is not None:
+                      max_daily = int(val)
+                      break
+          except Exception as e:
+              comp_dump = {'competition_view_error': repr(e)}
+
+          rows=[]
+          with open('/tmp/submissions.csv', newline='', encoding='utf-8-sig') as f:
+              rows=list(csv.DictReader(f))
+
+          def parse_date(r):
+              for k in ('date','Date','submittedAt','submitted_at'):
+                  v=r.get(k)
+                  if not v: continue
+                  for fmt in ('%Y-%m-%d %H:%M:%S','%Y-%m-%dT%H:%M:%S.%fZ','%Y-%m-%dT%H:%M:%SZ'):
+                      try:
+                          dt=datetime.strptime(v,fmt).replace(tzinfo=timezone.utc)
+                          return dt
+                      except Exception: pass
+              return None
+
+          today=[r for r in rows if (parse_date(r) and parse_date(r).date()==now.date())]
+          recent=rows[:12]
+          remaining = None if max_daily is None else max(0,max_daily-len(today))
+          gate_open = (remaining is not None and remaining > 0)
+          payload={
+              'utc_now': now.isoformat(),
+              'max_daily_submissions': max_daily,
+              'submissions_today_utc': len(today),
+              'remaining_today': remaining,
+              'gate_open': gate_open,
+              'recent_submissions': recent,
+              'competition_fields_subset': {k:v for k,v in comp_dump.items() if 'submit' in str(k).lower() or 'deadline' in str(k).lower() or 'title' in str(k).lower()},
+              'leaderboard_tail': Path('/tmp/leaderboard.txt').read_text(errors='replace')[-6000:],
+          }
+          Path('/tmp/gate.json').write_text(json.dumps(payload,indent=2,default=str))
+          print(json.dumps(payload,indent=2,default=str))
+          PY
+      - name: Comment result on gate PR
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo '=== SUBMISSIONS_VERBOSE ==='
-          kaggle competitions submissions kaggriculture -v || true
-          echo '=== SUBMISSIONS_CSV ==='
-          kaggle competitions submissions kaggriculture --csv || true
-      - name: Current leaderboard
-        run: |
-          echo '=== LEADERBOARD ==='
-          kaggle competitions leaderboard kaggriculture -s -v || kaggle competitions leaderboard kaggriculture -s || true
-      - name: UTC clock
-        run: date -u '+UTC_NOW=%Y-%m-%dT%H:%M:%SZ'
+          {
+            echo '### V30 Kaggle gate check'
+            echo
+            echo '```json'
+            cat /tmp/gate.json
+            echo '```'
+          } > /tmp/comment.md
+          gh pr comment 15 --repo "$GITHUB_REPOSITORY" --body-file /tmp/comment.md
