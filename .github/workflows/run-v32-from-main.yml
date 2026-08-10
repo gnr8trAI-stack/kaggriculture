@@ -1,4 +1,4 @@
-name: run-v32.2-from-main
+name: run-v32.3-from-main
 on:
   push:
     branches: [main]
@@ -13,69 +13,101 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: agent/v32.2-cashflow-first
+          ref: agent/v32.3-v19plus
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - run: pip install -q kaggle-environments
-      - name: Compile and import V32.2
+      - name: Compile V32.3
         run: |
-          python -m py_compile agents/v32_state_adaptive_frontier.py agents/v32_2_cashflow_first.py
+          python -m py_compile agents/v19_livestock_compound.py agents/v19_2_early_scale8.py agents/v32_3_v19plus.py
           python - <<'PY'
-          import agents.v32_2_cashflow_first as a
+          import agents.v32_3_v19plus as a
           assert callable(a.agent)
-          print('V32.2 import OK')
+          print('V32.3 import OK')
           PY
-      - name: Run 44-game benchmark
+      - name: Benchmark V19.2 baseline in isolated process
         run: |
           mkdir -p artifacts
           python - <<'PY'
-          import json,statistics
+          import json, statistics
           from pathlib import Path
           from kaggle_environments import make
-          import agents.v32_2_cashflow_first as v32
-          import agents.v19_2_early_scale8 as v19
+          import agents.v19_2_early_scale8 as a
           BAD={'ERROR','INVALID','TIMEOUT'}
-          def reset(m):
-              f=getattr(m,'reset_state',None)
-              if callable(f): f()
-          def play(mine,opp,seat,seed,series):
-              reset(mine); reset(v19)
-              env=make('kaggriculture',configuration={'seed':seed},debug=True)
-              env.run([mine.agent,opp] if seat==0 else [opp,mine.agent])
-              a=env.state[seat]; b=env.state[1-seat]
-              tele=getattr(mine,'get_telemetry',lambda clear=False:[])(clear=True) or []
-              dm={int(r.get('day',-1)):float(r.get('money',0) or 0) for r in tele}
-              rr=float(a.reward or 0); ro=float(b.reward or 0)
-              return {'series':series,'seat':seat,'seed':seed,'reward':rr,'opp':ro,'delta':rr-ro,'result':'win' if rr>ro else 'loss' if rr<ro else 'tie','status':str(a.status),'d12':dm.get(12,0),'d20':dm.get(20,0),'d25':dm.get(25,0),'max_land':max([int(x.get('land',0) or 0) for x in tele] or [0]),'max_cows':max([int(x.get('cows',0) or 0) for x in tele] or [0]),'max_sheep':max([int(x.get('sheep',0) or 0) for x in tele] or [0])}
           rows=[]
           for seat in (0,1):
-              for i in range(12): rows.append(play(v32,'starter',seat,324000+i,'starter'))
+            for i in range(16):
+              if hasattr(a,'reset_state'): a.reset_state()
+              seed=326000+i
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+              st=env.state[seat]; op=env.state[1-seat]
+              tele=a.get_telemetry(clear=True) or []
+              dm={int(r.get('day',-1)):float(r.get('money',0) or 0) for r in tele}
+              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'opp':float(op.reward or 0),'status':str(st.status),'d12':dm.get(12,0),'d20':dm.get(20,0),'d25':dm.get(25,0),'max_cows':max([int(r.get('cows',0) or 0) for r in tele] or [0]),'max_land':max([int(r.get('land',0) or 0) for r in tele] or [0])})
+          Path('artifacts/v19_2_isolated.json').write_text(json.dumps(rows,indent=2))
+          print('baseline median',statistics.median(r['reward'] for r in rows))
+          PY
+      - name: Benchmark V32.3 in isolated process
+        run: |
+          python - <<'PY'
+          import json, statistics
+          from pathlib import Path
+          from kaggle_environments import make
+          import agents.v32_3_v19plus as a
+          rows=[]
           for seat in (0,1):
-              for i in range(10): rows.append(play(v32,v19.agent,seat,325000+i,'v19.2'))
-          Path('artifacts/v32_2_rows.json').write_text(json.dumps(rows,indent=2))
-          def summary(series):
-              g=[r for r in rows if r['series']==series]
-              return {'games':len(g),'wins':sum(r['result']=='win' for r in g),'losses':sum(r['result']=='loss' for r in g),'ties':sum(r['result']=='tie' for r in g),'mean':statistics.fmean(r['reward'] for r in g),'median':statistics.median(r['reward'] for r in g),'mean_delta':statistics.fmean(r['delta'] for r in g),'invalid':sum(r['status'] in BAD for r in g),'median_d12':statistics.median(r['d12'] for r in g),'median_d20':statistics.median(r['d20'] for r in g),'median_d25':statistics.median(r['d25'] for r in g),'three_land':sum(r['max_land']>=3 for r in g),'herd8_6':sum(r['max_cows']>=8 and r['max_sheep']>=6 for r in g),'max_reward':max(r['reward'] for r in g)}
-          s=summary('starter'); h=summary('v19.2')
-          promote=(s['invalid']==0 and h['invalid']==0 and s['median']>=70000 and s['median_d20']>=30000 and s['three_land']>=12 and h['mean_delta']>0 and h['wins']>=12)
-          report={'version':'32.2.0-alpha1','starter':s,'vs_v19_2':h,'promotion_pass':promote}
-          Path('artifacts/v32_2_report.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
+            for i in range(16):
+              if hasattr(a,'reset_state'): a.reset_state()
+              seed=326000+i
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+              st=env.state[seat]; op=env.state[1-seat]
+              tele=a.get_telemetry(clear=True) or []
+              dm={int(r.get('day',-1)):float(r.get('money',0) or 0) for r in tele}
+              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'opp':float(op.reward or 0),'status':str(st.status),'d12':dm.get(12,0),'d20':dm.get(20,0),'d25':dm.get(25,0),'max_cows':max([int(r.get('cows',0) or 0) for r in tele] or [0]),'max_land':max([int(r.get('land',0) or 0) for r in tele] or [0])})
+          Path('artifacts/v32_3_isolated.json').write_text(json.dumps(rows,indent=2))
+          print('candidate median',statistics.median(r['reward'] for r in rows))
+          PY
+      - name: Compare paired results
+        run: |
+          python - <<'PY'
+          import json,statistics
+          from pathlib import Path
+          BAD={'ERROR','INVALID','TIMEOUT'}
+          b=json.loads(Path('artifacts/v19_2_isolated.json').read_text())
+          c=json.loads(Path('artifacts/v32_3_isolated.json').read_text())
+          key=lambda r:(r['seat'],r['seed'])
+          bm={key(r):r for r in b}; cm={key(r):r for r in c}
+          paired=[]
+          for k in sorted(bm):
+            x,y=bm[k],cm[k]
+            paired.append({'seat':k[0],'seed':k[1],'baseline':x['reward'],'candidate':y['reward'],'delta':y['reward']-x['reward']})
+          def summ(rows):
+            return {'games':len(rows),'mean':statistics.fmean(r['reward'] for r in rows),'median':statistics.median(r['reward'] for r in rows),'median_d12':statistics.median(r['d12'] for r in rows),'median_d20':statistics.median(r['d20'] for r in rows),'median_d25':statistics.median(r['d25'] for r in rows),'invalid':sum(r['status'] in BAD for r in rows),'max_reward':max(r['reward'] for r in rows),'six_cow_games':sum(r['max_cows']>=6 for r in rows),'two_land_games':sum(r['max_land']>=2 for r in rows)}
+          sb,sc=summ(b),summ(c)
+          deltas=[r['delta'] for r in paired]
+          compare={'paired_wins':sum(d>0 for d in deltas),'paired_losses':sum(d<0 for d in deltas),'paired_ties':sum(d==0 for d in deltas),'mean_delta':statistics.fmean(deltas),'median_delta':statistics.median(deltas)}
+          promote=(sc['invalid']==0 and sc['median']>sb['median'] and sc['mean']>sb['mean'] and sc['median_d20']>=sb['median_d20'] and compare['paired_wins']>=20 and compare['mean_delta']>0)
+          report={'version':'32.3.0-alpha1','baseline_v19_2':sb,'candidate_v32_3':sc,'paired':compare,'promotion_pass':promote}
+          Path('artifacts/v32_3_report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
           PY
       - name: Post report to issue 16
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -f artifacts/v32_2_report.json ]; then
-            { echo '## V32.2 cashflow-first benchmark result'; echo; echo '```json'; cat artifacts/v32_2_report.json; echo '```'; } > /tmp/v32.md
+          if [ -f artifacts/v32_3_report.json ]; then
+            { echo '## V32.3 isolated V19.2-plus benchmark result'; echo; echo '```json'; cat artifacts/v32_3_report.json; echo '```'; } > /tmp/v32.md
           else
-            echo '## V32.2 benchmark failed before report generation' > /tmp/v32.md
+            echo '## V32.3 benchmark failed before report generation' > /tmp/v32.md
           fi
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v32.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v32-2-cashflow-first-benchmark
+          name: v32-3-isolated-v19plus-benchmark
           path: artifacts/
           retention-days: 14
