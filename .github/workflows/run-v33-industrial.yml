@@ -1,4 +1,4 @@
-name: run-v33.1-industrial-milk
+name: run-v33.1.1-grid-industrial-milk
 on:
   push:
     branches: [main]
@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
+      - name: Announce benchmark start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V33.1.1 benchmark started\n\nRun: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\n\nRef under test: \`agent/v33.1-industrial-milk\`"
       - uses: actions/checkout@v6
         with:
           ref: agent/v33.1-industrial-milk
@@ -62,7 +67,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V33.1.1 Grid Industrial Milk benchmark'; echo; echo '```json'; cat /tmp/v331_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v331.md
+          { echo '## V33.1.1 Grid Industrial Milk benchmark'; echo; echo "Run: https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"; echo; echo '```json'; cat /tmp/v331_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v331.md
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v331.md
       - uses: actions/upload-artifact@v4
         if: always()
