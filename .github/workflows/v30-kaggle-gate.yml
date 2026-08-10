@@ -5,6 +5,8 @@ on:
     branches: [v30-economic-compounder]
     paths:
       - '.github/workflows/v30-kaggle-gate.yml'
+  pull_request:
+    branches: [main, master]
   workflow_dispatch:
 
 jobs:
