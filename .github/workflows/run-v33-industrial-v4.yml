@@ -1,0 +1,56 @@
+name: run-v33-industrial-v4
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/run-v33-industrial-v4.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33-industrial
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - run: python -m py_compile agents/v33_industrial.py agents/v33_industrial_v4.py
+      - name: benchmark
+        run: |
+          python - <<'PY'
+          import json, statistics, subprocess, os
+          from kaggle_environments import make
+          import agents.v33_industrial_v4 as a
+          results=[]
+          for seed in range(334000,334012):
+            for seat in (0,1):
+              a.reset_state(); env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+              st=env.state[seat]; tel=a.get_telemetry(); last=tel[-1] if tel else {}; qs=[last.get(f'q{i}',{}) for i in range(1,5)]
+              def snap(d):
+                rows=[r for r in tel if int(r.get('day',-1))<=d]; r=rows[-1] if rows else {}
+                return {'money':float(r.get('money',0) or 0),'productive':int(r.get('productive',0) or 0),'lands':int(r.get('lands',0) or 0),'hands':int(r.get('hands',0) or 0),'animals':int(r.get('animals',0) or 0)}
+              results.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),'lands':int(last.get('lands',0) or 0),'hands':int(last.get('hands',0) or 0),'animals':int(last.get('animals',0) or 0),'productive':int(last.get('productive',0) or 0),'idle':int(last.get('idle',0) or 0),'utilization':float(last.get('utilization',0) or 0),'q_productive':[int(q.get('productive',0) or 0) for q in qs],'q_animals':[int(q.get('animals',0) or 0) for q in qs],'unlock_steps':last.get('land_unlock_steps',{}),'capex':last.get('cumulative_capex',{}),'revenue_proxy':float(last.get('cumulative_revenue_proxy',0) or 0),'d12':snap(12),'d20':snap(20),'d25':snap(25),'action_counts':last.get('action_counts',{})})
+          rw=[r['reward'] for r in results]; med=lambda x: statistics.median(x) if x else 0; invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
+          report={'version':'33.4.0-industrial-cashflow','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'games':len(results),'invalid':invalid,'mean_reward':statistics.mean(rw),'median_reward':med(rw),'min_reward':min(rw),'p10_reward':sorted(rw)[max(0,int(len(rw)*.1)-1)],'max_reward':max(rw),'four_land_games':sum(r['lands']>=4 for r in results),'q3_active_games':sum(r['q_productive'][2]>=4 for r in results),'q4_active_games':sum(r['q_productive'][3]>=6 for r in results),'median_hands':med([r['hands'] for r in results]),'median_animals':med([r['animals'] for r in results]),'median_productive':med([r['productive'] for r in results]),'median_d12_money':med([r['d12']['money'] for r in results]),'median_d20_money':med([r['d20']['money'] for r in results]),'median_d25_money':med([r['d25']['money'] for r in results]),'stage_a_pass':invalid==0 and sum(r['lands']>=4 for r in results)>=18 and sum(r['q_productive'][2]>=4 for r in results)>=18 and sum(r['q_productive'][3]>=6 for r in results)>=18,'ready_150k':invalid==0 and len(results)>=24 and med(rw)>=150000 and min(rw)>=100000,'games_detail':results}
+          os.makedirs('benchmarks',exist_ok=True); open('benchmarks/v33_v4_latest.json','w').write(json.dumps(report,indent=2)); print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+          PY
+      - name: persist
+        if: always()
+        run: |
+          if [ -f benchmarks/v33_v4_latest.json ]; then
+            git config user.name github-actions[bot]; git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add benchmarks/v33_v4_latest.json; git commit -m 'Record V33.4 industrial benchmark' || true; git push origin HEAD:agent/v33-industrial
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v33-industrial-v4
+          path: benchmarks/v33_v4_latest.json
+          if-no-files-found: ignore
+          retention-days: 14
