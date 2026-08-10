@@ -1,0 +1,117 @@
+name: submit-v33.2-live
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/submit-v33-2.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33.2-industrial-frontier
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -q kaggle kaggle-environments
+      - name: Build standalone V33.2
+        run: |
+          mkdir -p dist
+          python - <<'PY'
+          from pathlib import Path
+          import base64, zlib
+          mods=[
+            ('agents.v15_champion','agents/v15_champion.py'),
+            ('agents.v19_livestock_compound','agents/v19_livestock_compound.py'),
+            ('agents.v19_2_early_scale8','agents/v19_2_early_scale8.py'),
+            ('agents.v33_industrial','agents/v33_industrial.py'),
+            ('agents.v33_2_industrial_frontier','agents/v33_2_industrial_frontier.py'),
+          ]
+          payloads=[]
+          for name,path in mods:
+            src=Path(path).read_text(encoding='utf-8')
+            payloads.append((name,base64.b64encode(zlib.compress(src.encode(),9)).decode()))
+          out=[
+            'import sys, types, base64, zlib',
+            "agents=types.ModuleType('agents')",
+            "agents.__path__=[]",
+            "sys.modules['agents']=agents",
+            f'_PAYLOADS={payloads!r}',
+            'for _name,_blob in _PAYLOADS:',
+            '    _mod=types.ModuleType(_name)',
+            "    _mod.__package__='agents'",
+            '    sys.modules[_name]=_mod',
+            "    setattr(agents,_name.rsplit('.',1)[1],_mod)",
+            "    exec(compile(zlib.decompress(base64.b64decode(_blob)).decode('utf-8'),'<embedded:'+_name+'>','exec'),_mod.__dict__)",
+            "agent=sys.modules['agents.v33_2_industrial_frontier'].agent",
+          ]
+          Path('dist/kaggriculture_v33.2_industrial_frontier.py').write_text('\n'.join(out)+'\n',encoding='utf-8')
+          PY
+          python -m py_compile dist/kaggriculture_v33.2_industrial_frontier.py
+      - name: Exact file-agent smoke test
+        run: |
+          rm -rf /tmp/v332 && mkdir /tmp/v332
+          cp dist/kaggriculture_v33.2_industrial_frontier.py /tmp/v332/submission.py
+          cd /tmp/v332
+          python - <<'PY'
+          from kaggle_environments import make
+          for seed,seat in [(332001,0),(332002,1)]:
+            env=make('kaggriculture',configuration={'seed':seed},debug=True)
+            env.run(['submission.py','starter'] if seat==0 else ['starter','submission.py'])
+            st=env.state[seat]
+            print(seed,seat,st.status,st.reward)
+            assert str(st.status) not in {'ERROR','INVALID','TIMEOUT'}
+          PY
+      - name: Submit V33.2
+        id: submit
+        run: |
+          set +e
+          kaggle competitions submit -c kaggriculture -f dist/kaggriculture_v33.2_industrial_frontier.py -m 'V33.2 Industrial Frontier replay-driven compounder' > /tmp/submit.txt 2>&1
+          rc=$?
+          cat /tmp/submit.txt
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          exit "$rc"
+      - name: Poll terminal status
+        id: poll
+        if: success()
+        run: |
+          set -e
+          for i in $(seq 1 24); do
+            kaggle competitions submissions -c kaggriculture -v > /tmp/final.txt 2>&1
+            row=$(grep 'V33.2 Industrial Frontier replay-driven compounder' /tmp/final.txt | head -1 || true)
+            echo "$row"
+            if echo "$row" | grep -q 'SubmissionStatus.COMPLETE'; then echo 'terminal=COMPLETE' >> "$GITHUB_OUTPUT"; exit 0; fi
+            if echo "$row" | grep -q 'SubmissionStatus.ERROR'; then echo 'terminal=ERROR' >> "$GITHUB_OUTPUT"; exit 2; fi
+            sleep 20
+          done
+          echo 'terminal=PENDING_TIMEOUT' >> "$GITHUB_OUTPUT"
+          exit 3
+      - name: Post result to issue 16
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TERMINAL: ${{ steps.poll.outputs.terminal }}
+        run: |
+          kaggle competitions submissions -c kaggriculture -v > /tmp/final.txt 2>&1 || true
+          { echo '## V33.2 Industrial Frontier live submission'; echo; echo "**Terminal:** \`${TERMINAL:-unknown}\`"; echo; echo '```text'; grep 'V33.2 Industrial Frontier replay-driven compounder' /tmp/final.txt | head -1 || true; echo '```'; echo '### submit response'; echo '```text'; cat /tmp/submit.txt 2>/dev/null || true; echo '```'; } > /tmp/result.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/result.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v33-2-live
+          path: |
+            dist/
+            /tmp/submit.txt
+            /tmp/final.txt
+          if-no-files-found: ignore
+          retention-days: 14
