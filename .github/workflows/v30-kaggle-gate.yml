@@ -41,8 +41,13 @@ jobs:
               subs=list(csv.DictReader(f))
           with open('/tmp/entered.csv',newline='',encoding='utf-8-sig') as f:
               entered=list(csv.DictReader(f))
-          comp=next((r for r in entered if (r.get('ref') or '').strip()=='kaggriculture'),{})
+          comp=next((r for r in entered if any('kaggriculture' in str(v).lower() for v in r.values())),{})
 
+          def field(row,*names):
+              low={str(k).lower():v for k,v in row.items()}
+              for name in names:
+                  if name.lower() in low:return low[name.lower()]
+              return None
           def parse_date(r):
               for k in ('date','Date','submittedAt','submitted_at'):
                   v=r.get(k)
@@ -55,9 +60,10 @@ jobs:
           hard_limit=5
           payload={
               'utc_now':now.isoformat(),
-              'gnr8tr_rank':int(comp.get('userRank') or 0),
-              'team_count':int(comp.get('teamCount') or 0),
+              'gnr8tr_rank':int(field(comp,'userRank','user_rank') or 0),
+              'team_count':int(field(comp,'teamCount','team_count') or 0),
               'competition_row':comp,
+              'entered_rows':entered,
               'submissions_today_utc':len(today),
               'hard_daily_limit':hard_limit,
               'remaining_today':max(0,hard_limit-len(today)),
