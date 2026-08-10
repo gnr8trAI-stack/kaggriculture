@@ -1,4 +1,4 @@
-name: v33-market-probe
+name: v33-market-probe2
 on:
   push:
     branches: [main]
@@ -17,37 +17,35 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -q kaggle-environments
-      - name: Run isolated market probes
+      - name: Probe multi-order market semantics
         run: |
           python - <<'PY'
           import json, os
           from kaggle_environments import make
           cases={
-            'hire':['HIRE'],
-            'hire_qty':['HIRE',1],
-            'land':['BUY_LAND'],
-            'seed':['BUY_SEED','WHEAT',5],
-            'seed_melon':['BUY_SEED','MELON',5],
-            'product':['BUY_PRODUCT','WHEAT',5],
-            'cow':['BUY_ANIMAL','COW',1],
+            'two_hires':[['HIRE'],['HIRE']],
+            'hire_seed':[['HIRE'],['BUY_SEED','WHEAT',5]],
+            'seed_hire':[['BUY_SEED','WHEAT',5],['HIRE']],
+            'land_hire':[['BUY_LAND'],['HIRE']],
+            'hire_land':[['HIRE'],['BUY_LAND']],
+            'hire3_seed':[['HIRE'],['HIRE'],['HIRE'],['BUY_SEED','WHEAT',10]],
           }
           out={}
-          for ci,(name,order) in enumerate(cases.items()):
+          for ci,(name,orders) in enumerate(cases.items()):
             rows=[]
             def agent(obs,config=None):
               o=obs if isinstance(obs,dict) else {k:getattr(obs,k) for k in ('player','step','day','hour','farms','private','market','town') if hasattr(obs,k)}
               p=int(o.get('player',0)); farm=(o.get('farms') or [{}])[p]; prv=o.get('private') or {}
-              rows.append({'step':int(o.get('step',0) or 0),'day':int(o.get('day',0) or 0),'hour':int(o.get('hour',0) or 0),'money':farm.get('money'),'hands':farm.get('hands'),'hires_today':farm.get('hires_today'),'unlocked':farm.get('unlocked_quadrants'),'seeds':prv.get('seeds'),'shed':prv.get('shed'),'inventories':prv.get('inventories')})
-              market=[order] if len(rows)==1 else []
-              return {'farmer':['PASS'],'hands':[['PASS'] for _ in (farm.get('hands') or [])],'market':market}
-            env=make('kaggriculture',configuration={'seed':335100+ci},debug=True); env.run([agent,'starter'])
-            out[name]={'order':order,'rows':rows[:6],'status':str(env.state[0].status),'reward':env.state[0].reward}
-          os.makedirs('benchmarks',exist_ok=True); open('benchmarks/v33_market_probe.json','w').write(json.dumps(out,indent=2,default=str))
+              rows.append({'step':int(o.get('step',0) or 0),'money':farm.get('money'),'hands':farm.get('hands'),'hires_today':farm.get('hires_today'),'unlocked':farm.get('unlocked_quadrants'),'seeds':prv.get('seeds')})
+              return {'farmer':['PASS'],'hands':[['PASS'] for _ in (farm.get('hands') or [])],'market':orders if len(rows)==1 else []}
+            env=make('kaggriculture',configuration={'seed':335200+ci},debug=True); env.run([agent,'starter'])
+            out[name]={'orders':orders,'rows':rows[:4],'status':str(env.state[0].status),'reward':env.state[0].reward}
+          os.makedirs('benchmarks',exist_ok=True); open('benchmarks/v33_market_probe2.json','w').write(json.dumps(out,indent=2,default=str))
           PY
       - name: Persist probe
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add benchmarks/v33_market_probe.json
-          git commit -m 'Record V33 market mechanics probe' || true
+          git add benchmarks/v33_market_probe2.json
+          git commit -m 'Record V33 multi-order market probe' || true
           git push origin HEAD:agent/v33-industrial
