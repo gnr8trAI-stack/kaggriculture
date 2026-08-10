@@ -1,6 +1,8 @@
 name: live-elite-submit-now
 on:
-  workflow_dispatch:
+  push:
+    branches: [live/elite-industrial-180k]
+    paths: ['.github/workflows/live-elite-submit-now.yml']
 permissions:
   contents: read
 jobs:
@@ -13,12 +15,55 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - run: pip install -q kaggle
-      - name: Build
+      - run: pip install -q kaggle kaggle-environments
+      - name: Build fixed standalone donor
         run: |
-          mkdir -p dist
-          cp agents/v23_direct_donor_clock.py dist/main.py
+          set -euo pipefail
+          mkdir -p dist artifacts
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          src=Path('agents/v23_direct_donor_clock.py').read_text()
+          old='_SCHEDULE=json.loads(zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8"))'
+          new='''\ndef _decode_schedule_payload(payload):\n    data=base64.b64decode(payload)\n    try:\n        raw=zlib.decompress(data)\n    except zlib.error:\n        raw=zlib.decompress(data[2:-4], -zlib.MAX_WBITS)\n    value=json.loads(raw.decode("utf-8"))\n    if not isinstance(value,list) or len(value)!=720:\n        raise ValueError("donor schedule integrity failure")\n    return value\n_SCHEDULE=_decode_schedule_payload(_PAYLOAD)'''
+          assert old in src
+          src=src.replace(old,new,1)
+          compile(src,'main.py','exec')
+          Path('dist/main.py').write_text(src)
+          with zipfile.ZipFile('dist/submission.zip','w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+              z.write('dist/main.py','main.py')
+          PY
           python -m py_compile dist/main.py
-          cd dist && zip -9 submission.zip main.py
-      - name: Submit
-        run: kaggle competitions submit kaggriculture -f dist/submission.zip -m "Elite industrial livestock replay reconstruction"
+      - name: Import and simulator smoke
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from kaggle_environments import make
+          spec=importlib.util.spec_from_file_location('elite','dist/main.py')
+          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+          assert callable(mod.agent)
+          env=make('kaggriculture',configuration={'seed':180002},debug=True)
+          env.run([mod.agent,'starter'])
+          s=env.state[0]
+          print('reward',s.reward,'status',s.status)
+          if str(s.status).upper() in {'ERROR','INVALID','TIMEOUT'}:
+              raise SystemExit('runtime smoke failed')
+          PY
+      - name: Hard quota guard
+        run: |
+          kaggle competitions submissions kaggriculture -v -q > artifacts/submissions_before.csv
+          python - <<'PY'
+          import csv,datetime
+          rows=list(csv.DictReader(open('artifacts/submissions_before.csv')))
+          today=datetime.datetime.now(datetime.timezone.utc).date()
+          used=0
+          for r in rows:
+              raw=r.get('date','')
+              try:d=datetime.datetime.fromisoformat(raw.replace('Z','+00:00')).date()
+              except:continue
+              if d==today: used+=1
+          print({'used_today':used,'remaining':max(0,5-used)})
+          if used>=5: raise SystemExit('daily quota exhausted')
+          PY
+      - name: Submit fixed elite reconstruction
+        run: kaggle competitions submit kaggriculture -f dist/submission.zip -m "Elite industrial livestock 180k reconstruction alpha2"
