@@ -1,0 +1,105 @@
+name: submit-v32.4-live
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/submit-v32-4.yml']
+permissions:
+  contents: read
+  issues: write
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+      KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v32.4-surplus-land
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -q kaggle kaggle-environments
+      - name: Compile and smoke V32.4
+        run: |
+          python -m py_compile agents/v32_4_surplus_land.py agents/v19_2_early_scale8.py agents/v19_livestock_compound.py agents/v15_champion.py
+          python - <<'PY'
+          from kaggle_environments import make
+          import agents.v32_4_surplus_land as a
+          assert callable(a.agent)
+          a.reset_state()
+          env=make('kaggriculture',configuration={'seed':329004},debug=True)
+          env.run([a.agent,'starter'])
+          st=env.state[0]
+          print('status=',st.status,'reward=',st.reward)
+          assert str(st.status) not in {'ERROR','INVALID','TIMEOUT'}
+          PY
+      - name: Build submission zip
+        run: |
+          rm -rf dist /tmp/v324pkg /tmp/v324smoke
+          mkdir -p dist /tmp/v324pkg/agents /tmp/v324smoke
+          printf 'from agents.v32_4_surplus_land import agent\n' > /tmp/v324pkg/main.py
+          cp agents/*.py /tmp/v324pkg/agents/
+          (cd /tmp/v324pkg && zip -qr "$GITHUB_WORKSPACE/dist/kaggriculture_v32.4_surplus-land_submission.zip" main.py agents)
+          (cd /tmp/v324smoke && unzip -q "$GITHUB_WORKSPACE/dist/kaggriculture_v32.4_surplus-land_submission.zip")
+          PYTHONPATH=/tmp/v324smoke python - <<'PY'
+          import main
+          assert callable(main.agent)
+          print('packaged main import OK')
+          PY
+          unzip -l dist/kaggriculture_v32.4_surplus-land_submission.zip | head -40
+      - name: Check Kaggle auth and current submissions
+        id: presubmit
+        run: |
+          set +e
+          kaggle competitions submissions -c kaggriculture -v > /tmp/before.txt 2>&1
+          rc=$?
+          cat /tmp/before.txt
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          if [ "$rc" -ne 0 ]; then
+            echo 'Kaggle authentication/submission-list check failed.'
+            exit "$rc"
+          fi
+      - name: Submit V32.4
+        run: |
+          kaggle competitions submit -c kaggriculture \
+            -f dist/kaggriculture_v32.4_surplus-land_submission.zip \
+            -m 'V32.4 surplus-funded second-land live test'
+      - name: Refresh live submission row
+        if: always()
+        run: |
+          sleep 20
+          set +e
+          kaggle competitions submissions -c kaggriculture -v > /tmp/after.txt 2>&1
+          cat /tmp/after.txt
+          exit 0
+      - name: Post result to issue 16
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo '## V32.4 Kaggle live submission attempt'
+            echo
+            echo '**Source:** `agent/v32.4-surplus-land`'
+            echo '**File:** `kaggriculture_v32.4_surplus-land_submission.zip`'
+            echo
+            echo '### Kaggle submissions after attempt'
+            echo '```text'
+            if [ -f /tmp/after.txt ]; then tail -30 /tmp/after.txt; elif [ -f /tmp/before.txt ]; then tail -30 /tmp/before.txt; else echo 'No Kaggle CLI output captured'; fi
+            echo '```'
+          } > /tmp/v324.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v324.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v32-4-live-submission-package
+          path: |
+            dist/
+            /tmp/before.txt
+            /tmp/after.txt
+          if-no-files-found: ignore
+          retention-days: 14
