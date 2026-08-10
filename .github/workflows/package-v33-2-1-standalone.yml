@@ -1,0 +1,91 @@
+name: package-v33-2-1-standalone
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/package-v33-2-1-standalone.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Announce packaging start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V33.2.1 standalone packaging started\n\nRun: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\n\nNo Kaggle submission step exists in this workflow."
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33.2.1-frontier-livestock-fix
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle environment
+        run: pip install -q kaggle-environments
+      - name: Build self-contained submission
+        run: |
+          mkdir -p dist
+          python - <<'PY'
+          from pathlib import Path
+          import base64, zlib
+          mods = [
+              ('agents.v15_champion','agents/v15_champion.py'),
+              ('agents.v19_livestock_compound','agents/v19_livestock_compound.py'),
+              ('agents.v19_2_early_scale8','agents/v19_2_early_scale8.py'),
+              ('agents.v33_industrial','agents/v33_industrial.py'),
+              ('agents.v33_2_industrial_frontier','agents/v33_2_industrial_frontier.py'),
+              ('agents.v33_2_1_frontier_livestock_fix','agents/v33_2_1_frontier_livestock_fix.py'),
+          ]
+          payloads=[]
+          for name,path in mods:
+              src=Path(path).read_text(encoding='utf-8')
+              payloads.append((name, base64.b64encode(zlib.compress(src.encode(),9)).decode()))
+          out = [
+              '# V33.2.1 Frontier Livestock Fix - standalone Kaggle submission',
+              '# Generated from branch agent/v33.2.1-frontier-livestock-fix',
+              'import sys, types, base64, zlib',
+              "agents = types.ModuleType('agents')",
+              "agents.__path__ = []",
+              "sys.modules['agents'] = agents",
+              f'_PAYLOADS = {payloads!r}',
+              'for _name, _blob in _PAYLOADS:',
+              '    _mod = types.ModuleType(_name)',
+              "    _mod.__package__ = 'agents'",
+              '    sys.modules[_name] = _mod',
+              "    setattr(agents, _name.rsplit('.',1)[1], _mod)",
+              "    exec(compile(zlib.decompress(base64.b64decode(_blob)).decode('utf-8'), '<embedded:'+_name+'>', 'exec'), _mod.__dict__)",
+              "agent = sys.modules['agents.v33_2_1_frontier_livestock_fix'].agent",
+          ]
+          p=Path('dist/kaggriculture_v33.2.1_frontier_livestock_fix_standalone.py')
+          p.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(p, p.stat().st_size)
+          PY
+          python -m py_compile dist/kaggriculture_v33.2.1_frontier_livestock_fix_standalone.py
+      - name: Exact file-agent smoke test both seats
+        run: |
+          rm -rf /tmp/v3321clean && mkdir /tmp/v3321clean
+          cp dist/kaggriculture_v33.2.1_frontier_livestock_fix_standalone.py /tmp/v3321clean/submission.py
+          cd /tmp/v3321clean
+          python - <<'PY'
+          from kaggle_environments import make
+          for seed, seat in ((332101,0),(332102,1)):
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run(['submission.py','starter'] if seat==0 else ['starter','submission.py'])
+              st=env.state[seat]
+              print('seed',seed,'seat',seat,'status',st.status,'reward',st.reward)
+              assert str(st.status) not in {'ERROR','INVALID','TIMEOUT'}
+          PY
+      - name: Record package success
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          size=$(wc -c < dist/kaggriculture_v33.2.1_frontier_livestock_fix_standalone.py)
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V33.2.1 standalone package ready\n\nRun: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\n\nFile: \`kaggriculture_v33.2.1_frontier_livestock_fix_standalone.py\`\nSize: ${size} bytes\nCompile + exact Kaggle file-agent smoke test passed both seats. No submission was made."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v33-2-1-frontier-livestock-standalone
+          path: dist/kaggriculture_v33.2.1_frontier_livestock_fix_standalone.py
+          retention-days: 14
