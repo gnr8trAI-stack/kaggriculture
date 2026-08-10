@@ -20,7 +20,7 @@ jobs:
           python-version: '3.11'
       - name: Install
         run: pip install -q kaggle-environments
-      - name: Compile
+      - name: Compile corrected V33.1
         run: python -m py_compile agents/v33_1_industrial_milk.py agents/v33_industrial.py
       - name: Run 32-game industrial benchmark
         run: |
@@ -43,10 +43,10 @@ jobs:
                     'productive':total_p,'utilization':total_p/max(1,total_u),
                     'q_productive':productive,'q_unlocked':unlocked,'q3_animals':int(qs[2].get('animals',0) or 0),
                     'q3_pasture':int(qs[2].get('pasture',0) or 0),'money':float(last.get('money',0) or 0),
-                    'unlock_steps':last.get('land_unlock_steps',[])})
+                    'should_expand':bool(last.get('should_expand',False))})
           rewards=[r['reward'] for r in results]
           invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
-          report={'version':'33.1.0-industrial-milk','games':len(results),'invalid':invalid,
+          report={'version':'33.1.1-grid-industrial-milk','games':len(results),'invalid':invalid,
             'mean_reward':statistics.mean(rewards),'median_reward':statistics.median(rewards),'min_reward':min(rewards),'p10_reward':sorted(rewards)[max(0,int(len(rewards)*.1)-1)],'max_reward':max(rewards),
             'two_land_games':sum(r['lands']>=2 for r in results),'three_land_games':sum(r['lands']>=3 for r in results),'four_land_games':sum(r['lands']>=4 for r in results),
             'q3_active_games':sum(r['q_productive'][2]>=4 for r in results),'q4_active_games':sum(r['q_productive'][3]>=6 for r in results),
@@ -62,12 +62,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V33.1 Industrial Milk benchmark'; echo; echo '```json'; cat /tmp/v331_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v331.md
+          { echo '## V33.1.1 Grid Industrial Milk benchmark'; echo; echo '```json'; cat /tmp/v331_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v331.md
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v331.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-1-industrial-milk-benchmark
+          name: v33-1-1-grid-industrial-milk-benchmark
           path: /tmp/v331_report.json
           if-no-files-found: ignore
           retention-days: 14
