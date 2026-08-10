@@ -1,0 +1,1723 @@
+{
+  "version": "33.6.0-crop-first",
+  "source_commit": "f32190db98b7829efff08cf84262661e3134b962",
+  "games": 24,
+  "invalid": 0,
+  "mean_reward": 10139.041666666666,
+  "median_reward": 9401.5,
+  "min_reward": 2500.0,
+  "p10_reward": 2972.0,
+  "max_reward": 17472.0,
+  "four_land_games": 21,
+  "q3_active_games": 23,
+  "q4_active_games": 3,
+  "median_hands": 0.0,
+  "median_animals": 0.0,
+  "median_productive": 18.5,
+  "median_d12_money": 1677.5,
+  "median_d20_money": 318.0,
+  "median_d25_money": 3434.5,
+  "stage_a_pass": false,
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 336000,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 3022.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 14,
+      "idle": 82,
+      "utilization": 0.14583333333333334,
+      "q_productive": [
+        6,
+        0,
+        8,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 265,
+        "3": 349,
+        "4": 406
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 235.0,
+        "crop": 4160.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 13915.0,
+      "d12": {
+        "money": 1296.0,
+        "productive": 34,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 15.0,
+        "productive": 39,
+        "lands": 4,
+        "hands": 9,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1069.0,
+        "productive": 22,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2381,
+        "move_to_plant": 159,
+        "plant_strawberry": 55,
+        "water": 1823,
+        "harvest_crop": 823,
+        "drop_inventory": 383,
+        "dig": 312,
+        "build_pasture": 31,
+        "plant_wheat": 20,
+        "plant_carrot": 7
+      }
+    },
+    {
+      "seed": 336000,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 2972.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 15,
+      "idle": 79,
+      "utilization": 0.1595744680851064,
+      "q_productive": [
+        7,
+        0,
+        8,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 265,
+        "3": 349,
+        "4": 406
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 235.0,
+        "crop": 4210.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 13915.0,
+      "d12": {
+        "money": 1296.0,
+        "productive": 34,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 15.0,
+        "productive": 39,
+        "lands": 4,
+        "hands": 9,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1069.0,
+        "productive": 24,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2378,
+        "move_to_plant": 157,
+        "plant_strawberry": 55,
+        "water": 1816,
+        "harvest_crop": 860,
+        "drop_inventory": 383,
+        "dig": 284,
+        "build_pasture": 31,
+        "plant_wheat": 21,
+        "plant_carrot": 9
+      }
+    },
+    {
+      "seed": 336001,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 17472.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 29,
+      "idle": 38,
+      "utilization": 0.43283582089552236,
+      "q_productive": [
+        10,
+        0,
+        11,
+        8
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 377
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5670.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 30168.0,
+      "d12": {
+        "money": 2322.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 357.0,
+        "productive": 64,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 7161.0,
+        "productive": 49,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1913,
+        "move_to_plant": 195,
+        "plant_strawberry": 78,
+        "water": 2471,
+        "harvest_crop": 906,
+        "drop_inventory": 536,
+        "build_pasture": 35,
+        "plant_wheat": 17,
+        "dig": 435,
+        "plant_carrot": 14
+      }
+    },
+    {
+      "seed": 336001,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 9067.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 21,
+      "idle": 53,
+      "utilization": 0.28378378378378377,
+      "q_productive": [
+        9,
+        0,
+        8,
+        4
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 348,
+        "4": 397
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 5240.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 21818.0,
+      "d12": {
+        "money": 1639.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 174.0,
+        "productive": 45,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 2977.0,
+        "productive": 37,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2028,
+        "move_to_plant": 184,
+        "plant_strawberry": 62,
+        "water": 2196,
+        "dig": 402,
+        "harvest_crop": 1131,
+        "drop_inventory": 472,
+        "build_pasture": 34,
+        "plant_wheat": 20,
+        "plant_carrot": 39
+      }
+    },
+    {
+      "seed": 336002,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 15982.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 28,
+      "idle": 31,
+      "utilization": 0.4745762711864407,
+      "q_productive": [
+        13,
+        0,
+        11,
+        4
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 362
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5640.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 28867.0,
+      "d12": {
+        "money": 2322.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 303.0,
+        "productive": 65,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 6616.0,
+        "productive": 53,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1906,
+        "move_to_plant": 244,
+        "plant_strawberry": 78,
+        "water": 2548,
+        "harvest_crop": 909,
+        "drop_inventory": 529,
+        "build_pasture": 35,
+        "plant_wheat": 18,
+        "dig": 317,
+        "plant_carrot": 16
+      }
+    },
+    {
+      "seed": 336002,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 16750.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 29,
+      "idle": 39,
+      "utilization": 0.4264705882352941,
+      "q_productive": [
+        10,
+        0,
+        11,
+        8
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 377
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5750.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 29329.0,
+      "d12": {
+        "money": 2322.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 409.0,
+        "productive": 63,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 6801.0,
+        "productive": 48,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1896,
+        "move_to_plant": 224,
+        "plant_strawberry": 77,
+        "water": 2451,
+        "harvest_crop": 996,
+        "drop_inventory": 536,
+        "build_pasture": 35,
+        "plant_wheat": 19,
+        "dig": 346,
+        "plant_carrot": 20
+      }
+    },
+    {
+      "seed": 336003,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 9141.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 18,
+      "idle": 57,
+      "utilization": 0.24,
+      "q_productive": [
+        7,
+        0,
+        9,
+        2
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 348,
+        "4": 399
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 4940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 20824.0,
+      "d12": {
+        "money": 1560.0,
+        "productive": 35,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 318.0,
+        "productive": 42,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 3507.0,
+        "productive": 36,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2067,
+        "move_to_plant": 169,
+        "plant_strawberry": 57,
+        "water": 2116,
+        "harvest_crop": 1174,
+        "drop_inventory": 457,
+        "dig": 433,
+        "build_pasture": 34,
+        "plant_wheat": 22,
+        "plant_carrot": 38
+      }
+    },
+    {
+      "seed": 336003,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 8489.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 15,
+      "idle": 58,
+      "utilization": 0.2054794520547945,
+      "q_productive": [
+        6,
+        0,
+        9,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 348,
+        "4": 399
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 4940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 20151.0,
+      "d12": {
+        "money": 1560.0,
+        "productive": 35,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 318.0,
+        "productive": 43,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 3261.0,
+        "productive": 36,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2126,
+        "move_to_plant": 194,
+        "plant_strawberry": 57,
+        "water": 2038,
+        "harvest_crop": 1194,
+        "drop_inventory": 463,
+        "dig": 400,
+        "build_pasture": 34,
+        "plant_wheat": 22,
+        "plant_carrot": 39
+      }
+    },
+    {
+      "seed": 336004,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 14108.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 25,
+      "idle": 41,
+      "utilization": 0.3787878787878788,
+      "q_productive": [
+        9,
+        0,
+        11,
+        5
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 377
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5640.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 26493.0,
+      "d12": {
+        "money": 2308.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 401.0,
+        "productive": 60,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 5624.0,
+        "productive": 48,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1854,
+        "move_to_plant": 245,
+        "plant_strawberry": 75,
+        "water": 2428,
+        "harvest_crop": 991,
+        "drop_inventory": 515,
+        "build_pasture": 35,
+        "plant_wheat": 18,
+        "dig": 418,
+        "plant_carrot": 21
+      }
+    },
+    {
+      "seed": 336004,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 14830.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 28,
+      "idle": 38,
+      "utilization": 0.42424242424242425,
+      "q_productive": [
+        10,
+        0,
+        11,
+        7
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 377
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5670.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 27576.0,
+      "d12": {
+        "money": 2308.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 348.0,
+        "productive": 62,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 6096.0,
+        "productive": 47,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1930,
+        "move_to_plant": 223,
+        "plant_strawberry": 75,
+        "water": 2391,
+        "harvest_crop": 1008,
+        "drop_inventory": 537,
+        "build_pasture": 35,
+        "plant_wheat": 19,
+        "dig": 359,
+        "plant_carrot": 24
+      }
+    },
+    {
+      "seed": 336005,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 8048.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 17,
+      "idle": 54,
+      "utilization": 0.23943661971830985,
+      "q_productive": [
+        9,
+        0,
+        8,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 346,
+        "4": 397
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 5370.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 21077.0,
+      "d12": {
+        "money": 2049.0,
+        "productive": 36,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 157.0,
+        "productive": 44,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 2900.0,
+        "productive": 37,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2044,
+        "move_to_plant": 171,
+        "plant_strawberry": 67,
+        "water": 2260,
+        "harvest_crop": 1067,
+        "drop_inventory": 473,
+        "dig": 407,
+        "build_pasture": 31,
+        "plant_wheat": 19,
+        "plant_carrot": 33
+      }
+    },
+    {
+      "seed": 336005,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 11928.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 19,
+      "idle": 43,
+      "utilization": 0.3064516129032258,
+      "q_productive": [
+        7,
+        0,
+        9,
+        3
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 345,
+        "4": 394
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 5460.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 24502.0,
+      "d12": {
+        "money": 1881.0,
+        "productive": 37,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 385.0,
+        "productive": 52,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 3989.0,
+        "productive": 43,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1928,
+        "move_to_plant": 227,
+        "plant_strawberry": 68,
+        "water": 2355,
+        "harvest_crop": 1058,
+        "drop_inventory": 500,
+        "dig": 349,
+        "build_pasture": 33,
+        "plant_wheat": 20,
+        "plant_carrot": 33
+      }
+    },
+    {
+      "seed": 336006,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 9324.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 23,
+      "idle": 45,
+      "utilization": 0.3382352941176471,
+      "q_productive": [
+        12,
+        0,
+        8,
+        3
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 346,
+        "4": 396
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 5430.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 22044.0,
+      "d12": {
+        "money": 1861.0,
+        "productive": 37,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 143.0,
+        "productive": 53,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 2970.0,
+        "productive": 41,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1971,
+        "move_to_plant": 189,
+        "plant_strawberry": 67,
+        "water": 2377,
+        "harvest_crop": 1074,
+        "drop_inventory": 483,
+        "dig": 324,
+        "build_pasture": 31,
+        "plant_wheat": 19,
+        "plant_carrot": 34
+      }
+    },
+    {
+      "seed": 336006,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 10661.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 24,
+      "idle": 45,
+      "utilization": 0.34782608695652173,
+      "q_productive": [
+        13,
+        0,
+        8,
+        3
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 346,
+        "4": 396
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 261.0,
+        "crop": 5490.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 23218.0,
+      "d12": {
+        "money": 1861.0,
+        "productive": 37,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 123.0,
+        "productive": 54,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 3233.0,
+        "productive": 41,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1944,
+        "move_to_plant": 215,
+        "plant_strawberry": 68,
+        "water": 2353,
+        "dig": 377,
+        "harvest_crop": 1038,
+        "drop_inventory": 484,
+        "build_pasture": 31,
+        "plant_wheat": 19,
+        "plant_carrot": 34
+      }
+    },
+    {
+      "seed": 336007,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 6097.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 17,
+      "idle": 54,
+      "utilization": 0.23943661971830985,
+      "q_productive": [
+        5,
+        0,
+        8,
+        4
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 348,
+        "4": 399
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 4660.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 17882.0,
+      "d12": {
+        "money": 1716.0,
+        "productive": 35,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 338.0,
+        "productive": 38,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 2854.0,
+        "productive": 32,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2241,
+        "move_to_plant": 164,
+        "plant_strawberry": 53,
+        "water": 2009,
+        "dig": 389,
+        "harvest_crop": 1158,
+        "drop_inventory": 460,
+        "build_pasture": 34,
+        "plant_wheat": 22,
+        "plant_carrot": 37
+      }
+    },
+    {
+      "seed": 336007,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 8486.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 16,
+      "idle": 59,
+      "utilization": 0.21333333333333335,
+      "q_productive": [
+        6,
+        0,
+        9,
+        1
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 348,
+        "4": 399
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 255.0,
+        "crop": 4940.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 20243.0,
+      "d12": {
+        "money": 1560.0,
+        "productive": 35,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 318.0,
+        "productive": 42,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 3362.0,
+        "productive": 35,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2107,
+        "move_to_plant": 176,
+        "plant_strawberry": 57,
+        "water": 2057,
+        "harvest_crop": 1141,
+        "drop_inventory": 461,
+        "dig": 473,
+        "build_pasture": 34,
+        "plant_wheat": 22,
+        "plant_carrot": 39
+      }
+    },
+    {
+      "seed": 336008,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 9479.0,
+      "lands": 2,
+      "hands": 0,
+      "animals": 0,
+      "productive": 11,
+      "idle": 18,
+      "utilization": 0.3793103448275862,
+      "q_productive": [
+        6,
+        5,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 297
+      },
+      "capex": {
+        "land": 1000.0,
+        "labour": 240.0,
+        "crop": 4370.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 13972.0,
+      "d12": {
+        "money": 1217.0,
+        "productive": 26,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 900.0,
+        "productive": 30,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d25": {
+        "money": 5141.0,
+        "productive": 28,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1982,
+        "move_to_plant": 189,
+        "plant_strawberry": 57,
+        "water": 2281,
+        "dig": 263,
+        "harvest_crop": 879,
+        "drop_inventory": 548,
+        "plant_carrot": 24,
+        "plant_wheat": 7
+      }
+    },
+    {
+      "seed": 336008,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 12207.0,
+      "lands": 3,
+      "hands": 0,
+      "animals": 0,
+      "productive": 17,
+      "idle": 18,
+      "utilization": 0.4857142857142857,
+      "q_productive": [
+        6,
+        0,
+        11,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 266,
+        "3": 362
+      },
+      "capex": {
+        "land": 2000.0,
+        "labour": 254.0,
+        "crop": 4820.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 20558.0,
+      "d12": {
+        "money": 1086.0,
+        "productive": 32,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 737.0,
+        "productive": 53,
+        "lands": 3,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 6188.0,
+        "productive": 41,
+        "lands": 3,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1945,
+        "move_to_plant": 179,
+        "plant_strawberry": 67,
+        "water": 2441,
+        "dig": 381,
+        "harvest_crop": 932,
+        "drop_inventory": 539,
+        "build_pasture": 35,
+        "plant_wheat": 16,
+        "plant_carrot": 17
+      }
+    },
+    {
+      "seed": 336009,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 7551.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 17,
+      "idle": 58,
+      "utilization": 0.22666666666666666,
+      "q_productive": [
+        7,
+        0,
+        8,
+        2
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 349,
+        "4": 400
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 261.0,
+        "crop": 4840.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 19702.0,
+      "d12": {
+        "money": 1616.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 126.0,
+        "productive": 44,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 2620.0,
+        "productive": 35,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2123,
+        "move_to_plant": 170,
+        "plant_strawberry": 58,
+        "water": 2113,
+        "harvest_crop": 1139,
+        "drop_inventory": 458,
+        "dig": 413,
+        "build_pasture": 35,
+        "plant_wheat": 22,
+        "plant_carrot": 30
+      }
+    },
+    {
+      "seed": 336009,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 7511.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 17,
+      "idle": 59,
+      "utilization": 0.2236842105263158,
+      "q_productive": [
+        7,
+        0,
+        8,
+        2
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 349,
+        "4": 400
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 261.0,
+        "crop": 4880.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 19652.0,
+      "d12": {
+        "money": 1616.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 126.0,
+        "productive": 44,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 2580.0,
+        "productive": 35,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2135,
+        "move_to_plant": 179,
+        "plant_strawberry": 58,
+        "water": 2102,
+        "harvest_crop": 1140,
+        "drop_inventory": 458,
+        "dig": 400,
+        "build_pasture": 35,
+        "plant_wheat": 22,
+        "plant_carrot": 32
+      }
+    },
+    {
+      "seed": 336010,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 12784.0,
+      "lands": 3,
+      "hands": 0,
+      "animals": 0,
+      "productive": 22,
+      "idle": 21,
+      "utilization": 0.5116279069767442,
+      "q_productive": [
+        12,
+        0,
+        10,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 266,
+        "3": 358
+      },
+      "capex": {
+        "land": 2000.0,
+        "labour": 255.0,
+        "crop": 4970.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 21834.0,
+      "d12": {
+        "money": 1133.0,
+        "productive": 32,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 970.0,
+        "productive": 53,
+        "lands": 3,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 6084.0,
+        "productive": 41,
+        "lands": 3,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2029,
+        "move_to_plant": 218,
+        "plant_strawberry": 69,
+        "water": 2449,
+        "harvest_crop": 915,
+        "drop_inventory": 521,
+        "dig": 306,
+        "build_pasture": 30,
+        "plant_wheat": 13,
+        "plant_carrot": 5
+      }
+    },
+    {
+      "seed": 336010,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 2500.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 15,
+      "idle": 80,
+      "utilization": 0.15789473684210525,
+      "q_productive": [
+        7,
+        0,
+        8,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 265,
+        "3": 349,
+        "4": 406
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 225.0,
+        "crop": 4190.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 13165.0,
+      "d12": {
+        "money": 1296.0,
+        "productive": 34,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 6.0,
+        "productive": 38,
+        "lands": 4,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 1029.0,
+        "productive": 24,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 2268,
+        "move_to_plant": 157,
+        "plant_strawberry": 55,
+        "water": 1750,
+        "dig": 320,
+        "harvest_crop": 796,
+        "drop_inventory": 383,
+        "build_pasture": 31,
+        "plant_wheat": 19,
+        "plant_carrot": 8
+      }
+    },
+    {
+      "seed": 336011,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 12484.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 24,
+      "idle": 31,
+      "utilization": 0.43636363636363634,
+      "q_productive": [
+        12,
+        0,
+        10,
+        2
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 396
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5660.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 25223.0,
+      "d12": {
+        "money": 2116.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 399.0,
+        "productive": 52,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 4859.0,
+        "productive": 44,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1933,
+        "move_to_plant": 207,
+        "plant_strawberry": 70,
+        "water": 2322,
+        "harvest_crop": 1050,
+        "drop_inventory": 520,
+        "build_pasture": 31,
+        "plant_wheat": 20,
+        "dig": 412,
+        "plant_carrot": 37
+      }
+    },
+    {
+      "seed": 336011,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 12444.0,
+      "lands": 4,
+      "hands": 0,
+      "animals": 0,
+      "productive": 24,
+      "idle": 32,
+      "utilization": 0.42857142857142855,
+      "q_productive": [
+        12,
+        0,
+        10,
+        2
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0,
+        "2": 264,
+        "3": 314,
+        "4": 396
+      },
+      "capex": {
+        "land": 3000.0,
+        "labour": 256.0,
+        "crop": 5700.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 25242.0,
+      "d12": {
+        "money": 2116.0,
+        "productive": 39,
+        "lands": 2,
+        "hands": 9,
+        "animals": 0
+      },
+      "d20": {
+        "money": 399.0,
+        "productive": 52,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "d25": {
+        "money": 4819.0,
+        "productive": 44,
+        "lands": 4,
+        "hands": 10,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 1933,
+        "move_to_plant": 208,
+        "plant_strawberry": 70,
+        "water": 2326,
+        "harvest_crop": 1075,
+        "drop_inventory": 520,
+        "build_pasture": 31,
+        "dig": 380,
+        "plant_wheat": 20,
+        "plant_carrot": 39
+      }
+    }
+  ]
+}
