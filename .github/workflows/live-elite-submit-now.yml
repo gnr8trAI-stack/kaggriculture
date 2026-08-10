@@ -1,7 +1,6 @@
 name: live-elite-submit-now
 on:
-  push:
-    branches: [live/elite-industrial-180k]
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
