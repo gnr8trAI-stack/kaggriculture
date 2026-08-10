@@ -1,6 +1,6 @@
 name: V30 Kaggle Gate Check
 
-# refreshed 2026-08-10 for live rank/submission gate
+# refreshed 2026-08-10 for full leaderboard/rank + quota
 on:
   push:
     branches: [v30-economic-compounder]
@@ -29,27 +29,17 @@ jobs:
         run: |
           set -e
           test -n "$KAGGLE_API_TOKEN"
-          kaggle competitions list -s kaggriculture --csv > /tmp/competition.csv
           kaggle competitions submissions kaggriculture --csv > /tmp/submissions.csv
-          kaggle competitions leaderboard kaggriculture -s -v > /tmp/leaderboard.txt 2>&1 || true
+          mkdir -p /tmp/lb
+          kaggle competitions leaderboard kaggriculture -d -p /tmp/lb -q
           python - <<'PY'
           import csv, json
           from datetime import datetime, timezone
           from pathlib import Path
-          from kaggle.api.kaggle_api_extended import KaggleApi
 
           now = datetime.now(timezone.utc)
-          api = KaggleApi(); api.authenticate()
-          comp_dump = {}
-          try:
-              comp = api.competition_view('kaggriculture')
-              comp_dump = comp.to_dict() if hasattr(comp, 'to_dict') else dict(getattr(comp, '__dict__', {}))
-          except Exception as e:
-              comp_dump = {'competition_view_error': repr(e)}
-
-          rows=[]
           with open('/tmp/submissions.csv', newline='', encoding='utf-8-sig') as f:
-              rows=list(csv.DictReader(f))
+              subs=list(csv.DictReader(f))
 
           def parse_date(r):
               for k in ('date','Date','submittedAt','submitted_at'):
@@ -60,22 +50,34 @@ jobs:
                       except Exception: pass
               return None
 
-          today=[r for r in rows if (parse_date(r) and parse_date(r).date()==now.date())]
-          # Competition hard limit is 5/day for this competition; competition_view currently omits it.
+          today=[r for r in subs if (parse_date(r) and parse_date(r).date()==now.date())]
           hard_limit=5
-          remaining=max(0, hard_limit-len(today))
-          lb=Path('/tmp/leaderboard.txt').read_text(errors='replace')
-          lines=[x for x in lb.splitlines() if x.strip()]
-          gnr=[x for x in lines if ',Gnr8tr,' in x or ',gnr8tr,' in x.lower()]
+          remaining=max(0,hard_limit-len(today))
+
+          csvs=list(Path('/tmp/lb').glob('*.csv'))
+          if not csvs:
+              raise RuntimeError('Downloaded leaderboard CSV not found')
+          lb_path=csvs[0]
+          with lb_path.open(newline='',encoding='utf-8-sig') as f:
+              lb=list(csv.DictReader(f))
+          team_count=len(lb)
+          target=None
+          rank=None
+          for i,row in enumerate(lb,1):
+              name=(row.get('teamName') or row.get('TeamName') or row.get('team_name') or '').strip()
+              if name.lower()=='gnr8tr':
+                  target=row; rank=i; break
           payload={
               'utc_now':now.isoformat(),
               'submissions_today_utc':len(today),
               'hard_daily_limit':hard_limit,
               'remaining_today':remaining,
               'gate_open':remaining>0,
-              'recent_submissions':rows[:15],
-              'gnr8tr_leaderboard_rows':gnr,
-              'leaderboard_tail':lb[-12000:],
+              'team_count':team_count,
+              'gnr8tr_rank':rank,
+              'gnr8tr_row':target,
+              'recent_submissions':subs[:15],
+              'leaderboard_file':lb_path.name,
           }
           Path('/tmp/gate.json').write_text(json.dumps(payload,indent=2,default=str))
           print(json.dumps(payload,indent=2,default=str))
