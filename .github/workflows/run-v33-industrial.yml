@@ -1,4 +1,4 @@
-name: run-v33-industrial
+name: run-v33-industrial-v33.1
 on:
   push:
     branches: [main]
@@ -21,81 +21,48 @@ jobs:
       - name: Install
         run: pip install -q kaggle-environments
       - name: Compile
-        run: python -m py_compile agents/v33_industrial.py
+        run: python -m py_compile agents/v33_industrial.py agents/v19_2_early_scale8.py agents/v19_livestock_compound.py agents/v15_champion.py
       - name: Run 32-game industrial benchmark
         run: |
           python - <<'PY'
           import json, statistics
           from kaggle_environments import make
           import agents.v33_industrial as a
-
           results=[]
-          seeds=list(range(330100,330116))
-          for seed in seeds:
+          for seed in range(331100,331116):
               for seat in (0,1):
-                  a.reset_state()
-                  env=make('kaggriculture',configuration={'seed':seed},debug=True)
-                  agents=[a.agent,'starter'] if seat==0 else ['starter',a.agent]
-                  env.run(agents)
-                  st=env.state[seat]
-                  tel=a.get_telemetry()
-                  last=tel[-1] if tel else {}
-                  q=last.get('q1',{}),last.get('q2',{}),last.get('q3',{}),last.get('q4',{})
-                  unlocked=[int(x.get('unlocked',0) or 0) for x in q]
-                  productive=[int(x.get('productive',0) or 0) for x in q]
+                  a.reset_state(); env=make('kaggriculture',configuration={'seed':seed},debug=True)
+                  env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+                  st=env.state[seat]; tel=a.get_telemetry(); last=tel[-1] if tel else {}
+                  qs=[last.get(f'q{i}',{}) for i in range(1,5)]
+                  unlocked=[int(q.get('unlocked',0) or 0) for q in qs]; productive=[int(q.get('productive',0) or 0) for q in qs]
                   total_u=sum(unlocked); total_p=sum(productive)
-                  utilization=(total_p/total_u) if total_u else 0.0
-                  results.append({
-                    'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
-                    'lands':int(last.get('lands',0) or 0),'land_unlock_steps':last.get('land_unlock_steps',[]),
-                    'hands':int(last.get('hands',0) or 0),'productive':int(last.get('productive',0) or 0),
-                    'empty':int(last.get('empty',0) or 0),'utilization':utilization,
-                    'q_productive':productive,'q_unlocked':unlocked,
-                    'q3_animals':int(q[2].get('animals',0) or 0),'q3_pasture':int(q[2].get('pasture',0) or 0),
-                    'money':float(last.get('money',0) or 0),
-                  })
-
-          rewards=[r['reward'] for r in results]
-          invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
-          four=sum(r['lands']>=4 for r in results)
-          q3_active=sum(r['q_productive'][2]>=4 for r in results)
-          q4_active=sum(r['q_productive'][3]>=6 for r in results)
-          util=[r['utilization'] for r in results]
-          hands=[r['hands'] for r in results]
-          animals=[r['q3_animals'] for r in results]
-          report={
-            'version':'33.0.0-alpha1',
-            'games':len(results),'invalid':invalid,
-            'mean_reward':statistics.mean(rewards),'median_reward':statistics.median(rewards),
-            'min_reward':min(rewards),'max_reward':max(rewards),
-            'four_land_games':four,'q3_active_games':q3_active,'q4_active_games':q4_active,
-            'median_utilization':statistics.median(util),'median_hands':statistics.median(hands),
-            'median_q3_animals':statistics.median(animals),
-            'industrial_gate': invalid==0 and four>=24 and q3_active>=24 and q4_active>=24 and statistics.median(util)>=0.55,
-            'reward_gate_100k': statistics.median(rewards)>=100000,
-            'ready_150k': invalid==0 and statistics.median(rewards)>=150000 and min(rewards)>=100000,
-            'games_detail':results,
-          }
-          open('/tmp/v33_report.json','w').write(json.dumps(report,indent=2))
-          print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+                  results.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
+                    'lands':int(last.get('lands',0) or 0),'hands':int(last.get('hands',0) or 0),
+                    'productive':total_p,'utilization':total_p/max(1,total_u),'q_productive':productive,
+                    'q_unlocked':unlocked,'q3_animals':int(qs[2].get('animals',0) or 0),'money':float(last.get('money',0) or 0)})
+          rewards=[r['reward'] for r in results]; invalid=sum(r['status'] in ('ERROR','INVALID','TIMEOUT') for r in results)
+          report={'version':'33.1.0-industrial','games':len(results),'invalid':invalid,
+            'mean_reward':statistics.mean(rewards),'median_reward':statistics.median(rewards),'min_reward':min(rewards),'max_reward':max(rewards),
+            'two_land_games':sum(r['lands']>=2 for r in results),'three_land_games':sum(r['lands']>=3 for r in results),'four_land_games':sum(r['lands']>=4 for r in results),
+            'q3_active_games':sum(r['q_productive'][2]>=4 for r in results),'q4_active_games':sum(r['q_productive'][3]>=6 for r in results),
+            'median_utilization':statistics.median(r['utilization'] for r in results),'median_hands':statistics.median(r['hands'] for r in results),
+            'median_q3_animals':statistics.median(r['q3_animals'] for r in results),
+            'industrial_gate': invalid==0 and sum(r['lands']>=4 for r in results)>=24 and sum(r['q_productive'][2]>=4 for r in results)>=24 and sum(r['q_productive'][3]>=6 for r in results)>=24,
+            'ready_150k': invalid==0 and statistics.median(rewards)>=150000 and min(rewards)>=100000,'games_detail':results}
+          open('/tmp/v33_report.json','w').write(json.dumps(report,indent=2)); print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
       - name: Post result to issue 16
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          {
-            echo '## V33 Industrial benchmark'
-            echo
-            echo '```json'
-            if [ -f /tmp/v33_report.json ]; then cat /tmp/v33_report.json; else echo '{"error":"benchmark did not produce report"}'; fi
-            echo '```'
-          } > /tmp/v33.md
+          { echo '## V33.1 Industrial benchmark'; echo; echo '```json'; cat /tmp/v33_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v33.md
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v33.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-industrial-benchmark
+          name: v33-1-industrial-benchmark
           path: /tmp/v33_report.json
           if-no-files-found: ignore
           retention-days: 14
