@@ -1,0 +1,88 @@
+name: benchmark-v33-industrial
+on:
+  push:
+    branches: ['agent/v33-industrial']
+    paths:
+      - 'agents/v33_industrial.py'
+      - '.github/workflows/benchmark-v33-industrial.yml'
+      - 'docs/V33_INDUSTRIAL_SPEC.md'
+permissions:
+  contents: read
+  issues: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33-industrial
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - name: Compile candidate
+        run: python -m py_compile agents/v33_industrial.py
+      - name: Clean file-agent smoke
+        run: |
+          mkdir -p /tmp/v33clean
+          cp agents/v33_industrial.py /tmp/v33clean/agent.py
+          cd /tmp/v33clean
+          python - <<'PY'
+          from kaggle_environments import make
+          env=make('kaggriculture',configuration={'seed':339900},debug=True)
+          env.run(['agent.py','starter'])
+          print(env.state[0].status,env.state[0].reward)
+          assert str(env.state[0].status) not in {'ERROR','INVALID','TIMEOUT'}
+          PY
+      - name: Industrial benchmark both seats
+        run: |
+          mkdir -p artifacts
+          python - <<'PY'
+          import json,statistics
+          from pathlib import Path
+          from kaggle_environments import make
+          import agents.v33_industrial as a
+          rows=[]
+          seeds=range(339000,339012)
+          for seat in (0,1):
+            for seed in seeds:
+              a.reset_state()
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+              st=env.state[seat]; tele=a.get_telemetry(clear=True) or []
+              def last_day(day):
+                r=[x for x in tele if int(x.get('day',-1))<=day]
+                return float(r[-1].get('money',0) or 0) if r else 0.0
+              peak=lambda key: max([int(x.get(key,0) or 0) for x in tele] or [0])
+              max_lands=max([int(x.get('lands',0) or 0) for x in tele] or [0])
+              max_q3_prod=max([int((x.get('q3') or {}).get('productive',0) or 0) for x in tele] or [0])
+              max_q4_prod=max([int((x.get('q4') or {}).get('productive',0) or 0) for x in tele] or [0])
+              max_q3_animals=max([int((x.get('q3') or {}).get('animals',0) or 0) for x in tele] or [0])
+              final=tele[-1] if tele else {}
+              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'status':str(st.status),'d12':last_day(12),'d20':last_day(20),'d25':last_day(25),'max_lands':max_lands,'max_q3_productive':max_q3_prod,'max_q4_productive':max_q4_prod,'max_q3_animals':max_q3_animals,'max_hands':peak('hands'),'final_productive':int(final.get('productive',0) or 0),'final_empty':int(final.get('empty',0) or 0),'land_unlock_steps':final.get('land_unlock_steps',[])})
+          Path('artifacts/v33_industrial_rows.json').write_text(json.dumps(rows,indent=2))
+          BAD={'ERROR','INVALID','TIMEOUT'}
+          rewards=[r['reward'] for r in rows]; sr=sorted(rewards)
+          report={'version':'33.0.0-industrial-alpha1','games':len(rows),'mean':statistics.fmean(rewards),'median':statistics.median(rewards),'min_reward':min(rewards),'p10_reward':sr[max(0,int(len(sr)*.10)-1)],'p25_reward':statistics.median(sr[:max(1,len(sr)//2)]),'max_reward':max(rewards),'invalid':sum(r['status'] in BAD for r in rows),'median_d12':statistics.median(r['d12'] for r in rows),'median_d20':statistics.median(r['d20'] for r in rows),'median_d25':statistics.median(r['d25'] for r in rows),'four_land_games':sum(r['max_lands']>=4 for r in rows),'q3_live_games':sum(r['max_q3_productive']>0 for r in rows),'q4_live_games':sum(r['max_q4_productive']>0 for r in rows),'q3_animal_games':sum(r['max_q3_animals']>0 for r in rows),'median_final_productive':statistics.median(r['final_productive'] for r in rows),'median_final_empty':statistics.median(r['final_empty'] for r in rows)}
+          report['ready_150k']=(report['games']>=24 and report['invalid']==0 and report['median']>=150000 and report['min_reward']>=100000)
+          Path('artifacts/v33_industrial_report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Post internal benchmark evidence
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -f artifacts/v33_industrial_report.json ]; then
+            { echo '## V33 Industrial alpha1 benchmark'; echo; echo '```json'; cat artifacts/v33_industrial_report.json; echo '```'; } > /tmp/report.md
+          else
+            echo '## V33 Industrial alpha1 benchmark failed before report generation' > /tmp/report.md
+          fi
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v33-industrial-alpha1
+          path: artifacts/
+          retention-days: 14
