@@ -1,0 +1,205 @@
+name: v16-challenger
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v16_health_guard.py'
+      - '.github/workflows/v16-challenger.yml'
+  workflow_dispatch:
+
+jobs:
+  v16-vs-v15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install simulator
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle-environments
+      - name: Compile champion and challenger
+        run: |
+          python -m py_compile agents/v15_champion.py agents/v16_health_guard.py
+      - name: A/B tournament and farm-health telemetry
+        run: |
+          mkdir -p artifacts dist
+          python - <<'PY'
+          import csv, importlib.util, json, statistics, time
+          from pathlib import Path
+          from kaggle_environments import make
+
+          BAD={'ERROR','INVALID','TIMEOUT'}
+
+          def load(path,name):
+              spec=importlib.util.spec_from_file_location(name,path)
+              mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+              return mod.agent
+
+          challenger=load('agents/v16_health_guard.py','v16_candidate')
+          champion=load('agents/v15_champion.py','v15_opponent_isolated')
+
+          def weed_ratio(obs, seat):
+              try:
+                  farm=(obs.get('farms') or [])[seat]
+                  tiles=farm.get('tiles') or []
+              except Exception:
+                  return None
+              usable=weed=0
+              for row in tiles:
+                  for tile in row:
+                      kind=str(tile.get('kind','')).upper() if isinstance(tile,dict) else ''
+                      if tile == 'LOCKED' or kind == 'LOCKED':
+                          continue
+                      usable += 1
+                      weed += int(kind == 'WEED')
+              return weed/max(1,usable)
+
+          def play(a,b,seat,seed,label):
+              agents=[a,b] if seat==0 else [b,a]
+              started=time.perf_counter()
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run(agents)
+              elapsed=time.perf_counter()-started
+              mine=env.state[seat]; other=env.state[1-seat]
+              cr=float(mine.reward or 0); rr=float(other.reward or 0)
+              weeds=[]
+              for step in getattr(env,'steps',[]) or []:
+                  try: obs=step[seat].observation
+                  except Exception: continue
+                  if isinstance(obs,dict):
+                      r=weed_ratio(obs,seat)
+                      if r is not None: weeds.append(r)
+              return {
+                  'series':label,'seat':seat,'seed':seed,'candidate_reward':cr,
+                  'reference_reward':rr,'delta':cr-rr,
+                  'result':'win' if cr>rr else 'loss' if cr<rr else 'tie',
+                  'candidate_status':str(mine.status),'reference_status':str(other.status),
+                  'max_weed_ratio':max(weeds) if weeds else 0.0,
+                  'mean_weed_ratio':statistics.fmean(weeds) if weeds else 0.0,
+                  'runtime_seconds':elapsed,
+              }
+
+          rows=[]
+          # Direct tournament: challenger versus champion, 50 independent towns
+          # per seat. This is the primary promotion evidence.
+          for seat in (0,1):
+              for offset in range(50):
+                  r=play(challenger,champion,seat,730000+offset,'v16_vs_v15')
+                  rows.append(r); print(r)
+
+          # Absolute floor: both versions face starter on the same seeds. These
+          # are separate games, not paired-town counterfactuals, so compare the
+          # distributions rather than pretending individual games share RNG.
+          for who,agent in (('v16_vs_starter',challenger),('v15_vs_starter',champion)):
+              for seat in (0,1):
+                  for offset in range(20):
+                      r=play(agent,'starter',seat,740000+offset,who)
+                      rows.append(r); print(r)
+
+          with Path('artifacts/v16_gate_results.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+          direct=[r for r in rows if r['series']=='v16_vs_v15']
+          v16s=[r for r in rows if r['series']=='v16_vs_starter']
+          v15s=[r for r in rows if r['series']=='v15_vs_starter']
+
+          def summary(v):
+              return {
+                  'games':len(v),
+                  'wins':sum(r['result']=='win' for r in v),
+                  'losses':sum(r['result']=='loss' for r in v),
+                  'ties':sum(r['result']=='tie' for r in v),
+                  'score_rate':sum(1.0 if r['result']=='win' else 0.5 if r['result']=='tie' else 0.0 for r in v)/len(v),
+                  'mean_reward':statistics.fmean(r['candidate_reward'] for r in v),
+                  'mean_delta':statistics.fmean(r['delta'] for r in v),
+                  'median_delta':statistics.median(r['delta'] for r in v),
+                  'seat0_delta':statistics.fmean(r['delta'] for r in v if r['seat']==0),
+                  'seat1_delta':statistics.fmean(r['delta'] for r in v if r['seat']==1),
+                  'max_weed_ratio':max(r['max_weed_ratio'] for r in v),
+                  'mean_max_weed_ratio':statistics.fmean(r['max_weed_ratio'] for r in v),
+                  'invalid':sum(r['candidate_status'] in BAD for r in v),
+              }
+
+          sd=summary(direct); s16=summary(v16s); s15=summary(v15s)
+          starter_reward_ratio=s16['mean_reward']/max(1.0,s15['mean_reward'])
+          promotion=(
+              sd['invalid']==0 and s16['invalid']==0 and
+              sd['score_rate'] >= 0.55 and sd['mean_delta'] > 0 and
+              sd['seat0_delta'] >= 0 and sd['seat1_delta'] >= 0 and
+              starter_reward_ratio >= 0.98 and
+              s16['mean_max_weed_ratio'] <= s15['mean_max_weed_ratio'] + 1e-9
+          )
+          report={
+              'version':'16.0.0-rc1','champion':'v15',
+              'direct_v16_vs_v15':sd,
+              'v16_vs_starter':s16,
+              'v15_vs_starter':s15,
+              'starter_reward_ratio':starter_reward_ratio,
+              'promotion_recommended':promotion,
+          }
+          Path('artifacts/v16_gate_report.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          assert sd['invalid']==0 and s16['invalid']==0
+          # Record a marker used by packaging; do not make a failed challenger
+          # look green merely because it executed legally.
+          Path('artifacts/PROMOTE').write_text('1' if promotion else '0')
+          PY
+      - name: Build standalone candidate only if promoted
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          promote=Path('artifacts/PROMOTE').read_text().strip()=='1'
+          if not promote:
+              print('V16 did not beat V15; no submission will be produced.')
+              raise SystemExit(0)
+          base=Path('agents/v15_champion.py').read_text()
+          overlay=Path('agents/v16_health_guard.py').read_text()
+          overlay=overlay.replace('from __future__ import annotations\n','')
+          overlay=overlay.replace('from agents.v15_champion import agent as _v15_agent','_v15_agent = agent')
+          Path('dist/main.py').write_text(base+'\n\n'+overlay)
+          PY
+          if [ -f dist/main.py ]; then python -m py_compile dist/main.py; fi
+      - name: Package promoted Kaggle release
+        if: success()
+        run: |
+          if [ "$(cat artifacts/PROMOTE)" != "1" ]; then exit 0; fi
+          (cd dist && zip -9 ../kaggriculture_adaptive_v16.0.0_submission.zip main.py)
+          python - <<'PY'
+          import json,zipfile
+          from pathlib import Path
+          z=Path('kaggriculture_adaptive_v16.0.0_submission.zip')
+          with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          r=json.loads(Path('artifacts/v16_gate_report.json').read_text())
+          Path('RELEASE_NOTES_v16.0.0.md').write_text(
+              '# Kaggriculture Adaptive Agent v16.0.0\n\n'
+              'Champion-derived release. Exact V15 economics plus a conservative farm-health governor.\n\n'
+              f"Direct V16 vs V15: {r['direct_v16_vs_v15']}\n\n"
+              f"V16 vs starter: {r['v16_vs_starter']}\n\n"
+              f"V15 vs starter control: {r['v15_vs_starter']}\n"
+          )
+          PY
+      - name: Upload gate evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v16-vs-v15-gate
+          path: |
+            artifacts/v16_gate_results.csv
+            artifacts/v16_gate_report.json
+            artifacts/PROMOTE
+            dist/main.py
+            kaggriculture_adaptive_v16.0.0_submission.zip
+            RELEASE_NOTES_v16.0.0.md
+          if-no-files-found: ignore
+          retention-days: 30
+      - name: Enforce promotion gate
+        if: always()
+        run: |
+          test -f artifacts/PROMOTE
+          test "$(cat artifacts/PROMOTE)" = "1"

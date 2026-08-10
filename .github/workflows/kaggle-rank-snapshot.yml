@@ -1,0 +1,31 @@
+name: kaggle-rank-snapshot
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/kaggle-rank-snapshot.yml'
+  workflow_dispatch:
+
+jobs:
+  rank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Query live rank and submissions
+        run: |
+          python -m pip install -q kaggle
+          mkdir -p artifacts
+          kaggle competitions list --group entered -s kaggriculture --csv | tee artifacts/competition.csv
+          kaggle competitions submissions kaggriculture -v -q | tee artifacts/submissions.csv
+          head -8 artifacts/submissions.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-rank-snapshot
+          path: artifacts/
+          retention-days: 2

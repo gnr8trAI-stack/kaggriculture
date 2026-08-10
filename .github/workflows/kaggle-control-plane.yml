@@ -1,0 +1,89 @@
+name: kaggle-control-plane
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'ops/kaggle_control_plane.py'
+      - 'ops/control_plane_refresh.txt'
+      - '.github/workflows/kaggle-control-plane.yml'
+  pull_request:
+    paths:
+      - 'ops/kaggle_control_plane.py'
+      - '.github/workflows/kaggle-control-plane.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaggle-control-plane
+  cancel-in-progress: true
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+      KAGGLE_COMPETITION: kaggriculture
+      KAGGLE_TEAM_NAME: Gnr8tr
+      KAGGLE_DAILY_LIMIT: '5'
+      KAGGLE_RESERVE_SLOTS: '1'
+      KAGGLE_EPISODE_DAYS: '2'
+      KAGGLE_REPLAY_WINS: '5'
+      KAGGLE_REPLAY_LOSSES: '5'
+      KAGGLE_MIN_GAMES_BEFORE_ROTATE: '10'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle tooling
+        run: python -m pip install -q kaggle
+      - name: Load previous persistent telemetry
+        shell: bash
+        run: |
+          mkdir -p artifacts/control_plane
+          git fetch origin kaggle-telemetry:kaggle-telemetry || true
+          if git show kaggle-telemetry:telemetry/kaggle/latest.json > artifacts/control_plane/previous.json 2>/dev/null; then
+            echo "KAGGLE_PREVIOUS_STATE=artifacts/control_plane/previous.json" >> "$GITHUB_ENV"
+          fi
+      - name: Refresh live competition state, episodes and replay signatures
+        run: python ops/kaggle_control_plane.py
+      - name: Publish job summary
+        run: cat artifacts/control_plane/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload live control-plane evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-control-plane-${{ github.run_number }}
+          path: artifacts/control_plane/
+          retention-days: 30
+      - name: Persist lightweight telemetry branch
+        if: ${{ github.event_name != 'pull_request' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/kaggle-telemetry
+          git clone --depth 1 --branch kaggle-telemetry "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/kaggle-telemetry
+          mkdir -p /tmp/kaggle-telemetry/telemetry/kaggle/snapshots
+          cp artifacts/control_plane/latest.json /tmp/kaggle-telemetry/telemetry/kaggle/latest.json
+          cp artifacts/control_plane/SUMMARY.md /tmp/kaggle-telemetry/telemetry/kaggle/LATEST.md
+          cp artifacts/control_plane/submissions.csv /tmp/kaggle-telemetry/telemetry/kaggle/submissions.csv
+          cp artifacts/control_plane/episodes.csv /tmp/kaggle-telemetry/telemetry/kaggle/episodes.csv
+          cp artifacts/control_plane/replay_signatures.json /tmp/kaggle-telemetry/telemetry/kaggle/replay_signatures.json
+          STAMP=$(date -u +%Y%m%dT%H%M%SZ)
+          cp artifacts/control_plane/latest.json "/tmp/kaggle-telemetry/telemetry/kaggle/snapshots/${STAMP}.json"
+          cd /tmp/kaggle-telemetry
+          git config user.name kaggriculture-control-plane
+          git config user.email actions@users.noreply.github.com
+          git add telemetry/kaggle
+          if ! git diff --cached --quiet; then
+            git commit -m "telemetry: Kaggriculture live snapshot ${STAMP}"
+            git push origin kaggle-telemetry
+          fi

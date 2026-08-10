@@ -1,0 +1,197 @@
+name: kaggle-live-submit
+
+on:
+  workflow_dispatch:
+    inputs:
+      candidate:
+        description: Single candidate to submit live
+        required: true
+        type: choice
+        options:
+          - v19.3-crew-feed-guard
+          - v19.4-three-land-crop-scale
+          - v19.1-feed-order-guard
+          - v19.2-early-scale8
+          - v19.0.0-live-rc1
+          - v21.0.0-alpha2-live
+          - v23.0.0-alpha2-live
+          - v15.0.0-live-control
+      message:
+        description: Kaggle submission message
+        required: false
+        default: Control-plane live challenger
+        type: string
+      reserve_slots:
+        description: Daily slots to keep in reserve
+        required: false
+        default: '1'
+        type: string
+      override_guard:
+        description: Override reserve/min-game guards (never overrides 5/day hard cap)
+        required: true
+        default: 'false'
+        type: choice
+        options: ['false','true']
+      confirm:
+        description: Type SUBMIT to make one real Kaggle submission
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kaggle-live-single-submit
+  cancel-in-progress: false
+
+jobs:
+  submit-live:
+    if: ${{ inputs.confirm == 'SUBMIT' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+      COMPETITION: kaggriculture
+      CANDIDATE: ${{ inputs.candidate }}
+      SUBMISSION_MESSAGE: ${{ inputs.message }}
+      RESERVE_SLOTS: ${{ inputs.reserve_slots }}
+      OVERRIDE_GUARD: ${{ inputs.override_guard }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle tooling
+        run: |
+          python -m pip install -q kaggle
+          test -n "$KAGGLE_API_TOKEN"
+          kaggle --version
+      - name: Refresh pre-submit live state
+        env:
+          KAGGLE_DAILY_LIMIT: '5'
+          KAGGLE_RESERVE_SLOTS: ${{ inputs.reserve_slots }}
+          KAGGLE_REPLAY_WINS: '0'
+          KAGGLE_REPLAY_LOSSES: '0'
+          KAGGLE_MIN_GAMES_BEFORE_ROTATE: '10'
+          KAGGLE_CONTROL_OUT: artifacts/pre_submit
+        run: python ops/kaggle_control_plane.py
+      - name: Enforce hard quota and one-at-a-time rotation policy
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          s=json.loads(Path('artifacts/pre_submit/latest.json').read_text())
+          remaining=int(s['quota']['remaining']); reserve=int(os.environ['RESERVE_SLOTS'])
+          override=os.environ['OVERRIDE_GUARD'].lower()=='true'
+          if remaining <= 0:
+              raise SystemExit('HARD STOP: Kaggle daily quota exhausted (5/5).')
+          latest=s.get('latest_submission') or {}
+          sid=latest.get('submission_id')
+          games=(s.get('recent_submission_stats') or {}).get(str(sid),{}).get('games',0) if sid else 0
+          if not override and remaining <= reserve:
+              raise SystemExit(f'Guarded stop: {remaining} slot(s) remain and {reserve} are reserved.')
+          if not override and sid and games < 10:
+              raise SystemExit(f'Guarded stop: latest submission {sid} has only {games} public games; wait for >=10 before rotating.')
+          print(json.dumps({'remaining':remaining,'reserve':reserve,'latest_submission_id':sid,'latest_public_games':games,'override':override},indent=2))
+          PY
+      - name: Build selected standalone candidate
+        run: |
+          mkdir -p live_submit artifacts
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, zipfile
+          import agents.v15_champion as champ
+
+          candidate=os.environ['CANDIDATE']
+          v15=Path('agents/v15_champion.py').read_text()
+          v19=Path('agents/v19_livestock_compound.py').read_text()
+          marker='from agents import v15_champion as _v15'
+          embedded=(
+              'import base64 as _b64, zlib as _zl, types as _types\n'
+              '_v15=_types.ModuleType("_v15_embedded")\n'
+              f'_V15_PAYLOAD={champ._PAYLOAD!r}\n'
+              'exec(_zl.decompress(_b64.b64decode(_V15_PAYLOAD)).decode("utf-8"),_v15.__dict__,_v15.__dict__)'
+          )
+          assert marker in v19
+          v19s=v19.replace(marker,embedded,1)
+
+          def embed_v19(path):
+              src=Path(path).read_text()
+              mark='from agents import v19_livestock_compound as _v19'
+              assert mark in src, path
+              repl=('import types as _types_live\n_v19=_types_live.ModuleType("_v19_embedded")\nexec('+repr(v19s)+',_v19.__dict__,_v19.__dict__)')
+              return src.replace(mark,repl,1)
+
+          v21=Path('agents/v21_scarcity_safe.py').read_text()
+          marker21='from agents import v19_livestock_compound as _v19'
+          assert marker21 in v21
+          v21s=v21.replace(marker21,'import types as _types_v21\n_v19=_types_v21.ModuleType("_v19_embedded")\nexec('+repr(v19s)+',_v19.__dict__,_v19.__dict__)',1)
+
+          v23=Path('agents/v23_direct_donor_clock.py').read_text()
+          old='_SCHEDULE=json.loads(zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8"))'
+          new='''\ndef _decode_schedule_payload(payload):\n    data=base64.b64decode(payload)\n    try: raw=zlib.decompress(data)\n    except zlib.error: raw=zlib.decompress(data[2:-4], -zlib.MAX_WBITS)\n    value=json.loads(raw.decode("utf-8"))\n    if not isinstance(value,list) or len(value)!=720: raise ValueError("donor schedule integrity failure")\n    return value\n_SCHEDULE=_decode_schedule_payload(_PAYLOAD)'''
+          assert old in v23
+          v23s=v23.replace(old,new,1)
+
+          sources={
+              'v15.0.0-live-control': v15,
+              'v19.0.0-live-rc1': v19s,
+              'v19.1-feed-order-guard': embed_v19('agents/v19_1_feed_order_guard.py'),
+              'v19.2-early-scale8': embed_v19('agents/v19_2_early_scale8.py'),
+              'v19.3-crew-feed-guard': embed_v19('agents/v19_3_crew_feed_guard.py'),
+              'v19.4-three-land-crop-scale': embed_v19('agents/v19_4_three_land_crop_scale.py'),
+              'v21.0.0-alpha2-live': v21s,
+              'v23.0.0-alpha2-live': v23s,
+          }
+          src=sources[candidate]
+          compile(src,'main.py','exec')
+          main=Path('live_submit/main.py'); main.write_text(src)
+          z=Path('live_submit')/f'kaggriculture_adaptive_{candidate}_submission.zip'
+          with zipfile.ZipFile(z,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as f: f.write(main,'main.py')
+          with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          manifest={'candidate':candidate,'zip':str(z),'sha256':hashlib.sha256(z.read_bytes()).hexdigest(),'members':['main.py']}
+          Path('artifacts/live_submit_manifest.json').write_text(json.dumps(manifest,indent=2))
+          print(json.dumps(manifest,indent=2))
+          PY
+      - name: Submit exactly one candidate
+        shell: bash
+        run: |
+          set -o pipefail
+          FILE=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          print(json.loads(Path('artifacts/live_submit_manifest.json').read_text())['zip'])
+          PY
+          )
+          kaggle competitions submit "$COMPETITION" -f "$FILE" -m "$SUBMISSION_MESSAGE" | tee artifacts/submit_output.txt
+          REF=$(grep -Eo 'Submission ref: *[0-9]+' artifacts/submit_output.txt | grep -Eo '[0-9]+' | tail -1 || true)
+          echo "$REF" > artifacts/submission_ref.txt
+          test -n "$REF"
+          echo "Submitted ref=$REF"
+      - name: Capture immediate submission status
+        shell: bash
+        run: |
+          REF=$(cat artifacts/submission_ref.txt)
+          sleep 10
+          kaggle competitions submission "$REF" > artifacts/submission_status.txt 2> artifacts/submission_status.err || true
+          kaggle competitions submissions "$COMPETITION" -v -q > artifacts/submissions_after.csv
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competition_after.csv
+          head -6 artifacts/submissions_after.csv
+          cat artifacts/competition_after.csv
+      - name: Refresh post-submit control-plane state
+        env:
+          KAGGLE_DAILY_LIMIT: '5'
+          KAGGLE_RESERVE_SLOTS: ${{ inputs.reserve_slots }}
+          KAGGLE_REPLAY_WINS: '2'
+          KAGGLE_REPLAY_LOSSES: '2'
+          KAGGLE_CONTROL_OUT: artifacts/post_submit
+        run: python ops/kaggle_control_plane.py
+      - name: Upload live field evidence and exact ZIP
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-live-${{ inputs.candidate }}-${{ github.run_number }}
+          path: |
+            artifacts/
+            live_submit/*.zip
+          retention-days: 30

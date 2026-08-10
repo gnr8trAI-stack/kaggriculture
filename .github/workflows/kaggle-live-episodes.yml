@@ -1,0 +1,129 @@
+name: kaggle-live-episodes
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/kaggle-live-episodes.yml'
+      - 'ops/episode_refresh_*'
+
+jobs:
+  episodes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle API
+        run: python -m pip install -q kaggle
+      - name: Fetch today's submission episodes and replays
+        run: |
+          mkdir -p artifacts/replays
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from kaggle.api.kaggle_api_extended import KaggleApi
+
+          TODAY='2026-08-09'
+          # All five submissions made today, in chronological order.
+          SUBMISSIONS=[55381784,55381890,55382036,55383460,55383465]
+          api=KaggleApi(); api.authenticate()
+          print('competition_list_episodes available:', hasattr(api,'competition_list_episodes'))
+          print('competition_episode_replay available:', hasattr(api,'competition_episode_replay'))
+
+          def objdict(x):
+              if hasattr(x,'to_dict'):
+                  try: return x.to_dict()
+                  except Exception: pass
+              if hasattr(x,'__dict__'):
+                  return {k:v for k,v in x.__dict__.items() if not k.startswith('_')}
+              return {'repr':repr(x)}
+
+          def pick(d,*names,default=None):
+              norm=lambda s: ''.join(c for c in str(s).lower() if c.isalnum())
+              wanted={norm(n) for n in names}
+              for k,v in d.items():
+                  if norm(k) in wanted: return v
+              return default
+
+          rows=[]
+          raw_by_submission={}
+          for sid in SUBMISSIONS:
+              try:
+                  eps=api.competition_list_episodes(sid)
+              except Exception as e:
+                  raw_by_submission[str(sid)]={'error':repr(e)}
+                  continue
+              raw=[]
+              for ep in eps or []:
+                  d=objdict(ep); raw.append(d)
+                  eid=pick(d,'id','episodeId','episode_id')
+                  create=str(pick(d,'createTime','create_time',default='') or '')
+                  agents=pick(d,'agents',default=[]) or []
+                  agents=[objdict(a) if not isinstance(a,dict) else a for a in agents]
+                  ours=None; opp=None
+                  for a in agents:
+                      asid=pick(a,'submissionId','submission_id')
+                      try: asid=int(asid)
+                      except Exception: pass
+                      if asid==sid: ours=a
+                      else: opp=a
+                  def reward(a):
+                      if not a: return None
+                      try: return float(pick(a,'reward',default=0) or 0)
+                      except Exception: return None
+                  orw=reward(ours); prw=reward(opp)
+                  if orw is None or prw is None: result='unknown'
+                  elif orw>prw: result='win'
+                  elif orw<prw: result='loss'
+                  else: result='tie'
+                  rows.append({
+                      'submission_id':sid,'episode_id':eid,'create_time':create,
+                      'end_time':str(pick(d,'endTime','end_time',default='') or ''),
+                      'state':pick(d,'state'),'type':pick(d,'type'),
+                      'result':result,'our_reward':orw,'opponent_reward':prw,
+                      'our_agent':ours,'opponent_agent':opp,
+                      'is_today':create.startswith(TODAY),
+                  })
+              raw_by_submission[str(sid)]={'count':len(raw),'episodes':raw}
+
+          today=[r for r in rows if r['is_today']]
+          today.sort(key=lambda r:r['create_time'], reverse=True)
+          wins=[r for r in today if r['result']=='win']
+          losses=[r for r in today if r['result']=='loss']
+          ties=[r for r in today if r['result']=='tie']
+          # Keep enough actual replays for detailed comparison without making an enormous artifact.
+          selected=(wins[:10]+losses[:10]+ties[:2])
+          seen=set(); downloaded=[]
+          for r in selected:
+              eid=r['episode_id']
+              if not eid or eid in seen: continue
+              seen.add(eid)
+              try:
+                  api.competition_episode_replay(int(eid), path='artifacts/replays', quiet=True)
+                  downloaded.append(eid)
+              except Exception as e:
+                  r['replay_error']=repr(e)
+
+          summary={
+              'generated_at_utc':datetime.now(timezone.utc).isoformat(),
+              'today':TODAY,'submission_ids':SUBMISSIONS,
+              'total_episode_rows':len(rows),'today_games':len(today),
+              'today_wins':len(wins),'today_losses':len(losses),'today_ties':len(ties),
+              'downloaded_replay_ids':downloaded,
+              'today_games_detail':today,
+              'latest_wins':wins[:10],'latest_losses':losses[:10],'latest_ties':ties[:2],
+          }
+          Path('artifacts/episode_summary.json').write_text(json.dumps(summary,indent=2,default=str),encoding='utf-8')
+          Path('artifacts/raw_episode_metadata.json').write_text(json.dumps(raw_by_submission,indent=2,default=str),encoding='utf-8')
+          print(json.dumps(summary,indent=2,default=str))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-live-episodes
+          path: artifacts/
+          retention-days: 7

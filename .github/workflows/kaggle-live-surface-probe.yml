@@ -1,0 +1,117 @@
+# live refresh probe 2026-08-09T20:36+05:30
+name: kaggle-live-surface-probe
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - '.github/workflows/kaggle-live-surface-probe.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/kaggle-live-surface-probe.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Kaggle CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install kaggle
+          test -n "$KAGGLE_API_TOKEN"
+      - name: Discover Kaggriculture competition surface
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          set +e
+          kaggle competitions list --group entered -s kaggriculture --csv > artifacts/competitions.csv 2> artifacts/competitions.err
+          echo $? > artifacts/competitions.exit
+          kaggle datasets list -s kaggriculture --csv > artifacts/datasets.csv 2> artifacts/datasets.err
+          echo $? > artifacts/datasets.exit
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          p=Path('artifacts/competitions.csv')
+          rows=[]
+          if p.exists() and p.stat().st_size:
+              try: rows=list(csv.DictReader(p.open()))
+              except Exception: rows=[]
+          refs=[]
+          slugs=[]
+          for r in rows:
+              ref=(r.get('ref') or r.get('Ref') or '').strip()
+              if not ref:
+                  continue
+              refs.append(ref)
+              slug=ref.rstrip('/').split('/')[-1]
+              if slug:
+                  slugs.append(slug)
+          payload={'competition_refs':refs,'competition_slugs':slugs,'count':len(refs)}
+          Path('artifacts/discovery.json').write_text(json.dumps(payload,indent=2))
+          print(json.dumps(payload,indent=2))
+          PY
+      - name: Query live competition state
+        shell: bash
+        run: |
+          set +e
+          REF=$(python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('artifacts/discovery.json').read_text())
+          print(x['competition_slugs'][0] if x.get('competition_slugs') else '')
+          PY
+          )
+          if [ -n "$REF" ]; then
+            echo "$REF" > artifacts/selected_competition.txt
+            kaggle competitions submissions "$REF" -v -q > artifacts/submissions.csv 2> artifacts/submissions.err
+            echo $? > artifacts/submissions.exit
+            kaggle competitions files "$REF" --page-size=200 -v -q > artifacts/files.csv 2> artifacts/files.err
+            echo $? > artifacts/files.exit
+            kaggle competitions leaderboard "$REF" -s -v -q > artifacts/leaderboard.csv 2> artifacts/leaderboard.err
+            echo $? > artifacts/leaderboard.exit
+          else
+            echo 'No entered Kaggriculture competition slug discovered.' > artifacts/no_competition.txt
+          fi
+      - name: Summarize live surface
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv,json
+          from pathlib import Path
+          def rows(name):
+              p=Path('artifacts')/name
+              if not p.exists() or not p.stat().st_size:
+                  return []
+              try:
+                  return list(csv.DictReader(p.open()))
+              except Exception:
+                  return []
+          comps=rows('competitions.csv')
+          subs=rows('submissions.csv')
+          leaders=rows('leaderboard.csv')
+          summary={
+              'entered': bool(comps),
+              'competition': comps[0] if comps else {},
+              'submission_count_visible': len(subs),
+              'latest_submissions': subs[:10],
+              'leaderboard_rows_visible': len(leaders),
+              'leaderboard_top': leaders[:10],
+          }
+          Path('artifacts/live_surface_summary.json').write_text(json.dumps(summary,indent=2))
+          print(json.dumps(summary,indent=2))
+          PY
+      - name: Upload probe evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggle-live-surface-probe
+          path: artifacts/
+          retention-days: 7
