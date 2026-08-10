@@ -1,4 +1,4 @@
-name: run-v32-from-main
+name: run-v32.1-from-main
 on:
   push:
     branches: [main]
@@ -13,18 +13,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: agent/v32-state-adaptive-frontier
+          ref: agent/v32.1-land-first
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - run: pip install -q kaggle-environments
-      - name: Compile and import V32
+      - name: Compile and import V32.1
         run: |
-          python -m py_compile agents/v32_state_adaptive_frontier.py
+          python -m py_compile agents/v32_state_adaptive_frontier.py agents/v32_1_land_first.py
           python - <<'PY'
-          import agents.v32_state_adaptive_frontier as a
+          import agents.v32_1_land_first as a
           assert callable(a.agent)
-          print('V32 import OK')
+          print('V32.1 import OK')
           PY
       - name: Run 44-game benchmark
         run: |
@@ -33,7 +33,7 @@ jobs:
           import json, statistics
           from pathlib import Path
           from kaggle_environments import make
-          import agents.v32_state_adaptive_frontier as v32
+          import agents.v32_1_land_first as v32
           import agents.v19_2_early_scale8 as v19
           BAD={'ERROR','INVALID','TIMEOUT'}
           def reset(m):
@@ -57,10 +57,10 @@ jobs:
                       'max_hands':max([int(x.get('hands',0) or 0) for x in tele] or [0])}
           rows=[]
           for seat in (0,1):
-              for i in range(12): rows.append(play(v32,'starter',seat,320000+i,'starter'))
+              for i in range(12): rows.append(play(v32,'starter',seat,322000+i,'starter'))
           for seat in (0,1):
-              for i in range(10): rows.append(play(v32,v19.agent,seat,321000+i,'v19.2'))
-          Path('artifacts/v32_rows.json').write_text(json.dumps(rows,indent=2))
+              for i in range(10): rows.append(play(v32,v19.agent,seat,323000+i,'v19.2'))
+          Path('artifacts/v32_1_rows.json').write_text(json.dumps(rows,indent=2))
           def summary(series):
               g=[r for r in rows if r['series']==series]
               return {'games':len(g),'wins':sum(r['result']=='win' for r in g),'losses':sum(r['result']=='loss' for r in g),'ties':sum(r['result']=='tie' for r in g),
@@ -68,32 +68,33 @@ jobs:
                       'invalid':sum(r['status'] in BAD for r in g),'median_d12':statistics.median(r['d12'] for r in g),'median_d20':statistics.median(r['d20'] for r in g),'median_d25':statistics.median(r['d25'] for r in g),
                       'three_land':sum(r['max_land']>=3 for r in g),'herd8_6':sum(r['max_cows']>=8 and r['max_sheep']>=6 for r in g),'max_reward':max(r['reward'] for r in g)}
           s=summary('starter'); h=summary('v19.2')
-          promote=(s['invalid']==0 and h['invalid']==0 and s['median']>=70000 and s['median_d20']>=30000 and h['mean_delta']>0 and h['wins']>=12)
-          report={'version':'32.0.0-alpha1','starter':s,'vs_v19_2':h,'promotion_pass':promote}
-          Path('artifacts/v32_report.json').write_text(json.dumps(report,indent=2))
+          promote=(s['invalid']==0 and h['invalid']==0 and s['median']>=70000 and s['median_d20']>=30000 and s['three_land']>=18 and h['mean_delta']>0 and h['wins']>=12)
+          report={'version':'32.1.0-alpha1','starter':s,'vs_v19_2':h,'promotion_pass':promote}
+          Path('artifacts/v32_1_report.json').write_text(json.dumps(report,indent=2))
           print(json.dumps(report,indent=2))
           if promote:
               import zipfile
-              src=Path('agents/v32_state_adaptive_frontier.py').read_text()
-              compile(src,'main.py','exec')
-              Path('dist/main.py').write_text(src)
-              with zipfile.ZipFile('dist/kaggriculture_v32_submission.zip','w',zipfile.ZIP_DEFLATED) as z: z.write('dist/main.py','main.py')
+              # V32.1 is a wrapper over V32/V22/V15 modules; artifact is research-only
+              # until standalone bundling is produced after promotion.
+              with zipfile.ZipFile('dist/kaggriculture_v32_1_research_bundle.zip','w',zipfile.ZIP_DEFLATED) as z:
+                  for p in ['agents/v32_1_land_first.py','agents/v32_state_adaptive_frontier.py','agents/v22_frontier_clone.py','agents/v15_champion.py']:
+                      z.write(p,p)
           PY
       - name: Post report to issue 16
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -f artifacts/v32_report.json ]; then
-            { echo '## V32 benchmark result'; echo; echo '```json'; cat artifacts/v32_report.json; echo '```'; } > /tmp/v32.md
+          if [ -f artifacts/v32_1_report.json ]; then
+            { echo '## V32.1 land-first benchmark result'; echo; echo '```json'; cat artifacts/v32_1_report.json; echo '```'; } > /tmp/v32.md
           else
-            echo '## V32 benchmark failed before report generation' > /tmp/v32.md
+            echo '## V32.1 benchmark failed before report generation' > /tmp/v32.md
           fi
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v32.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v32-benchmark-main-runner
+          name: v32-1-land-first-benchmark
           path: |
             artifacts/
             dist/
