@@ -1,0 +1,49 @@
+name: v33-mechanics-probe
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/v33-mechanics-probe.yml']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33-industrial
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - name: Probe initial observation and one-step economics
+        run: |
+          python - <<'PY'
+          import json, os
+          from kaggle_environments import make
+          snapshots=[]
+          for seat in (0,1):
+            seen=[]
+            def probe_agent(obs, config=None):
+              if len(seen)<4:
+                def conv(v):
+                  if isinstance(v,dict): return {k:conv(x) for k,x in v.items()}
+                  if isinstance(v,list): return [conv(x) for x in v]
+                  try: json.dumps(v); return v
+                  except Exception: return str(v)
+                seen.append(conv(obs if isinstance(obs,dict) else {k:getattr(obs,k) for k in ('player','step','day','hour','farms','private','market','town') if hasattr(obs,k)}))
+              return {'farmer':['PASS'],'hands':[],'market':[]}
+            env=make('kaggriculture',configuration={'seed':335000+seat},debug=True)
+            env.run([probe_agent,'starter'] if seat==0 else ['starter',probe_agent])
+            snapshots.append({'seat':seat,'observations':seen,'configuration':dict(env.configuration) if hasattr(env,'configuration') else str(env.configuration)})
+          os.makedirs('benchmarks',exist_ok=True)
+          open('benchmarks/v33_mechanics_probe.json','w').write(json.dumps(snapshots,indent=2,default=str))
+          PY
+      - name: Persist probe
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v33_mechanics_probe.json
+          git commit -m 'Record Kaggriculture mechanics probe' || true
+          git push origin HEAD:agent/v33-industrial
