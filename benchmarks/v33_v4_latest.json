@@ -1,0 +1,1584 @@
+{
+  "version": "33.4.0-industrial-cashflow",
+  "source_commit": "eaf7203bb789224aefa7b71b30a60cd3ca6ebf75",
+  "games": 24,
+  "invalid": 0,
+  "mean_reward": 756.0,
+  "median_reward": 756.0,
+  "min_reward": 756.0,
+  "p10_reward": 756.0,
+  "max_reward": 756.0,
+  "four_land_games": 0,
+  "q3_active_games": 0,
+  "q4_active_games": 0,
+  "median_hands": 0.0,
+  "median_animals": 0.0,
+  "median_productive": 0.0,
+  "median_d12_money": 826.0,
+  "median_d20_money": 766.0,
+  "median_d25_money": 756.0,
+  "stage_a_pass": false,
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 334000,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 207,
+        "move_to_plant": 21,
+        "plant_melon": 27,
+        "harvest_crop": 525,
+        "dig": 160,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334000,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 188,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 545,
+        "dig": 161,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334001,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 195,
+        "move_to_plant": 18,
+        "plant_melon": 27,
+        "harvest_crop": 517,
+        "dig": 183,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334001,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 208,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 575,
+        "dig": 111,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334002,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 205,
+        "move_to_plant": 18,
+        "plant_melon": 27,
+        "harvest_crop": 557,
+        "dig": 133,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334002,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 210,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 572,
+        "dig": 112,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334003,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 197,
+        "move_to_plant": 18,
+        "plant_melon": 27,
+        "harvest_crop": 538,
+        "dig": 160,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334003,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 205,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 552,
+        "dig": 137,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334004,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 208,
+        "move_to_plant": 20,
+        "plant_melon": 27,
+        "harvest_crop": 540,
+        "dig": 145,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334004,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 200,
+        "move_to_plant": 18,
+        "plant_melon": 27,
+        "harvest_crop": 515,
+        "dig": 180,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334005,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 210,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 574,
+        "dig": 110,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334005,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 194,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 529,
+        "dig": 171,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334006,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 194,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 571,
+        "dig": 129,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334006,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 206,
+        "move_to_plant": 18,
+        "plant_melon": 27,
+        "harvest_crop": 572,
+        "dig": 117,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334007,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 203,
+        "move_to_plant": 21,
+        "plant_melon": 27,
+        "harvest_crop": 543,
+        "dig": 146,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334007,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 207,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 575,
+        "dig": 112,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334008,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 209,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 568,
+        "dig": 117,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334008,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 199,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 556,
+        "dig": 139,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334009,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 183,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 564,
+        "dig": 147,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334009,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 205,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 558,
+        "dig": 131,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334010,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 187,
+        "move_to_plant": 18,
+        "plant_melon": 27,
+        "harvest_crop": 557,
+        "dig": 151,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334010,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 198,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 558,
+        "dig": 138,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334011,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 209,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 564,
+        "dig": 121,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    },
+    {
+      "seed": 334011,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 756.0,
+      "lands": 1,
+      "hands": 0,
+      "animals": 0,
+      "productive": 0,
+      "idle": 24,
+      "utilization": 0.0,
+      "q_productive": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "q_animals": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "unlock_steps": {
+        "1": 0
+      },
+      "capex": {
+        "land": 0.0,
+        "labour": 5000.0,
+        "crop": 2230.0,
+        "livestock": 0.0,
+        "feed": 0.0
+      },
+      "revenue_proxy": 0.0,
+      "d12": {
+        "money": 826.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d20": {
+        "money": 766.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "d25": {
+        "money": 756.0,
+        "productive": 1,
+        "lands": 1,
+        "hands": 0,
+        "animals": 0
+      },
+      "action_counts": {
+        "idle": 197,
+        "move_to_plant": 19,
+        "plant_melon": 27,
+        "harvest_crop": 558,
+        "dig": 139,
+        "plant_carrot": 3,
+        "plant_wheat": 1
+      }
+    }
+  ]
+}
