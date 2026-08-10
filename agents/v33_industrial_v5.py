@@ -1,0 +1,145 @@
+"""V33.5 mechanics-grounded industrial architecture.
+
+Independent V33 core plus corrections learned from direct Kaggriculture probes:
+* HIRE costs 1 coin, not 500, and hands are a daily operating resource.
+* BUY_LAND costs 1000 and unlocks NE after NW.
+* seed costs are WHEAT 10, CARROT 20, TOMATO 40, STRAWBERRY 60, MELON 80.
+* a newly planted crop reports yield_units immediately, but harvest before its
+  maturity age is a no-op; therefore WATER must precede maturity-gated HARVEST.
+
+No V19/V32 agent is imported or used as an architecture parent.
+"""
+from __future__ import annotations
+from typing import Any, Dict, Mapping, Set, Tuple
+from agents import v33_industrial as _b
+
+_b.HIRE_COST = 1
+
+
+def _crop_for(day: int, district: int, obs: Mapping[str, Any]) -> str:
+    if district == 3:
+        return "WHEAT"
+    if day <= 18:
+        return "MELON"
+    if day <= 25:
+        return "CARROT"
+    return "WHEAT"
+
+
+def _tile_tasks(tiles, day: int, districts: Set[int], reserved):
+    tasks=[]; n=len(tiles)
+    for y,row in enumerate(tiles):
+        for x,t in enumerate(row):
+            p=(x,y)
+            if _b._quadrant(n,p) not in districts or p in reserved: continue
+            k=_b._kind(t)
+            if k=="WEED":
+                tasks.append((3,p,["DIG"],"dig")); continue
+            if k!="PLANT" or not isinstance(t,Mapping): continue
+            crop=str(t.get("crop","")).upper()
+            raw=t.get("planted_day",day); planted=day if raw is None else int(raw)
+            age=day-planted; mature=age>=int(_b.CYCLE.get(crop,2))
+            watered=bool(t.get("watered_today",t.get("watered",False)))
+            danger=int(t.get("consecutive_unwatered",0) or 0)>=1
+            yld=int(t.get("yield_units",t.get("yield",0)) or 0)
+            if not watered and danger:
+                tasks.append((0,p,["WATER"],"water_danger"))
+            elif mature and yld>0:
+                tasks.append((1,p,["HARVEST"],"harvest_crop"))
+            elif not watered:
+                tasks.append((2,p,["WATER"],"water"))
+    return tasks
+
+_base_unit_action=_b._unit_action
+
+
+def _unit_action(obs,farm,idx,p,stats,reserved,seed_budget,role):
+    inv=_b._inventory(_b._m(obs.get("private")),idx)
+    # Once a valid maturity-gated harvest loads inventory, monetization has
+    # priority over wandering to another district task.
+    if _b._inv_total(inv)>0:
+        return _b._to_shed(farm.get("tiles") or [],p,["DROP"]),"drop_inventory"
+    return _base_unit_action(obs,farm,idx,p,stats,reserved,seed_budget,role)
+
+
+def _capital_allocator(obs,farm,stats):
+    day=int(obs.get("day",0) or 0); horizon=max(0,_b.GAME_DAYS-day)
+    private=_b._m(obs.get("private")); shed=_b._m(private.get("shed")); seeds=_b._m(private.get("seeds"))
+    money=float(farm.get("money",0) or 0); hands=list(farm.get("hands") or []); hires_today=int(farm.get("hires_today",0) or 0)
+    lands=int(stats.get("lands",0) or 0); animals=int(stats.get("animals",0) or 0); qs=stats["districts"]
+    liquidate=day>=28; orders=[]
+    meta:Dict[str,Any]={"land":0,"hires":0,"cows":0,"feed":0,"seeds":{},"sell_qty":0,"reserve":0.0,"ranked":[]}
+
+    # Cash conversion every market turn keeps capital cycling.
+    for item in _b.SELLABLE:
+        qty=int(shed.get(item,0) or 0); keep=animals*3 if item=="WHEAT" and not liquidate else 0; sell=max(0,qty-keep)
+        if sell>0:
+            orders.append(["SELL",item,sell]); meta["sell_qty"]+=sell
+            if len(orders)>=10:return orders,meta
+
+    # Real measured hire cost is one coin.  Treat hands as daily OPEX capacity.
+    reserve=250+35*animals
+    meta["reserve"]=reserve; spendable=max(0.0,money-reserve)
+    desired={1:7,2:10,3:14,4:18}.get(lands,7)
+    # Up to 6 hires per turn leaves order slots for seeds/land. Multiple HIRE
+    # orders were directly verified to execute atomically.
+    if horizon>=2 and len(hands)<desired:
+        for _ in range(min(6,desired-len(hands))):
+            if spendable<2 or len(orders)>=9:break
+            orders.append(["HIRE"]); meta["hires"]+=1; spendable-=1
+
+    # Seed enough active surface before committing scarce 1k land capex.
+    active=[1]+([2] if lands>=2 else [])+([3] if lands>=3 else [])+([4] if lands>=4 else [])
+    needs:Dict[str,int]={}
+    for q in active:
+        idle=int(qs[q]["idle"] or 0)
+        if q==3: idle=min(idle,10)
+        crop=_crop_for(day,q,obs); needs[crop]=needs.get(crop,0)+idle
+    for crop,raw in sorted(needs.items(),key=lambda kv:-kv[1]):
+        if len(orders)>=10:break
+        have=int(seeds.get(crop,0) or 0)+int(meta["seeds"].get(crop,0) or 0)
+        need=max(0,min(40,raw+2-have))
+        affordable=max(0,int(max(0.0,spendable-100)//_b.SEED_COST[crop]))
+        buy=min(need,affordable)
+        if buy>0:
+            orders.append(["BUY_SEED",crop,buy]); meta["seeds"][crop]=buy; spendable-=buy*_b.SEED_COST[crop]
+
+    # Serial land growth. Q2 can be bought very early; Q3/Q4 require cash
+    # generated by actual productive districts, not telemetry-only intents.
+    q1p=int(qs[1]["productive"] or 0); q2p=int(qs[2]["productive"] or 0); q3p=int(qs[3]["productive"] or 0)
+    land_ok=False
+    if lands==1: land_ok=(q1p>=8 or day>=2) and money>=1800
+    elif lands==2: land_ok=(q2p>=6 or day>=6) and money>=2600
+    elif lands==3: land_ok=(q3p>=5 or day>=10) and money>=3200
+    if lands<4 and horizon>=8 and land_ok and spendable>=_b.LAND_COST+150 and len(orders)<10:
+        orders.append(["BUY_LAND"]); meta["land"]=1; spendable-=_b.LAND_COST
+
+    # Q3 livestock against physical pasture only.
+    if lands>=3 and horizon>=5:
+        pastures=int(qs[3]["pasture"] or 0); cows=animals+int(shed.get("COW",0) or 0)
+        target=min(14,max(6,len(hands)//2+3)); capacity=max(0,min(pastures-cows,target-cows))
+        affordable=max(0,int(max(0.0,spendable-200)//_b.COW_COST)); buy=min(3,capacity,affordable)
+        if buy>0 and len(orders)<10:
+            orders.append(["BUY_ANIMAL","COW",buy]); meta["cows"]=buy; spendable-=buy*_b.COW_COST
+    wheat=int(shed.get("WHEAT",0) or 0); need=max(0,animals*3-wheat)
+    if need>0 and len(orders)<10:
+        buy=min(need,max(0,int(max(0.0,spendable-100)//25)))
+        if buy>0: orders.append(["BUY_PRODUCT","WHEAT",buy]); meta["feed"]=buy
+    return orders[:10],meta
+
+
+_b._crop_for=_crop_for
+_b._tile_tasks=lambda tiles,districts,reserved: _tile_tasks(tiles,int(getattr(_b,'_CURRENT_DAY',0)),districts,reserved)
+# Base _unit_action does not pass day into _tile_tasks. Patch with a tiny day
+# context wrapper so maturity tests use the live observation day.
+def _unit_action_with_day(obs,farm,idx,p,stats,reserved,seed_budget,role):
+    _b._CURRENT_DAY=int(obs.get("day",0) or 0)
+    return _unit_action(obs,farm,idx,p,stats,reserved,seed_budget,role)
+_b._unit_action=_unit_action_with_day
+_b._capital_allocator=_capital_allocator
+
+
+def reset_state(): return _b.reset_state()
+def reset_telemetry(): return _b.reset_telemetry()
+def get_telemetry(clear:bool=False): return _b.get_telemetry(clear=clear)
+def agent(observation:Any,configuration:Any=None): return _b.agent(observation,configuration)
