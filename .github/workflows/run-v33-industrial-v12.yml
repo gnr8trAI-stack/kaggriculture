@@ -1,4 +1,4 @@
-name: run-v33-12-cash-conversion
+name: run-v33-13-solvency-industrial
 on:
   push:
     branches: [main]
@@ -17,7 +17,7 @@ jobs:
         with:
           ref: agent/v32.4-surplus-land
           path: baseline
-      - name: Checkout V33.12 candidate
+      - name: Checkout V33.13 candidate
         uses: actions/checkout@v6
         with:
           ref: agent/v33-industrial
@@ -28,7 +28,7 @@ jobs:
       - run: pip install -q kaggle-environments
       - name: Compile
         run: |
-          python -m py_compile candidate/agents/v33_industrial.py candidate/agents/v33_industrial_v10.py candidate/agents/v33_industrial_v12.py
+          python -m py_compile candidate/agents/v33_industrial.py candidate/agents/v33_industrial_v10.py candidate/agents/v33_industrial_v13.py
           python -m py_compile baseline/agents/v19_2_early_scale8.py
       - name: Run isolated 24-game both-seat gate
         run: |
@@ -62,9 +62,9 @@ jobs:
               if p.returncode or not line: return {'status':'ERROR','reward':0.0,'peaks':{},'stderr':(p.stderr+p.stdout)[-2000:]}
               return json.loads(line.split('=',1)[1])
           rows=[]
-          for seed in range(341200,341212):
+          for seed in range(341300,341312):
               for seat in (0,1):
-                  c=one('candidate','agents.v33_industrial_v12',seed,seat); b=one('baseline','agents.v19_2_early_scale8',seed,seat)
+                  c=one('candidate','agents.v33_industrial_v13',seed,seat); b=one('baseline','agents.v19_2_early_scale8',seed,seat)
                   rows.append({'seed':seed,'seat':seat,'candidate':c,'control':b,'delta':c['reward']-b['reward']})
           def summ(which):
               rs=[x[which] for x in rows]; rewards=[float(r.get('reward',0) or 0) for r in rs]; s=sorted(rewards); invalid=sum(str(r.get('status')) in ('ERROR','INVALID','TIMEOUT') for r in rs)
@@ -78,20 +78,20 @@ jobs:
                   out.update({'median_peak_lands':med('lands'),'four_land_games':sum((r.get('peaks') or {}).get('lands',0)>=4 for r in rs),'q3_active_games':sum((r.get('peaks') or {}).get('q3_prod',0)>0 for r in rs),'q4_active_games':sum((r.get('peaks') or {}).get('q4_prod',0)>0 for r in rs),'median_peak_animals':med('animals'),'median_q3_animals':med('q3_animals'),'median_peak_hands':med('hands'),'median_peak_productive':med('productive'),'median_d12_money':med('money',12),'median_d20_money':med('money',20),'median_d25_money':med('money',25)})
               return out
           c=summ('candidate'); b=summ('control'); d=[x['delta'] for x in rows]
-          report={'version':'33.12.0-cash-conversion','source_commit':'92294b7d304a3fc83bdc2c61bd075073fccb2ec8','mechanism':'shorter harvest-to-cash latency plus day-23 terminal monetization; V33.10 allocator retained','candidate':c,'control_v19_2':b,'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},'stage_a_pass':c['invalid']==0 and c['q3_active_games']>=20 and c['q4_active_games']>=12 and c['median_peak_lands']>=3,'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
-          Path('/tmp/v3312.json').write_text(json.dumps(report,indent=2)); print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+          report={'version':'33.13.0-solvency-industrial','source_commit':'6d7b3cad750b6864e9515800b1948a528ffdde7a','mechanism':'solvency floor, throughput-sized labour, Q3-before-Q4 commissioning, 12-cow staging priority, serviceable seed cap','candidate':c,'control_v19_2':b,'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},'stage_a_pass':c['invalid']==0 and c['q3_active_games']>=20 and c['q4_active_games']>=12 and c['median_peak_lands']>=3,'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
+          Path('/tmp/v3313.json').write_text(json.dumps(report,indent=2)); print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
       - name: Record internal result
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V33.12 cash-conversion industrial benchmark'; echo '```json'; cat /tmp/v3312.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/comment.md
+          { echo '## V33.13 solvency-first industrial benchmark'; echo '```json'; cat /tmp/v3313.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/comment.md
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/comment.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-12-cash-conversion
-          path: /tmp/v3312.json
+          name: v33-13-solvency-industrial
+          path: /tmp/v3313.json
           if-no-files-found: ignore
           retention-days: 14
