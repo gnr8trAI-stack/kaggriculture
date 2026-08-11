@@ -1,0 +1,49 @@
+name: v33-econ-probe
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/v33-econ-probe.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: agent/v33-industrial
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - name: Probe capital costs and limits
+        run: |
+          python - <<'PY'
+          import json, os
+          from kaggle_environments import make
+          out={}
+          def run_case(name, policy, seed):
+            rows=[]
+            def agent(obs,config=None):
+              o=obs if isinstance(obs,dict) else {k:getattr(obs,k) for k in ('player','step','day','hour','farms','private','market','town') if hasattr(obs,k)}
+              p=int(o.get('player',0)); farm=(o.get('farms') or [{}])[p]; prv=o.get('private') or {}
+              rows.append({'step':int(o.get('step',0) or 0),'day':int(o.get('day',0) or 0),'hour':int(o.get('hour',0) or 0),'money':farm.get('money'),'hands':len(farm.get('hands') or []),'hires_today':farm.get('hires_today'),'unlocked':list(farm.get('unlocked_quadrants') or []),'shed':dict(prv.get('shed') or {})})
+              return {'farmer':['PASS'],'hands':[['PASS'] for _ in (farm.get('hands') or [])],'market':policy(o,rows)}
+            env=make('kaggriculture',configuration={'seed':seed},debug=True); env.run([agent,'starter'])
+            out[name]={'rows':rows[:8],'status':str(env.state[0].status),'reward':env.state[0].reward}
+          run_case('land_chain',lambda o,r: ([['BUY_LAND']] if len((o.get('farms') or [{}])[int(o.get('player',0))].get('unlocked_quadrants') or [])<4 and len(r)<=4 else []),335900)
+          run_case('hire10',lambda o,r: ([['HIRE'] for _ in range(10)] if len(r)==1 else []),335901)
+          run_case('cow1',lambda o,r: ([['BUY_ANIMAL','COW',1]] if len(r)==1 else []),335902)
+          run_case('cow5',lambda o,r: ([['BUY_ANIMAL','COW',5]] if len(r)==1 else []),335903)
+          run_case('sheep1',lambda o,r: ([['BUY_ANIMAL','SHEEP',1]] if len(r)==1 else []),335904)
+          os.makedirs('benchmarks',exist_ok=True); open('benchmarks/v33_econ_probe.json','w').write(json.dumps(out,indent=2,default=str))
+          PY
+      - name: Persist probe
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v33_econ_probe.json
+          git commit -m 'Record V33 capital cost probe' || true
+          git push origin HEAD:agent/v33-industrial
