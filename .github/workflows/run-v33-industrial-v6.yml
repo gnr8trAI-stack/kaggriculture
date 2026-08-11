@@ -1,4 +1,4 @@
-name: run-v33-industrial-v6-r1
+name: run-v33-industrial-v6-r2
 on:
   push:
     branches: [main]
