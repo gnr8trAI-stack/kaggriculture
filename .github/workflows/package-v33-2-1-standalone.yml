@@ -1,4 +1,4 @@
-name: package-v33-2-1-standalone
+name: package-v33-2-1-standalone-r2
 on:
   push:
     branches: [main]
