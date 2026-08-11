@@ -1,0 +1,123 @@
+name: run-v34-15-late-feed3-isolated
+on:
+  push:
+    branches: ['agent/v34.15-late-feed3-isolated']
+    paths: ['.github/workflows/run-v34-15-late-feed3-isolated.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Checkout V19.2 control
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v32.4-surplus-land
+          path: baseline
+      - name: Checkout V34.15 candidate
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v34.15-late-feed3-isolated
+          path: candidate
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install environment
+        run: pip install -q kaggle-environments
+      - name: Compile candidate and control
+        run: |
+          python -m py_compile candidate/agents/v34_15_late_feed3_isolated.py
+          python -m py_compile candidate/agents/v34_13_late_crop_hire10_isolated.py
+          python -m py_compile candidate/agents/v34_6_cow16_window24_isolated.py
+          python -m py_compile baseline/agents/v19_2_early_scale8.py
+      - name: Run isolated 24-game both-seat benchmark
+        run: |
+          python - <<'PY'
+          import json, statistics, subprocess, sys
+          from pathlib import Path
+
+          CHILD = r'''
+          import importlib, json, sys, os
+          from kaggle_environments import make
+          root, modname, seed, seat = sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
+          sys.path.insert(0, root); os.chdir(root)
+          a = importlib.import_module(modname)
+          if hasattr(a, 'reset_state'): a.reset_state()
+          env = make('kaggriculture', configuration={'seed': seed}, debug=False)
+          env.run([a.agent, 'starter'] if seat == 0 else ['starter', a.agent])
+          st = env.state[seat]
+          tel = a.get_telemetry() if hasattr(a, 'get_telemetry') else []
+          final = tel[-1] if tel else {}
+          def peak(k): return max([int(r.get(k,0) or 0) for r in tel] or [0])
+          out = {
+            'status': str(st.status), 'reward': float(st.reward or 0),
+            'peak_cows': peak('cow_count'), 'peak_active_cows': peak('active_cows'),
+            'peak_pastures': peak('pastures'), 'peak_productive': peak('productive'),
+            'unlocked_count': int(final.get('unlocked_count',0) or 0),
+            'final_money': float(final.get('money',0) or 0),
+            'late_hire_triggered': bool(a.late_hire_triggered()) if hasattr(a,'late_hire_triggered') else False,
+            'late_feed_triggered': bool(a.late_feed_triggered()) if hasattr(a,'late_feed_triggered') else False,
+          }
+          print('RESULTJSON=' + json.dumps(out, separators=(',',':')))
+          '''
+
+          def one(root, mod, seed, seat):
+              try:
+                  p = subprocess.run([sys.executable,'-c',CHILD,root,mod,str(seed),str(seat)], text=True, capture_output=True, timeout=170)
+              except subprocess.TimeoutExpired:
+                  return {'status':'TIMEOUT','reward':0.0}
+              line = next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')), None)
+              if p.returncode or not line:
+                  return {'status':'ERROR','reward':0.0,'stderr':(p.stderr+p.stdout)[-1800:]}
+              return json.loads(line.split('=',1)[1])
+
+          rows=[]
+          for seed in range(341500,341512):
+              for seat in (0,1):
+                  b=one('baseline','agents.v19_2_early_scale8',seed,seat)
+                  c=one('candidate','agents.v34_15_late_feed3_isolated',seed,seat)
+                  rows.append({'seed':seed,'seat':seat,'baseline':b,'candidate':c,'delta':c['reward']-b['reward']})
+                  print(seed,seat,b['reward'],c['reward'],c.get('late_feed_triggered'))
+
+          def summ(which):
+              rs=[x[which] for x in rows]; rewards=[float(r.get('reward',0) or 0) for r in rs]; sr=sorted(rewards)
+              def med(k): return statistics.median(float(r.get(k,0) or 0) for r in rs)
+              return {
+                'games':len(rs),'invalid':sum(str(r.get('status')) in ('ERROR','INVALID','TIMEOUT') for r in rs),
+                'mean':statistics.mean(rewards),'median':statistics.median(rewards),'min':min(rewards),
+                'p10':sr[2],'p25':sr[5],'p75':sr[17],'p90':sr[-3],'max':max(rewards),
+                'median_peak_cows':med('peak_cows'),'median_peak_active_cows':med('peak_active_cows'),
+                'median_peak_pastures':med('peak_pastures'),'median_peak_productive':med('peak_productive'),
+                'median_final_money':med('final_money'),
+                'late_hire_trigger_games':sum(bool(r.get('late_hire_triggered')) for r in rs),
+                'late_feed_trigger_games':sum(bool(r.get('late_feed_triggered')) for r in rs),
+              }
+          bs=summ('baseline'); cs=summ('candidate'); d=[x['delta'] for x in rows]
+          report={
+            'version':'34.15.0-late-feed3-isolated',
+            'mechanism':'V34.13 unchanged except feed reserve 2->3 per active cow after day16, >=10 active cows, >=18000 cash and healthy farm',
+            'baseline_v19_2':bs,'candidate':cs,
+            'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
+            'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000,
+            'games_detail':rows,
+          }
+          Path('/tmp/v3415.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+          PY
+      - name: Record result in issue 16
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo '## V34.15 isolated late feed-buffer benchmark'; echo; echo '```json'; cat /tmp/v3415.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/v3415.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v3415.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v34-15-late-feed3-isolated
+          path: /tmp/v3415.json
+          if-no-files-found: ignore
+          retention-days: 14
