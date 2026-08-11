@@ -16,7 +16,7 @@ _b.HIRE_COST = 1
 def _crop_for(day: int, district: int, obs: Mapping[str, Any]) -> str:
     if district == 3:
         return "WHEAT"
-    if day <= 5:
+    if day <= 6:
         return "WHEAT"
     if day <= 16:
         return "MELON" if district == 4 else "STRAWBERRY"
@@ -43,7 +43,6 @@ def _capital_allocator(obs, farm, stats):
     orders = []
     meta: Dict[str, Any] = {"land":0,"hires":0,"cows":0,"feed":0,"seeds":{},"sell_qty":0,"reserve":0.0,"ranked":[]}
 
-    # Convert every realized output to cash immediately, retaining only feed wheat.
     total_carried_wheat = 0
     if isinstance(inventories, list):
         total_carried_wheat = sum(int(_b._m(inv).get("WHEAT", 0) or 0) for inv in inventories)
@@ -56,9 +55,8 @@ def _capital_allocator(obs, farm, stats):
             if len(orders) >= 10:
                 return orders, meta
 
-    # Frontier action density is roughly 9 hires/day. Hires are one coin and temporary.
     desired = {1:7, 2:9, 3:11, 4:12}.get(lands, 7)
-    reserve = 450 + 45 * animals
+    reserve = 350 + 40 * animals
     meta["reserve"] = reserve
     spendable = max(0.0, money - reserve)
     if day <= 27 and len(hands) < desired:
@@ -67,27 +65,24 @@ def _capital_allocator(obs, farm, stats):
                 break
             orders.append(["HIRE"]); meta["hires"] += 1; spendable -= 1
 
-    # Frontier land timing: first expansion ~d4-6, third land ~d6-10.
-    # Q4 is rare in the replay frontier, so require genuine retained surplus.
+    # First land expansion around d4-6; force the third owned quadrant into the
+    # frontier d6-10 window instead of waiting for Q2 saturation. Q4 still needs surplus.
     land_ok = False
     if lands == 1:
-        land_ok = day >= 4 and int(qs[1]["productive"] or 0) >= 12 and money >= 2300
+        land_ok = day >= 4 and int(qs[1]["productive"] or 0) >= 10 and money >= 2100
     elif lands == 2:
-        land_ok = day >= 6 and (int(qs[1]["productive"] or 0) + int(qs[2]["productive"] or 0)) >= 26 and money >= 3200
+        land_ok = day >= 6 and money >= 1800
     elif lands == 3:
-        land_ok = day >= 10 and money >= 16000 and (int(qs[1]["productive"] or 0) + int(qs[2]["productive"] or 0)) >= 34
-    if lands < 4 and horizon >= 9 and land_ok and spendable >= _b.LAND_COST + 250 and len(orders) < 10:
+        land_ok = day >= 11 and money >= 14000 and int(stats.get("productive",0) or 0) >= 45
+    if lands < 4 and horizon >= 9 and land_ok and spendable >= _b.LAND_COST + 200 and len(orders) < 10:
         orders.append(["BUY_LAND"]); meta["land"] = 1; spendable -= _b.LAND_COST
 
-    # Seed the currently owned idle surface. Wheat compounds the opening quickly;
-    # strawberry dominates the midgame footprint, matching frontier replays.
     if not liquidate:
         needs: Dict[str, int] = {}
         active = [1] + ([2] if lands >= 2 else []) + ([3] if lands >= 3 else []) + ([4] if lands >= 4 else [])
         for q in active:
             idle = int(qs[q].get("idle", 0) or 0)
             if q == 3:
-                # Reserve 14 Q3 cells for pasture and use the remaining strip as feed crop.
                 available_for_feed = max(0, int(qs[q].get("unlocked", 0) or 0) - 4 - 14 - int(qs[q].get("productive", 0) or 0))
                 idle = min(idle, available_for_feed)
             crop = _crop_for(day, q, obs)
@@ -98,38 +93,34 @@ def _capital_allocator(obs, farm, stats):
             if crop in {"STRAWBERRY", "MELON"} and day > 17:
                 continue
             have = int(seeds.get(crop, 0) or 0) + int(meta["seeds"].get(crop, 0) or 0)
-            need = max(0, min(30, raw_need + 3 - have))
-            affordable = max(0, int(max(0.0, spendable - 200) // _b.SEED_COST[crop]))
+            cap = 48 if crop == "WHEAT" else 40
+            need = max(0, min(cap, raw_need + 5 - have))
+            affordable = max(0, int(max(0.0, spendable - 150) // _b.SEED_COST[crop]))
             buy = min(need, affordable)
             if buy > 0:
                 orders.append(["BUY_SEED", crop, buy]); meta["seeds"][crop] = buy; spendable -= buy * _b.SEED_COST[crop]
 
-    # Fill Q3 pasture as soon as physical capacity exists. Do not wait for a 12k
-    # cash threshold; replay frontier has ~13 animals by day 15.
     if lands >= 3 and day <= 23 and horizon >= 5:
         q3 = qs[3]
         pastures = int(q3.get("pasture", 0) or 0)
         cow_total = animals + int(shed.get("COW", 0) or 0)
         target = 14 if lands == 3 else 18
         capacity = max(0, min(pastures - cow_total, target - cow_total))
-        affordable = max(0, int(max(0.0, spendable - 350) // _b.COW_COST))
+        affordable = max(0, int(max(0.0, spendable - 250) // _b.COW_COST))
         buy = min(4, capacity, affordable)
         if buy > 0 and len(orders) < 10:
             orders.append(["BUY_ANIMAL", "COW", buy]); meta["cows"] = buy; spendable -= buy * _b.COW_COST
 
-    # Feed is mandatory survival OPEX; carried wheat counts toward the reserve.
     wheat_total = int(shed.get("WHEAT", 0) or 0) + total_carried_wheat
     feed_need = max(0, animals * 3 - wheat_total)
     if feed_need > 0 and len(orders) < 10:
-        buy = min(feed_need, max(0, int(max(0.0, spendable - 100) // 25)))
+        buy = min(feed_need, max(0, int(max(0.0, spendable - 75) // 25)))
         if buy > 0:
             orders.append(["BUY_PRODUCT", "WHEAT", buy]); meta["feed"] = buy
 
     return orders[:10], meta
 
 
-# V33.5 already patches maturity-gated harvest and inventory return into the
-# independent V33 router. Replace only crop choice and capital allocation.
 _b._crop_for = _crop_for
 _b._capital_allocator = _capital_allocator
 
