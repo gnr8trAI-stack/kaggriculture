@@ -1,0 +1,107 @@
+name: run-v34-12-dynamic-crew-isolated
+on:
+  push:
+    branches: ['agent/v34.12-dynamic-crew-isolated']
+    paths: ['.github/workflows/run-v34-12-dynamic-crew-isolated.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout V19.2 control
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v32.4-surplus-land
+          path: baseline
+      - name: Checkout V34.12 candidate
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v34.12-dynamic-crew-isolated
+          path: candidate
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install environment
+        run: pip install -q kaggle-environments
+      - name: Run fresh-process paired benchmark
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > /tmp/base.jsonl
+          : > /tmp/cand.jsonl
+          run_game () {
+            local wd="$1" mod="$2" seed="$3" seat="$4" outfile="$5"
+            (cd "$wd" && timeout 90s python - "$mod" "$seed" "$seat" <<'PY'
+          import importlib,json,sys
+          from kaggle_environments import make
+          mod,seed,seat=sys.argv[1],int(sys.argv[2]),int(sys.argv[3])
+          a=importlib.import_module(mod)
+          if hasattr(a,'reset_state'): a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=True)
+          env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat]
+          tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          last=tel[-1] if tel else {}
+          health=last.get('health') or {}
+          print(json.dumps({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
+            'cow_count':int(last.get('cow_count',0) or 0),'active_cows':int(last.get('active_cows',0) or 0),
+            'pastures':int(last.get('pastures',0) or 0),'unlocked_count':int(last.get('unlocked_count',0) or 0),
+            'productive':int(health.get('productive',0) or 0),'nw_productive':int(health.get('nw_productive',0) or 0)}))
+          PY
+            ) >> "$outfile" || echo "{\"seed\":$seed,\"seat\":$seat,\"status\":\"TIMEOUT_OR_ERROR\",\"reward\":0}" >> "$outfile"
+          }
+          for seed in $(seq 341200 341215); do
+            for seat in 0 1; do
+              run_game baseline agents.v19_2_early_scale8 "$seed" "$seat" /tmp/base.jsonl
+              run_game candidate agents.v34_12_dynamic_crew_isolated "$seed" "$seat" /tmp/cand.jsonl
+            done
+          done
+      - name: Summarize paired benchmark
+        run: |
+          python - <<'PY'
+          import json,statistics
+          def load(p): return [json.loads(x) for x in open(p) if x.strip()]
+          b,c=load('/tmp/base.jsonl'),load('/tmp/cand.jsonl')
+          def stats(rows):
+            rewards=[x['reward'] for x in rows]; sr=sorted(rewards)
+            bad=sum(x.get('status') in ('ERROR','INVALID','TIMEOUT','TIMEOUT_OR_ERROR') for x in rows)
+            def med(k): return statistics.median(x.get(k,0) for x in rows)
+            return {'games':len(rows),'invalid':bad,'mean':statistics.mean(rewards),'median':statistics.median(rewards),
+              'min':min(rewards),'p10':sr[max(0,int(len(sr)*.1)-1)],'p25':sr[max(0,int(len(sr)*.25)-1)],
+              'p75':sr[min(len(sr)-1,int(len(sr)*.75))],'max':max(rewards),'median_cows':med('cow_count'),
+              'median_active_cows':med('active_cows'),'median_pastures':med('pastures'),'median_productive':med('productive'),
+              'median_nw_productive':med('nw_productive'),'multi_land_games':sum(x.get('unlocked_count',0)>=2 for x in rows)}
+          bs,cs=stats(b),stats(c)
+          pairs={(x['seed'],x['seat']):x for x in b}; deltas=[]
+          for x in c:
+            y=pairs.get((x['seed'],x['seat']))
+            if y: deltas.append(x['reward']-y['reward'])
+          report={'version':'34.12.0-dynamic-crew-isolated',
+            'mechanism':'V34.10/V34.6 unchanged except livestock crew 6->4 after 10 active cows',
+            'baseline_v19_2':bs,'candidate':cs,
+            'paired':{'wins':sum(d>0 for d in deltas),'losses':sum(d<0 for d in deltas),'ties':sum(d==0 for d in deltas),
+              'mean_delta':statistics.mean(deltas),'median_delta':statistics.median(deltas)},
+            'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000}
+          open('/tmp/report.json','w').write(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
+          PY
+      - name: Record result in issue 16
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo '## V34.12 isolated dynamic-crew benchmark'; echo; echo '```json'; cat /tmp/report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/report.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/report.md
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v34-12-dynamic-crew-isolated-benchmark
+          path: |
+            /tmp/report.json
+            /tmp/base.jsonl
+            /tmp/cand.jsonl
+          if-no-files-found: ignore
+          retention-days: 14
