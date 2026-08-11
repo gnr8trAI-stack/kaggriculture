@@ -1,4 +1,4 @@
-name: run-v34-6-cow16-window24-isolated
+name: run-v34-7-placement-priority-isolated
 on:
   push:
     branches: [main]
@@ -17,10 +17,10 @@ jobs:
         with:
           ref: agent/v32.4-surplus-land
           path: baseline
-      - name: Checkout V34.6 candidate
+      - name: Checkout V34.7 candidate
         uses: actions/checkout@v6
         with:
-          ref: agent/v34.6-cow16-window24-isolated
+          ref: agent/v34.7-placement-priority-isolated
           path: candidate
       - uses: actions/setup-python@v6
         with:
@@ -29,7 +29,7 @@ jobs:
         run: pip install -q kaggle-environments
       - name: Compile candidate and control
         run: |
-          python -m py_compile candidate/agents/v34_6_cow16_window24_isolated.py
+          python -m py_compile candidate/agents/v34_7_placement_priority_isolated.py
           python -m py_compile baseline/agents/v19_2_early_scale8.py
       - name: Run fresh-process paired benchmark
         run: |
@@ -67,10 +67,10 @@ jobs:
               return json.loads(line.split('=',1)[1])
 
           rows=[]
-          for seed in range(346000, 346016):
+          for seed in range(347000, 347016):
               for seat in (0,1):
                   b = one('baseline', 'agents.v19_2_early_scale8', seed, seat)
-                  c = one('candidate', 'agents.v34_6_cow16_window24_isolated', seed, seat)
+                  c = one('candidate', 'agents.v34_7_placement_priority_isolated', seed, seat)
                   rows.append({'seed':seed,'seat':seat,'baseline':b,'candidate':c,'delta':c['reward']-b['reward']})
                   print(seed, seat, b['reward'], c['reward'], c['peak_cows'], c['peak_active_cows'])
 
@@ -89,14 +89,14 @@ jobs:
                       'median_peak_pastures':statistics.median(x['peak_pastures'] for x in rs),
                       'multi_land_games':sum(x['unlocked_count']>=2 for x in rs)}
           bs=s('baseline'); cs=s('candidate'); d=[x['delta'] for x in rows]
-          report={'version':'34.6.0-cow16-window24-isolated',
-                  'mechanism':'V34.5 unchanged except livestock purchase/start window day 20->24',
-                  'baseline_v19_2':bs,'candidate_v34_6':cs,
+          report={'version':'34.7.0-placement-priority-isolated',
+                  'mechanism':'V34.6 unchanged except pasture/cow staging before optional livestock service',
+                  'baseline_v19_2':bs,'candidate_v34_7':cs,
                   'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),
                             'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
                   'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000,
                   'games_detail':rows}
-          Path('/tmp/v346_report.json').write_text(json.dumps(report,indent=2))
+          Path('/tmp/v347_report.json').write_text(json.dumps(report,indent=2))
           print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
       - name: Record result in issue 16
@@ -104,12 +104,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V34.6 isolated livestock-window benchmark'; echo; echo '```json'; cat /tmp/v346_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v346.md
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v346.md
+          { echo '## V34.7 isolated placement-priority benchmark'; echo; echo '```json'; cat /tmp/v347_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v347.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v347.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v34-6-cow16-window24-isolated-benchmark
-          path: /tmp/v346_report.json
+          name: v34-7-placement-priority-isolated-benchmark
+          path: /tmp/v347_report.json
           if-no-files-found: ignore
           retention-days: 14
