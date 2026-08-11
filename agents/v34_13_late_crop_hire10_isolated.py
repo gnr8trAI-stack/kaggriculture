@@ -28,6 +28,8 @@ LATE_MIN_CASH = 18000
 MAX_LATE_WEED_RATIO = 0.18
 MAX_LATE_DANGER = 2
 
+_LATE_TRIGGERED = False
+
 
 def _v19():
     return _v346._v345._v343._v342._v19
@@ -54,9 +56,11 @@ def _late_crop_hires_ready(observation: Any) -> bool:
 
 
 def _activate(observation: Any = None) -> None:
+    global _LATE_TRIGGERED
     _v346._activate()
     v19 = _v19()
     if observation is not None and _late_crop_hires_ready(observation):
+        _LATE_TRIGGERED = True
         v19.MIN_HANDS_WITH_COWS = LATE_MIN_HANDS
         v19.MAX_HANDS_WITH_COWS = LATE_MAX_HANDS
     else:
@@ -65,6 +69,8 @@ def _activate(observation: Any = None) -> None:
 
 
 def reset_state() -> None:
+    global _LATE_TRIGGERED
+    _LATE_TRIGGERED = False
     _v346.reset_state()
     _activate()
 
@@ -75,6 +81,10 @@ def reset_telemetry() -> None:
 
 def get_telemetry(clear: bool = False):
     return _v346.get_telemetry(clear=clear)
+
+
+def late_hire_triggered() -> bool:
+    return bool(_LATE_TRIGGERED)
 
 
 def agent(observation: Any, configuration: Any = None):
