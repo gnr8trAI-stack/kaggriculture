@@ -1,3 +1,4 @@
+# retrigger 2026-08-11T09:35Z: V34.7 isolated placement-priority benchmark only; no Kaggle submission
 name: run-v34-7-placement-priority-isolated
 on:
   push:
