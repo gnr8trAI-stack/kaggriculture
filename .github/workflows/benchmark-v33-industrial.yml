@@ -4,7 +4,7 @@ on:
     branches: ['agent/v33-industrial']
     paths:
       - 'agents/v33_industrial.py'
-      - 'agents/v33_industrial_v7.py'
+      - 'agents/v33_industrial_v14.py'
       - '.github/workflows/benchmark-v33-industrial.yml'
       - 'docs/V33_INDUSTRIAL_SPEC.md'
 permissions:
@@ -23,20 +23,20 @@ jobs:
           python-version: '3.11'
       - run: pip install -q kaggle-environments
       - name: Compile candidate
-        run: python -m py_compile agents/v33_industrial.py agents/v33_industrial_v7.py
+        run: python -m py_compile agents/v33_industrial.py agents/v33_industrial_v14.py
       - name: Clean file-agent smoke both seats
         run: |
           mkdir -p /tmp/v33clean/agents
-          cp agents/v33_industrial.py agents/v33_industrial_v7.py /tmp/v33clean/agents/
+          cp agents/v33_industrial.py agents/v33_industrial_v14.py /tmp/v33clean/agents/
           touch /tmp/v33clean/agents/__init__.py
           cat > /tmp/v33clean/agent.py <<'PY'
-          from agents.v33_industrial_v7 import agent
+          from agents.v33_industrial_v14 import agent
           PY
           cd /tmp/v33clean
           python - <<'PY'
           from kaggle_environments import make
           for seat in (0,1):
-              env=make('kaggriculture',configuration={'seed':339900+seat},debug=True)
+              env=make('kaggriculture',configuration={'seed':3314900+seat},debug=True)
               env.run(['agent.py','starter'] if seat==0 else ['starter','agent.py'])
               st=env.state[seat]
               print(seat,st.status,st.reward)
@@ -49,9 +49,9 @@ jobs:
           import json,statistics
           from pathlib import Path
           from kaggle_environments import make
-          import agents.v33_industrial_v7 as a
+          import agents.v33_industrial_v14 as a
           rows=[]
-          seeds=range(337700,337712)
+          seeds=range(331400,331412)
           for seat in (0,1):
             for seed in seeds:
               a.reset_state()
@@ -75,11 +75,11 @@ jobs:
                 'q3_animals':peakq(3,'animals'),'q4_animals':peakq(4,'animals'),
                 'final':final,
               })
-          Path('artifacts/v33_v7_rows.json').write_text(json.dumps(rows,indent=2))
+          Path('artifacts/v33_v14_rows.json').write_text(json.dumps(rows,indent=2))
           BAD={'ERROR','INVALID','TIMEOUT'}
           rewards=[r['reward'] for r in rows]; sr=sorted(rewards)
           report={
-            'version':'33.7.0-frontier-shaped','games':len(rows),
+            'version':'33.14.0-sequential-commissioning','games':len(rows),
             'mean_reward':statistics.fmean(rewards),'median_reward':statistics.median(rewards),
             'min_reward':min(rewards),'p10_reward':sr[max(0,int(len(sr)*.10)-1)],
             'p25_reward':statistics.median(sr[:max(1,len(sr)//2)]),'max_reward':max(rewards),
@@ -98,7 +98,7 @@ jobs:
           }
           report['stage_a_pass']=(report['invalid']==0 and report['q3_live_games']>=20 and report['q4_live_games']>=12)
           report['ready_150k']=(report['games']>=24 and report['invalid']==0 and report['median_reward']>=150000 and report['min_reward']>=100000)
-          Path('artifacts/v33_v7_report.json').write_text(json.dumps(report,indent=2))
+          Path('artifacts/v33_v14_report.json').write_text(json.dumps(report,indent=2))
           print(json.dumps(report,indent=2))
           PY
       - name: Post internal benchmark evidence
@@ -106,15 +106,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -f artifacts/v33_v7_report.json ]; then
-            { echo '## V33.7 Industrial benchmark'; echo; echo '```json'; cat artifacts/v33_v7_report.json; echo '```'; } > /tmp/report.md
+          if [ -f artifacts/v33_v14_report.json ]; then
+            { echo '## V33.14 Industrial benchmark'; echo; echo '```json'; cat artifacts/v33_v14_report.json; echo '```'; } > /tmp/report.md
           else
-            echo '## V33.7 Industrial benchmark failed before report generation' > /tmp/report.md
+            echo '## V33.14 Industrial benchmark failed before report generation' > /tmp/report.md
           fi
           gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/report.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-industrial-v7
+          name: v33-industrial-v14
           path: artifacts/
           retention-days: 14
