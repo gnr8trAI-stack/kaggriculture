@@ -1,49 +1,58 @@
-name: v33-mechanics-probe
+name: v33-8-debug-probe
 on:
   push:
     branches: [main]
     paths: ['.github/workflows/v33-mechanics-probe.yml']
 permissions:
-  contents: write
+  contents: read
+  issues: write
 jobs:
   probe:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v6
         with:
           ref: agent/v33-industrial
-          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - run: pip install -q kaggle-environments
-      - name: Probe initial observation and one-step economics
+      - name: Install
+        id: install
+        run: pip install -q kaggle-environments
+      - name: Compile and import
+        id: compile
+        run: |
+          python -m py_compile agents/v33_industrial.py agents/v33_industrial_v8.py
+          python - <<'PY'
+          import agents.v33_industrial_v8 as a
+          print('import ok',a)
+          PY
+      - name: One game diagnostic
+        id: game
         run: |
           python - <<'PY'
-          import json, os
-          from kaggle_environments import make
-          snapshots=[]
-          for seat in (0,1):
-            seen=[]
-            def probe_agent(obs, config=None):
-              if len(seen)<4:
-                def conv(v):
-                  if isinstance(v,dict): return {k:conv(x) for k,x in v.items()}
-                  if isinstance(v,list): return [conv(x) for x in v]
-                  try: json.dumps(v); return v
-                  except Exception: return str(v)
-                seen.append(conv(obs if isinstance(obs,dict) else {k:getattr(obs,k) for k in ('player','step','day','hour','farms','private','market','town') if hasattr(obs,k)}))
-              return {'farmer':['PASS'],'hands':[],'market':[]}
-            env=make('kaggriculture',configuration={'seed':335000+seat},debug=True)
-            env.run([probe_agent,'starter'] if seat==0 else ['starter',probe_agent])
-            snapshots.append({'seat':seat,'observations':seen,'configuration':dict(env.configuration) if hasattr(env,'configuration') else str(env.configuration)})
-          os.makedirs('benchmarks',exist_ok=True)
-          open('benchmarks/v33_mechanics_probe.json','w').write(json.dumps(snapshots,indent=2,default=str))
+          import json, traceback
+          from pathlib import Path
+          result={'stage':'start'}
+          try:
+            from kaggle_environments import make
+            import agents.v33_industrial_v8 as a
+            a.reset_state()
+            env=make('kaggriculture',configuration={'seed':338000},debug=True)
+            env.run([a.agent,'starter'])
+            st=env.state[0]
+            tel=a.get_telemetry()
+            result={'stage':'game','status':str(st.status),'reward':float(st.reward or 0),'telemetry_rows':len(tel),'last':tel[-1] if tel else {}}
+          except Exception as e:
+            result={'stage':'exception','error':repr(e),'traceback':traceback.format_exc()}
+          Path('/tmp/v338probe.json').write_text(json.dumps(result,indent=2,default=str))
+          print(json.dumps(result,indent=2,default=str))
           PY
-      - name: Persist probe
+      - name: Record probe
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add benchmarks/v33_mechanics_probe.json
-          git commit -m 'Record Kaggriculture mechanics probe' || true
-          git push origin HEAD:agent/v33-industrial
+          { echo '## V33.8 debug probe'; echo 'install=${{ steps.install.outcome }} compile=${{ steps.compile.outcome }} game=${{ steps.game.outcome }}'; echo '```json'; cat /tmp/v338probe.json 2>/dev/null || echo '{"error":"probe did not reach game"}'; echo '```'; } >/tmp/comment.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/comment.md
