@@ -1,4 +1,4 @@
-name: run-v34-8-herd-funded-third-land
+name: run-v34-9-herd-funded-third-land-rerun
 on:
   push:
     branches: [main]
@@ -17,10 +17,10 @@ jobs:
         with:
           ref: agent/v32.4-surplus-land
           path: baseline
-      - name: Checkout V34.8 candidate
+      - name: Checkout V34.9 candidate
         uses: actions/checkout@v6
         with:
-          ref: agent/v34.8-herd-funded-third-land
+          ref: agent/v34.9-herd-funded-third-land-rerun
           path: candidate
       - uses: actions/setup-python@v6
         with:
@@ -29,7 +29,8 @@ jobs:
         run: pip install -q kaggle-environments
       - name: Compile candidate and control
         run: |
-          python -m py_compile candidate/agents/v34_8_herd_funded_third_land.py
+          python -m py_compile candidate/agents/v34_9_herd_funded_third_land_rerun.py
+          python -m py_compile candidate/agents/v34_6_cow16_window24_isolated.py
           python -m py_compile baseline/agents/v19_2_early_scale8.py
       - name: Run fresh-process paired benchmark
         run: |
@@ -72,10 +73,10 @@ jobs:
               return json.loads(line.split('=',1)[1])
 
           rows=[]
-          for seed in range(348000, 348016):
+          for seed in range(349000, 349016):
               for seat in (0,1):
                   b = one('baseline', 'agents.v19_2_early_scale8', seed, seat)
-                  c = one('candidate', 'agents.v34_8_herd_funded_third_land', seed, seat)
+                  c = one('candidate', 'agents.v34_9_herd_funded_third_land_rerun', seed, seat)
                   rows.append({'seed':seed,'seat':seat,'baseline':b,'candidate':c,'delta':c['reward']-b['reward']})
                   print(seed, seat, b['reward'], c['reward'], c['peak_active_cows'], c['unlocked_count'])
 
@@ -94,18 +95,19 @@ jobs:
                   'three_land_games':sum(x['unlocked_count']>=3 for x in rs),
                   'median_final_productive':statistics.median(x['final_productive'] for x in rs),
                   'median_final_empty':statistics.median(x['final_empty'] for x in rs),
+                  'median_final_money':statistics.median(x['final_money'] for x in rs),
               }
           bs=summarize('baseline'); cs=summarize('candidate'); d=[x['delta'] for x in rows]
           report={
-              'version':'34.8.0-herd-funded-third-land',
-              'mechanism':'V34.6 unchanged except exactly one third-land purchase after >=10 active cows, >=10 pastures, >=5200 cash, healthy farm, days 10-19',
-              'baseline_v19_2':bs,'candidate_v34_8':cs,
+              'version':'34.9.0-herd-funded-third-land-rerun',
+              'mechanism':'V34.6 unchanged except exactly one third-land purchase after >=10 active cows, >=10 pastures, >=5200 cash, healthy farm, days 10-19; dependency-correct rerun of invalid V34.8',
+              'baseline_v19_2':bs,'candidate_v34_9':cs,
               'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),
                         'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
               'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000,
               'games_detail':rows,
           }
-          Path('/tmp/v348_report.json').write_text(json.dumps(report,indent=2))
+          Path('/tmp/v349_report.json').write_text(json.dumps(report,indent=2))
           print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
       - name: Record result in issue 16
@@ -113,12 +115,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V34.8 isolated herd-funded-third-land benchmark'; echo; echo '```json'; cat /tmp/v348_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v348.md
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v348.md
+          { echo '## V34.9 isolated herd-funded-third-land rerun'; echo; echo '```json'; cat /tmp/v349_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v349.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v349.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v34-8-herd-funded-third-land-benchmark
-          path: /tmp/v348_report.json
+          name: v34-9-herd-funded-third-land-rerun-benchmark
+          path: /tmp/v349_report.json
           if-no-files-found: ignore
           retention-days: 14
