@@ -1,7 +1,7 @@
-name: run-v34-7-placement-priority-isolated
+name: run-v34-8-herd-funded-third-land
 on:
   push:
-    branches: [main]
+    branches: ['agent/v34.8-herd-funded-third-land']
     paths: ['.github/workflows/run-v34-2-cow12-isolated.yml']
   workflow_dispatch:
 permissions:
@@ -17,10 +17,10 @@ jobs:
         with:
           ref: agent/v32.4-surplus-land
           path: baseline
-      - name: Checkout V34.7 candidate
+      - name: Checkout V34.8 candidate
         uses: actions/checkout@v6
         with:
-          ref: agent/v34.7-placement-priority-isolated
+          ref: agent/v34.8-herd-funded-third-land
           path: candidate
       - uses: actions/setup-python@v6
         with:
@@ -29,14 +29,13 @@ jobs:
         run: pip install -q kaggle-environments
       - name: Compile candidate and control
         run: |
-          python -m py_compile candidate/agents/v34_7_placement_priority_isolated.py
+          python -m py_compile candidate/agents/v34_8_herd_funded_third_land.py
           python -m py_compile baseline/agents/v19_2_early_scale8.py
       - name: Run fresh-process paired benchmark
         run: |
           python - <<'PY'
           import json, statistics, subprocess, sys
           from pathlib import Path
-
           CHILD = r'''
           import importlib, json, sys
           from kaggle_environments import make
@@ -47,56 +46,42 @@ jobs:
           env.run([a.agent, 'starter'] if seat == 0 else ['starter', a.agent])
           st = env.state[seat]
           tel = a.get_telemetry() if hasattr(a, 'get_telemetry') else []
-          out = {
-              'status': str(st.status), 'reward': float(st.reward or 0),
-              'peak_cows': max([int(r.get('cow_count',0) or 0) for r in tel] or [0]),
-              'peak_active_cows': max([int(r.get('active_cows',0) or 0) for r in tel] or [0]),
-              'peak_pastures': max([int(r.get('pastures',0) or 0) for r in tel] or [0]),
-              'unlocked_count': int((tel[-1] if tel else {}).get('unlocked_count',0) or 0),
-          }
-          print('RESULTJSON=' + json.dumps(out, separators=(',',':')))
+          out = {'status':str(st.status),'reward':float(st.reward or 0),
+                 'peak_cows':max([int(r.get('cow_count',0) or 0) for r in tel] or [0]),
+                 'peak_active_cows':max([int(r.get('active_cows',0) or 0) for r in tel] or [0]),
+                 'peak_pastures':max([int(r.get('pastures',0) or 0) for r in tel] or [0]),
+                 'unlocked_count':max([int(r.get('unlocked_count',0) or 0) for r in tel] or [0])}
+          print('RESULTJSON='+json.dumps(out,separators=(',',':')))
           '''
-
           def one(cwd, mod, seed, seat):
-              p = subprocess.run([sys.executable, '-c', CHILD, mod, str(seed), str(seat)], cwd=cwd,
-                                 text=True, capture_output=True, timeout=170)
-              line = next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')), None)
+              p=subprocess.run([sys.executable,'-c',CHILD,mod,str(seed),str(seat)],cwd=cwd,text=True,capture_output=True,timeout=170)
+              line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
               if p.returncode or not line:
-                  return {'status':'ERROR','reward':0.0,'peak_cows':0,'peak_active_cows':0,
-                          'peak_pastures':0,'unlocked_count':0,'stderr':p.stderr[-1600:]}
+                  return {'status':'ERROR','reward':0.0,'peak_cows':0,'peak_active_cows':0,'peak_pastures':0,'unlocked_count':0,'stderr':p.stderr[-1600:]}
               return json.loads(line.split('=',1)[1])
-
           rows=[]
-          for seed in range(347000, 347016):
+          for seed in range(348000,348016):
               for seat in (0,1):
-                  b = one('baseline', 'agents.v19_2_early_scale8', seed, seat)
-                  c = one('candidate', 'agents.v34_7_placement_priority_isolated', seed, seat)
+                  b=one('baseline','agents.v19_2_early_scale8',seed,seat)
+                  c=one('candidate','agents.v34_8_herd_funded_third_land',seed,seat)
                   rows.append({'seed':seed,'seat':seat,'baseline':b,'candidate':c,'delta':c['reward']-b['reward']})
-                  print(seed, seat, b['reward'], c['reward'], c['peak_cows'], c['peak_active_cows'])
-
           def s(which):
               rs=[x[which] for x in rows]; r=[x['reward'] for x in rs]; sr=sorted(r)
-              return {'games':len(rs),
-                      'invalid':sum(x['status'] in ('ERROR','INVALID','TIMEOUT') for x in rs),
+              return {'games':len(rs),'invalid':sum(x['status'] in ('ERROR','INVALID','TIMEOUT') for x in rs),
                       'mean':statistics.mean(r),'median':statistics.median(r),'min':min(r),
                       'p10':sr[max(0,int(len(sr)*.1)-1)],'p25':statistics.median(sr[:len(sr)//2]),
                       'p75':statistics.median(sr[(len(sr)+1)//2:]),'max':max(r),
                       'median_peak_cows':statistics.median(x['peak_cows'] for x in rs),
                       'median_peak_active_cows':statistics.median(x['peak_active_cows'] for x in rs),
-                      'max_peak_active_cows':max(x['peak_active_cows'] for x in rs),
-                      'active12_games':sum(x['peak_active_cows']>=12 for x in rs),
-                      'active16_games':sum(x['peak_active_cows']>=16 for x in rs),
                       'median_peak_pastures':statistics.median(x['peak_pastures'] for x in rs),
-                      'multi_land_games':sum(x['unlocked_count']>=2 for x in rs)}
+                      'three_land_games':sum(x['unlocked_count']>=3 for x in rs)}
           bs=s('baseline'); cs=s('candidate'); d=[x['delta'] for x in rows]
-          report={'version':'34.7.0-placement-priority-isolated',
-                  'mechanism':'V34.6 unchanged except pasture/cow staging before optional livestock service',
-                  'baseline_v19_2':bs,'candidate_v34_7':cs,
-                  'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),
-                            'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
+          report={'version':'34.8.0-herd-funded-third-land','mechanism':'V34.6 unchanged except exactly one third-land purchase after two-land herd saturation (>=10 active cows, >=10 pastures, cash>=5200, day10-19)',
+                  'baseline_v19_2':bs,'candidate_v34_8':cs,
+                  'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
                   'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000,
                   'games_detail':rows}
-          Path('/tmp/v347_report.json').write_text(json.dumps(report,indent=2))
+          Path('/tmp/v348_report.json').write_text(json.dumps(report,indent=2))
           print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
           PY
       - name: Record result in issue 16
@@ -104,12 +89,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V34.7 isolated placement-priority benchmark'; echo; echo '```json'; cat /tmp/v347_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v347.md
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v347.md
+          { echo '## V34.8 isolated herd-funded third-land benchmark'; echo; echo '```json'; cat /tmp/v348_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v348.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v348.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v34-7-placement-priority-isolated-benchmark
-          path: /tmp/v347_report.json
+          name: v34-8-herd-funded-third-land-benchmark
+          path: /tmp/v348_report.json
           if-no-files-found: ignore
           retention-days: 14
