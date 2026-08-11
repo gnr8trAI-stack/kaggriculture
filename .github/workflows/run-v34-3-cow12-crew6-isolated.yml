@@ -1,4 +1,4 @@
-name: run-v34-5-cow16-crew6-isolated
+name: package-v34-5-kaggle-ready
 on:
   push:
     branches: [main]
@@ -8,110 +8,84 @@ permissions:
   contents: read
   issues: write
 jobs:
-  benchmark:
+  package:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 30
     steps:
-      - name: Checkout V19.2 control
-        uses: actions/checkout@v6
-        with:
-          ref: agent/v32.4-surplus-land
-          path: baseline
-      - name: Checkout V34.5 candidate
-        uses: actions/checkout@v6
+      - name: Announce start
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V34.5 Kaggle-ready packaging started\n\nRun: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\n\nNo Kaggle submission step."
+      - uses: actions/checkout@v6
         with:
           ref: agent/v34.5-cow16-crew6-isolated
-          path: candidate
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
-      - name: Install environment
+      - name: Install Kaggle environment
         run: pip install -q kaggle-environments
-      - name: Compile candidate and control
+      - name: Build exact-chain standalone
         run: |
-          python -m py_compile candidate/agents/v34_5_cow16_crew6_isolated.py
-          python -m py_compile baseline/agents/v19_2_early_scale8.py
-      - name: Run isolated V19.2 control
-        working-directory: baseline
-        run: |
+          mkdir -p dist
           python - <<'PY'
-          import json
+          from pathlib import Path
+          import base64, zlib
+          mods = [
+              ('agents.v15_champion','agents/v15_champion.py'),
+              ('agents.v19_livestock_compound','agents/v19_livestock_compound.py'),
+              ('agents.v19_2_early_scale8','agents/v19_2_early_scale8.py'),
+              ('agents.v34_2_cow12_crew4_isolated','agents/v34_2_cow12_crew4_isolated.py'),
+              ('agents.v34_3_cow12_crew6_isolated','agents/v34_3_cow12_crew6_isolated.py'),
+              ('agents.v34_5_cow16_crew6_isolated','agents/v34_5_cow16_crew6_isolated.py'),
+          ]
+          payloads=[]
+          for name,path in mods:
+              src=Path(path).read_text(encoding='utf-8')
+              payloads.append((name,base64.b64encode(zlib.compress(src.encode(),9)).decode()))
+          out=[
+              '# V34.5 cow16/crew6 standalone Kaggriculture submission',
+              'import sys, types, base64, zlib',
+              "agents=types.ModuleType('agents')",
+              "agents.__path__=[]",
+              "sys.modules['agents']=agents",
+              f'_PAYLOADS={payloads!r}',
+              'for _name,_blob in _PAYLOADS:',
+              '    _mod=types.ModuleType(_name)',
+              "    _mod.__package__='agents'",
+              '    sys.modules[_name]=_mod',
+              "    setattr(agents,_name.rsplit('.',1)[1],_mod)",
+              "    exec(compile(zlib.decompress(base64.b64decode(_blob)).decode('utf-8'),'<embedded:'+_name+'>','exec'),_mod.__dict__)",
+              "agent=sys.modules['agents.v34_5_cow16_crew6_isolated'].agent",
+          ]
+          p=Path('dist/kaggriculture_v34.5_cow16_crew6_standalone.py')
+          p.write_text('\n'.join(out)+'\n',encoding='utf-8')
+          print(p,p.stat().st_size)
+          PY
+          python -m py_compile dist/kaggriculture_v34.5_cow16_crew6_standalone.py
+      - name: Exact Kaggle file-agent smoke test both seats
+        run: |
+          rm -rf /tmp/v345clean && mkdir /tmp/v345clean
+          cp dist/kaggriculture_v34.5_cow16_crew6_standalone.py /tmp/v345clean/submission.py
+          cd /tmp/v345clean
+          python - <<'PY'
           from kaggle_environments import make
-          import agents.v19_2_early_scale8 as a
-          rows=[]
-          for seed in range(345000,345016):
-              for seat in (0,1):
-                  a.reset_state()
-                  env=make('kaggriculture', configuration={'seed':seed}, debug=False)
-                  env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
-                  st=env.state[seat]
-                  tel=a.get_telemetry(); last=tel[-1] if tel else {}
-                  rows.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
-                               'peak_cows':max([int(r.get('cow_count',0) or 0) for r in tel] or [0]),
-                               'peak_active_cows':max([int(r.get('active_cows',0) or 0) for r in tel] or [0]),
-                               'peak_pastures':max([int(r.get('pastures',0) or 0) for r in tel] or [0]),
-                               'unlocked_count':int(last.get('unlocked_count',0) or 0)})
-          open('/tmp/v345_base.json','w').write(json.dumps(rows))
+          for seed,seat in ((345901,0),(345902,1)):
+              env=make('kaggriculture',configuration={'seed':seed},debug=True)
+              env.run(['submission.py','starter'] if seat==0 else ['starter','submission.py'])
+              st=env.state[seat]
+              print('seed',seed,'seat',seat,'status',st.status,'reward',st.reward)
+              assert str(st.status) not in {'ERROR','INVALID','TIMEOUT'}
           PY
-      - name: Run isolated V34.5 candidate
-        working-directory: candidate
-        run: |
-          python - <<'PY'
-          import json
-          from kaggle_environments import make
-          import agents.v34_5_cow16_crew6_isolated as a
-          rows=[]
-          for seed in range(345000,345016):
-              for seat in (0,1):
-                  a.reset_state()
-                  env=make('kaggriculture', configuration={'seed':seed}, debug=False)
-                  env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
-                  st=env.state[seat]
-                  tel=a.get_telemetry(); last=tel[-1] if tel else {}
-                  rows.append({'seed':seed,'seat':seat,'status':str(st.status),'reward':float(st.reward or 0),
-                               'peak_cows':max([int(r.get('cow_count',0) or 0) for r in tel] or [0]),
-                               'peak_active_cows':max([int(r.get('active_cows',0) or 0) for r in tel] or [0]),
-                               'peak_pastures':max([int(r.get('pastures',0) or 0) for r in tel] or [0]),
-                               'unlocked_count':int(last.get('unlocked_count',0) or 0)})
-          open('/tmp/v345_cand.json','w').write(json.dumps(rows))
-          PY
-      - name: Summarize paired benchmark
-        run: |
-          python - <<'PY'
-          import json, statistics
-          b=json.load(open('/tmp/v345_base.json')); c=json.load(open('/tmp/v345_cand.json'))
-          def s(rows):
-              r=[x['reward'] for x in rows]; sr=sorted(r)
-              return {'games':len(rows),'invalid':sum(x['status'] in ('ERROR','INVALID','TIMEOUT') for x in rows),
-                      'mean':statistics.mean(r),'median':statistics.median(r),'min':min(r),
-                      'p10':sr[max(0,int(len(sr)*.1)-1)],'max':max(r),
-                      'median_peak_cows':statistics.median(x['peak_cows'] for x in rows),
-                      'median_peak_active_cows':statistics.median(x['peak_active_cows'] for x in rows),
-                      'max_peak_active_cows':max(x['peak_active_cows'] for x in rows),
-                      'active12_games':sum(x['peak_active_cows']>=12 for x in rows),
-                      'active16_games':sum(x['peak_active_cows']>=16 for x in rows),
-                      'median_peak_pastures':statistics.median(x['peak_pastures'] for x in rows),
-                      'multi_land_games':sum(x['unlocked_count']>=2 for x in rows)}
-          bs=s(b); cs=s(c); d=[c[i]['reward']-b[i]['reward'] for i in range(len(b))]
-          report={'version':'34.5.0-cow16-crew6-isolated',
-                  'mechanism':'V34.3 unchanged except mature cow ceiling 12->16',
-                  'baseline_v19_2':bs,'candidate_v34_5':cs,
-                  'paired':{'wins':sum(x>0 for x in d),'losses':sum(x<0 for x in d),'ties':sum(x==0 for x in d),
-                            'mean_delta':statistics.mean(d),'median_delta':statistics.median(d)},
-                  'ready_150k':cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000}
-          open('/tmp/v345_report.json','w').write(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
-          PY
-      - name: Record result in issue 16
-        if: always()
+      - name: Record success
+        if: success()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          { echo '## V34.5 isolated 16-cow capacity benchmark'; echo; echo '```json'; cat /tmp/v345_report.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v345.md
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v345.md
+          sha=$(sha256sum dist/kaggriculture_v34.5_cow16_crew6_standalone.py | awk '{print $1}')
+          size=$(wc -c < dist/kaggriculture_v34.5_cow16_crew6_standalone.py)
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body "## V34.5 Kaggle-ready artifact PASS\n\nRun: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\n\nCompile PASS; exact Kaggle file-agent smoke PASS both seats. Size: ${size}. SHA256: ${sha}. No submission made."
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: v34-5-cow16-crew6-isolated-benchmark
-          path: /tmp/v345_report.json
-          if-no-files-found: ignore
+          name: v34-5-kaggle-ready-standalone
+          path: dist/kaggriculture_v34.5_cow16_crew6_standalone.py
           retention-days: 14
