@@ -1,4 +1,4 @@
-name: run-v33.0.1-from-main
+name: run-v34-terminal-liquidation
 on:
   push:
     branches: [main]
@@ -13,14 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: agent/v33-serial-surplus-land
+          ref: agent/v34-terminal-liquidation
       - uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - run: pip install -q kaggle-environments
       - name: Compile candidate
-        run: |
-          python -m py_compile agents/v19_livestock_compound.py agents/v19_2_early_scale8.py agents/v33_serial_surplus_land.py
+        run: python -m py_compile agents/v19_livestock_compound.py agents/v19_2_early_scale8.py agents/v34_terminal_liquidation.py
       - name: Benchmark V19.2 baseline isolated
         run: |
           mkdir -p artifacts
@@ -32,64 +31,66 @@ jobs:
           rows=[]
           for seat in (0,1):
             for i in range(16):
-              a.reset_state(); seed=333100+i
+              a.reset_state(); seed=334100+i
               env=make('kaggriculture',configuration={'seed':seed},debug=True)
               env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
               st=env.state[seat]; tele=a.get_telemetry(clear=True) or []
               dm={int(r.get('day',-1)):float(r.get('money',0) or 0) for r in tele}
-              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'status':str(st.status),'d12':dm.get(12,0),'d20':dm.get(20,0),'d25':dm.get(25,0),'max_land':max([int(r.get('unlocked_count',1) or 1) for r in tele] or [1])})
+              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'status':str(st.status),'d12':dm.get(12,0),'d20':dm.get(20,0),'d25':dm.get(25,0)})
           Path('artifacts/v19_2.json').write_text(json.dumps(rows,indent=2))
           PY
-      - name: Benchmark V33.0.1 isolated
+      - name: Benchmark V34 isolated
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           from kaggle_environments import make
-          import agents.v33_serial_surplus_land as a
+          import agents.v34_terminal_liquidation as a
           rows=[]
           for seat in (0,1):
             for i in range(16):
-              a.reset_state(); seed=333100+i
+              a.reset_state(); seed=334100+i
               env=make('kaggriculture',configuration={'seed':seed},debug=True)
               env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
               st=env.state[seat]; tele=a.get_telemetry(clear=True) or []
-              dm={int(r.get('day',-1)):float(r.get('money',0) or 0) for r in tele}
-              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'status':str(st.status),'d12':dm.get(12,0),'d20':dm.get(20,0),'d25':dm.get(25,0),'max_land':max([int(r.get('unlocked_count',1) or 1) for r in tele] or [1]),'serial_days':[int(r.get('day',-1)) for r in tele if r.get('serial_expand')]})
-          Path('artifacts/v33.json').write_text(json.dumps(rows,indent=2))
+              rows.append({'seat':seat,'seed':seed,'reward':float(st.reward or 0),'status':str(st.status),'max_terminal_shed_units':max([int(r.get('shed_sellable_units',0) or 0) for r in tele if int(r.get('day',-1))==29] or [0]),'liquidation_orders':sum(int(r.get('liquidation_units_ordered',0) or 0) for r in tele)})
+          Path('artifacts/v34.json').write_text(json.dumps(rows,indent=2))
           PY
       - name: Compare paired results
         run: |
           python - <<'PY'
-          import json,statistics
+          import json,statistics,math
           from pathlib import Path
           BAD={'ERROR','INVALID','TIMEOUT'}
-          b=json.loads(Path('artifacts/v19_2.json').read_text()); c=json.loads(Path('artifacts/v33.json').read_text())
+          b=json.loads(Path('artifacts/v19_2.json').read_text()); c=json.loads(Path('artifacts/v34.json').read_text())
           key=lambda r:(r['seat'],r['seed']); bm={key(r):r for r in b}; cm={key(r):r for r in c}
+          def q(vals,p):
+            vals=sorted(vals); x=(len(vals)-1)*p; lo=math.floor(x); hi=math.ceil(x)
+            return vals[lo] if lo==hi else vals[lo]+(vals[hi]-vals[lo])*(x-lo)
           def summ(rows):
-            rewards=[r['reward'] for r in rows]; sr=sorted(rewards)
-            return {'games':len(rows),'mean':statistics.fmean(rewards),'median':statistics.median(rewards),'min_reward':min(rewards),'p10_reward':sr[max(0,int(len(sr)*0.10)-1)],'max_reward':max(rewards),'median_d12':statistics.median(r['d12'] for r in rows),'median_d20':statistics.median(r['d20'] for r in rows),'median_d25':statistics.median(r['d25'] for r in rows),'invalid':sum(r['status'] in BAD for r in rows),'two_land_games':sum(r['max_land']>=2 for r in rows),'three_land_games':sum(r['max_land']>=3 for r in rows),'four_land_games':sum(r['max_land']>=4 for r in rows)}
+            rewards=[r['reward'] for r in rows]
+            return {'games':len(rows),'mean':statistics.fmean(rewards),'median':statistics.median(rewards),'min_reward':min(rewards),'p10_reward':q(rewards,.1),'p25_reward':q(rewards,.25),'p75_reward':q(rewards,.75),'p90_reward':q(rewards,.9),'max_reward':max(rewards),'invalid':sum(r['status'] in BAD for r in rows)}
           sb,sc=summ(b),summ(c); ds=[cm[k]['reward']-bm[k]['reward'] for k in bm]
-          paired={'wins':sum(d>0 for d in ds),'losses':sum(d<0 for d in ds),'ties':sum(d==0 for d in ds),'mean_delta':statistics.fmean(ds),'median_delta':statistics.median(ds)}
+          paired={'wins':sum(d>0 for d in ds),'losses':sum(d<0 for d in ds),'ties':sum(d==0 for d in ds),'mean_delta':statistics.fmean(ds),'median_delta':statistics.median(ds),'min_delta':min(ds),'max_delta':max(ds)}
           ready150=(sc['invalid']==0 and sc['games']>=24 and sc['median']>=150000 and sc['min_reward']>=100000)
           promote=(sc['invalid']==0 and sc['median']>sb['median'] and sc['mean']>sb['mean'] and paired['wins']>=20 and paired['mean_delta']>0)
-          report={'version':'33.0.1','mechanism':'serial surplus-funded third/fourth land only; tile-grid ownership fix','candidate_commit':'dddee2b65180eb19bec0f941884d642f59c9d5a2','baseline_v19_2':sb,'candidate_v33':sc,'paired':paired,'promotion_pass':promote,'ready_150k':ready150}
-          Path('artifacts/v33_report.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
+          report={'version':'34.0.0-alpha1','mechanism':'V19.2 unchanged except hard shed liquidation from day29 hour12','candidate_commit':'84d25d4e3818e1dcde74a442ba83f2edda721095','baseline_v19_2':sb,'candidate_v34':sc,'paired':paired,'median_max_terminal_shed_units':statistics.median(r['max_terminal_shed_units'] for r in c),'promotion_pass':promote,'ready_150k':ready150}
+          Path('artifacts/v34_report.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
           PY
       - name: Post report to issue 16
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -f artifacts/v33_report.json ]; then
-            { echo '## V33.0.1 isolated serial-surplus-land benchmark'; echo; echo '```json'; cat artifacts/v33_report.json; echo '```'; } > /tmp/v33.md
+          if [ -f artifacts/v34_report.json ]; then
+            { echo '## V34 isolated terminal-liquidation benchmark'; echo; echo '```json'; cat artifacts/v34_report.json; echo '```'; } > /tmp/v34.md
           else
-            echo '## V33.0.1 benchmark failed before report generation' > /tmp/v33.md
+            echo '## V34 benchmark failed before report generation' > /tmp/v34.md
           fi
-          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v33.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v34.md
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v33-0-1-isolated-serial-surplus-land
+          name: v34-isolated-terminal-liquidation
           path: artifacts/
           retention-days: 14
