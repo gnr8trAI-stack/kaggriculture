@@ -1,0 +1,78 @@
+name: run-v33-38-canonical-animal-decoding
+on:
+  push:
+    branches: [agent/v33-industrial]
+    paths:
+      - 'agents/v33_industrial_v38.py'
+      - '.github/workflows/run-v33-industrial-v38.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33-industrial, path: candidate}
+      - uses: actions/checkout@v6
+        with: {ref: agent/v32.4-surplus-land, path: baseline}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - name: Compile
+        run: |
+          python -m py_compile candidate/agents/v33_industrial.py candidate/agents/v33_industrial_v23.py candidate/agents/v33_industrial_v24.py candidate/agents/v33_industrial_v25.py candidate/agents/v33_industrial_v37.py candidate/agents/v33_industrial_v38.py
+          python -m py_compile baseline/agents/v19_2_early_scale8.py
+      - name: Run isolated 24-game both-seat readiness gate
+        run: |
+          python - <<'PY'
+          import json,statistics,subprocess,sys
+          from pathlib import Path
+          CHILD=r'''
+          import importlib,json,sys,os
+          from kaggle_environments import make
+          root,mod,seed,seat=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]);sys.path.insert(0,root);os.chdir(root)
+          a=importlib.import_module(mod)
+          if hasattr(a,'reset_state'):a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=False)
+          env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat];tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          peaks={'lands':0,'hands':0,'animals':0,'productive':0,'idle':0,'q3_prod':0,'q3_pasture':0,'q4_prod':0,'cows':0,'sheep':0}
+          snaps={12:{},20:{},25:{}}
+          for r in tel:
+            if not isinstance(r,dict):continue
+            for k in ('lands','hands','animals','productive','idle'):peaks[k]=max(peaks[k],int(r.get(k,0) or 0))
+            q3=r.get('q3',{}) if isinstance(r.get('q3',{}),dict) else {};q4=r.get('q4',{}) if isinstance(r.get('q4',{}),dict) else {}
+            peaks['q3_prod']=max(peaks['q3_prod'],int(q3.get('productive',0) or 0));peaks['q3_pasture']=max(peaks['q3_pasture'],int(q3.get('pasture',0) or 0));peaks['q4_prod']=max(peaks['q4_prod'],int(q4.get('productive',0) or 0));peaks['cows']=max(peaks['cows'],int(r.get('cow_total',0) or 0));peaks['sheep']=max(peaks['sheep'],int(r.get('sheep_total',0) or 0))
+            d=int(r.get('day',-1) or -1)
+            if d in snaps:snaps[d]={'money':float(r.get('money',0) or 0),'productive':int(r.get('productive',0) or 0),'lands':int(r.get('lands',0) or 0),'hands':int(r.get('hands',0) or 0),'animals':int(r.get('animals',0) or 0),'idle':int(r.get('idle',0) or 0),'reinvestment_ratio':float(r.get('reinvestment_ratio',0) or 0)}
+          print('RESULTJSON='+json.dumps({'status':str(st.status),'reward':float(st.reward or 0),'peaks':peaks,'d12':snaps[12],'d20':snaps[20],'d25':snaps[25]},separators=(',',':')))
+          '''
+          def one(root,mod,seed,seat):
+            try:p=subprocess.run([sys.executable,'-c',CHILD,root,mod,str(seed),str(seat)],text=True,capture_output=True,timeout=150)
+            except subprocess.TimeoutExpired:return {'status':'TIMEOUT','reward':0.0,'peaks':{}}
+            line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
+            if p.returncode or not line:return {'status':'ERROR','reward':0.0,'peaks':{},'stderr':(p.stderr+p.stdout)[-2500:]}
+            return json.loads(line.split('=',1)[1])
+          rows=[]
+          for seed in range(370000,370012):
+            for seat in (0,1):
+              c=one('candidate','agents.v33_industrial_v38',seed,seat);b=one('baseline','agents.v19_2_early_scale8',seed,seat);rows.append({'seed':seed,'seat':seat,'candidate':c,'control':b,'delta':c['reward']-b['reward']})
+          def summ(which):
+            rs=[x[which] for x in rows];rewards=[float(r.get('reward',0) or 0) for r in rs];s=sorted(rewards);invalid=sum(str(r.get('status')) in ('ERROR','INVALID','TIMEOUT') for r in rs)
+            out={'games':len(rs),'invalid':invalid,'mean':statistics.mean(rewards),'median':statistics.median(rewards),'min':min(rewards),'p10':s[2],'p25':s[5],'p90':s[-3],'max':max(rewards)}
+            if which=='candidate':
+              def med(field,day=None):
+                vals=[]
+                for r in rs:src=r.get('peaks',{}) if day is None else (r.get('d'+str(day)) or {});vals.append(float(src.get(field,0) or 0))
+                return statistics.median(vals)
+              out.update({'median_peak_lands':med('lands'),'four_land_games':sum((r.get('peaks') or {}).get('lands',0)>=4 for r in rs),'q3_active_games':sum((r.get('peaks') or {}).get('q3_prod',0)>0 for r in rs),'q4_active_games':sum((r.get('peaks') or {}).get('q4_prod',0)>0 for r in rs),'median_peak_animals':med('animals'),'median_peak_cows':med('cows'),'median_peak_sheep':med('sheep'),'median_q3_pasture':med('q3_pasture'),'median_peak_hands':med('hands'),'median_peak_productive':med('productive'),'median_d12_money':med('money',12),'median_d20_money':med('money',20),'median_d25_money':med('money',25)})
+            return out
+          c=summ('candidate');b=summ('control');ds=[x['delta'] for x in rows]
+          report={'version':'33.38.0-canonical-animal-decoding','mechanism':'V33.37 unchanged except canonical nested animal species/state decoding for count/feed/care/harvest/fertilizer service','candidate':c,'control_v19_2':b,'paired':{'wins':sum(x>0 for x in ds),'losses':sum(x<0 for x in ds),'ties':sum(x==0 for x in ds),'mean_delta':statistics.mean(ds),'median_delta':statistics.median(ds)},'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
+          Path('/tmp/v3338.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: v33-38-canonical-animal-decoding, path: /tmp/v3338.json, if-no-files-found: ignore, retention-days: 14}
