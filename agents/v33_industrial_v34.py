@@ -94,3 +94,5 @@ def reset_telemetry():
 
 def get_telemetry(clear: bool = False):
     return _v28.get_telemetry(clear=clear)
+
+# Benchmark trigger: economics unchanged.
