@@ -1,0 +1,1432 @@
+{
+  "version": "34.23.0-earlier-strawberry",
+  "mechanism": "V34.21 unchanged except strawberry gate moves from day12/10cows/12k to day10/8cows/8k",
+  "candidate": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 73498.125,
+    "median": 77874.0,
+    "min": 28930.0,
+    "p10": 67343.0,
+    "p25": 69049.0,
+    "p75": 79969.0,
+    "p90": 82685.0,
+    "max": 82990.0,
+    "strawberry_games": 24,
+    "median_peak_active_cows": 12.0,
+    "median_peak_pastures": 12.0,
+    "median_peak_hands": 0.0,
+    "median_peak_productive": 0.0,
+    "median_d12_money": 19320.0,
+    "median_d16_money": 19975.0,
+    "median_d20_money": 33926.5,
+    "median_d25_money": 56387.0
+  },
+  "parent_v34_21": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 73023.0,
+    "median": 77874.0,
+    "min": 28930.0,
+    "p10": 67343.0,
+    "p25": 69049.0,
+    "p75": 79969.0,
+    "p90": 82685.0,
+    "max": 82990.0
+  },
+  "control_v19_2": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 51199.291666666664,
+    "median": 51746.0,
+    "min": 38755.0,
+    "p10": 47501.0,
+    "p25": 50632.0,
+    "p75": 52772.0,
+    "p90": 54499.0,
+    "max": 55233.0
+  },
+  "paired_parent": {
+    "wins": 1,
+    "losses": 0,
+    "ties": 23,
+    "median_delta": 0.0
+  },
+  "paired_control": {
+    "wins": 23,
+    "losses": 1,
+    "ties": 0,
+    "median_delta": 25457.0
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 342300,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 82990.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19364.0,
+          "16": 20083.0,
+          "20": 34601.0,
+          "25": 60862.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 82990.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19364.0,
+          "16": 20083.0,
+          "20": 34601.0,
+          "25": 60862.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51179.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18121.0,
+          "16": 18183.0,
+          "20": 25335.0,
+          "25": 40129.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 31811.0
+    },
+    {
+      "seed": 342300,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 82685.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19364.0,
+          "16": 20083.0,
+          "20": 34601.0,
+          "25": 60862.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 82685.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19364.0,
+          "16": 20083.0,
+          "20": 34601.0,
+          "25": 60862.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51738.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18121.0,
+          "16": 18263.0,
+          "20": 25025.0,
+          "25": 42267.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 30947.0
+    },
+    {
+      "seed": 342301,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 76394.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19316.0,
+          "16": 19985.0,
+          "20": 33052.0,
+          "25": 57714.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 76394.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19316.0,
+          "16": 19985.0,
+          "20": 33052.0,
+          "25": 57714.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49840.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17620.0,
+          "16": 19718.0,
+          "20": 26504.0,
+          "25": 41511.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 26554.0
+    },
+    {
+      "seed": 342301,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77826.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19316.0,
+          "16": 19989.0,
+          "20": 33117.0,
+          "25": 58378.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 77826.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19316.0,
+          "16": 19989.0,
+          "20": 33117.0,
+          "25": 58378.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51732.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17620.0,
+          "16": 19701.0,
+          "20": 26618.0,
+          "25": 42317.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 26094.0
+    },
+    {
+      "seed": 342302,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 51046.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19400.0,
+          "16": 20570.0,
+          "20": 31378.0,
+          "25": 44794.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 39643.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19400.0,
+          "16": 19397.0,
+          "20": 28885.0,
+          "25": 39651.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 47001.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18443.0,
+          "16": 19959.0,
+          "20": 25787.0,
+          "25": 40456.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 11403.0,
+      "delta_control": 4045.0
+    },
+    {
+      "seed": 342302,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 28930.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 20045.0,
+          "20": 27665.0,
+          "25": 29963.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 28930.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 20045.0,
+          "20": 27665.0,
+          "25": 29963.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 38755.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18203.0,
+          "16": 19731.0,
+          "20": 24736.0,
+          "25": 35082.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": -9825.0
+    },
+    {
+      "seed": 342303,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 76228.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 19726.0,
+          "20": 36672.0,
+          "25": 58447.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 76228.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 19726.0,
+          "20": 36672.0,
+          "25": 58447.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49994.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18272.0,
+          "16": 17641.0,
+          "20": 23823.0,
+          "25": 42192.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 26234.0
+    },
+    {
+      "seed": 342303,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 70268.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 19957.0,
+          "20": 34225.0,
+          "25": 55060.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 70268.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 19957.0,
+          "20": 34225.0,
+          "25": 55060.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51630.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17234.0,
+          "16": 18623.0,
+          "20": 25244.0,
+          "25": 42774.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 18638.0
+    },
+    {
+      "seed": 342304,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 69049.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19387.0,
+          "16": 20184.0,
+          "20": 35039.0,
+          "25": 54395.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 69049.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19387.0,
+          "16": 20184.0,
+          "20": 35039.0,
+          "25": 54395.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52915.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 20242.0,
+          "16": 20415.0,
+          "20": 27434.0,
+          "25": 43526.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 16134.0
+    },
+    {
+      "seed": 342304,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 75008.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19467.0,
+          "16": 19853.0,
+          "20": 36354.0,
+          "25": 58372.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 75008.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19467.0,
+          "16": 19853.0,
+          "20": 36354.0,
+          "25": 58372.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52772.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 20242.0,
+          "16": 21223.0,
+          "20": 27604.0,
+          "25": 44366.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 22236.0
+    },
+    {
+      "seed": 342305,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 78039.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19336.0,
+          "16": 20022.0,
+          "20": 33628.0,
+          "25": 58372.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 78039.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19336.0,
+          "16": 20022.0,
+          "20": 33628.0,
+          "25": 58372.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 54499.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18539.0,
+          "16": 20113.0,
+          "20": 27505.0,
+          "25": 45186.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23540.0
+    },
+    {
+      "seed": 342305,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 78623.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19336.0,
+          "16": 20022.0,
+          "20": 33628.0,
+          "25": 59635.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 78623.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19336.0,
+          "16": 20022.0,
+          "20": 33628.0,
+          "25": 59635.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 55233.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18539.0,
+          "16": 20113.0,
+          "20": 27465.0,
+          "25": 45024.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23390.0
+    },
+    {
+      "seed": 342306,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 80485.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17499.0,
+          "16": 17736.0,
+          "20": 34301.0,
+          "25": 54877.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 80485.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17499.0,
+          "16": 17736.0,
+          "20": 34301.0,
+          "25": 54877.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51754.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 16927.0,
+          "16": 18436.0,
+          "20": 24810.0,
+          "25": 41426.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 28731.0
+    },
+    {
+      "seed": 342306,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 80485.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17499.0,
+          "16": 17736.0,
+          "20": 34301.0,
+          "25": 54877.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 80485.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17499.0,
+          "16": 17736.0,
+          "20": 34301.0,
+          "25": 54877.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51754.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 16927.0,
+          "16": 18436.0,
+          "20": 24810.0,
+          "25": 41426.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 28731.0
+    },
+    {
+      "seed": 342307,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 78766.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17549.0,
+          "16": 17697.0,
+          "20": 32287.0,
+          "25": 52005.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 78766.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17549.0,
+          "16": 17697.0,
+          "20": 32287.0,
+          "25": 52005.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 47501.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18387.0,
+          "16": 18358.0,
+          "20": 24425.0,
+          "25": 40232.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 31265.0
+    },
+    {
+      "seed": 342307,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 79969.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17469.0,
+          "16": 17977.0,
+          "20": 33569.0,
+          "25": 52512.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 79969.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17469.0,
+          "16": 17977.0,
+          "20": 33569.0,
+          "25": 52512.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 55149.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17909.0,
+          "16": 17793.0,
+          "20": 24993.0,
+          "25": 43183.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 24820.0
+    },
+    {
+      "seed": 342308,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 75010.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19416.0,
+          "16": 20295.0,
+          "20": 37260.0,
+          "25": 58046.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 75010.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19416.0,
+          "16": 20295.0,
+          "20": 37260.0,
+          "25": 58046.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53181.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19809.0,
+          "16": 19486.0,
+          "20": 27228.0,
+          "25": 44094.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 21829.0
+    },
+    {
+      "seed": 342308,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 78770.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19336.0,
+          "16": 20095.0,
+          "20": 33487.0,
+          "25": 58008.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 78770.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19336.0,
+          "16": 20095.0,
+          "20": 33487.0,
+          "25": 58008.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52009.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17799.0,
+          "16": 19220.0,
+          "20": 26658.0,
+          "25": 43608.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 26761.0
+    },
+    {
+      "seed": 342309,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77922.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17520.0,
+          "16": 17893.0,
+          "20": 32085.0,
+          "25": 52506.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 77922.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17520.0,
+          "16": 17893.0,
+          "20": 32085.0,
+          "25": 52506.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50632.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17705.0,
+          "16": 18485.0,
+          "20": 24789.0,
+          "25": 40009.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 27290.0
+    },
+    {
+      "seed": 342309,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 67871.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17600.0,
+          "16": 17741.0,
+          "20": 32068.0,
+          "25": 49413.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 67871.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17600.0,
+          "16": 17741.0,
+          "20": 32068.0,
+          "25": 49413.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50728.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18394.0,
+          "16": 17930.0,
+          "20": 24924.0,
+          "25": 43102.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 17143.0
+    },
+    {
+      "seed": 342310,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 67539.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 20220.0,
+          "20": 32725.0,
+          "25": 53942.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 67539.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 20220.0,
+          "20": 32725.0,
+          "25": 53942.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51977.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18674.0,
+          "16": 19926.0,
+          "20": 26267.0,
+          "25": 42977.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 15562.0
+    },
+    {
+      "seed": 342310,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 67343.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 19965.0,
+          "20": 34411.0,
+          "25": 52046.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 67343.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19320.0,
+          "16": 19965.0,
+          "20": 34411.0,
+          "25": 52046.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51506.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 18674.0,
+          "16": 19926.0,
+          "20": 25767.0,
+          "25": 43423.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 15837.0
+    },
+    {
+      "seed": 342311,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 79756.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19314.0,
+          "16": 19951.0,
+          "20": 37833.0,
+          "25": 57907.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 79756.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19314.0,
+          "16": 19951.0,
+          "20": 37833.0,
+          "25": 57907.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52720.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17640.0,
+          "16": 18821.0,
+          "20": 25753.0,
+          "25": 42851.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 27036.0
+    },
+    {
+      "seed": 342311,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 82953.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19314.0,
+          "16": 19951.0,
+          "20": 37833.0,
+          "25": 61166.0
+        },
+        "strawberry": true
+      },
+      "parent_v34_21": {
+        "status": "DONE",
+        "reward": 82953.0,
+        "peaks": {
+          "active_cows": 12,
+          "pastures": 12,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 19314.0,
+          "16": 19951.0,
+          "20": 37833.0,
+          "25": 61166.0
+        },
+        "strawberry": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52584.0,
+        "peaks": {
+          "active_cows": 4,
+          "pastures": 4,
+          "hands": 0,
+          "productive": 0
+        },
+        "cash": {
+          "12": 17640.0,
+          "16": 18821.0,
+          "20": 25941.0,
+          "25": 43480.0
+        },
+        "strawberry": false
+      },
+      "delta_parent": 0.0,
+      "delta_control": 30369.0
+    }
+  ]
+}
