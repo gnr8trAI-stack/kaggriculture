@@ -1,0 +1,37 @@
+name: v33-45-smoke
+on:
+  push:
+    branches: [agent/v33-industrial]
+    paths: [.github/workflows/v33-45-smoke.yml]
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33-industrial}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - name: Four isolated games
+        run: |
+          python - <<'PY'
+          import importlib,json,statistics,subprocess,sys
+          C=r'''
+          import importlib,json,sys
+          from kaggle_environments import make
+          a=importlib.import_module('agents.v33_industrial_v45');a.reset_state();seed=int(sys.argv[1]);seat=int(sys.argv[2]);env=make('kaggriculture',configuration={'seed':seed},debug=False);env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent]);t=a.get_telemetry();s=env.state[seat];
+          def pk(k):return max([int(x.get(k,0) or 0) for x in t] or [0])
+          print('R='+json.dumps({'reward':s.reward,'status':str(s.status),'lands':pk('lands'),'prod':pk('productive'),'animals':pk('animals'),'geese':pk('geese'),'cows':pk('cows'),'sheep':pk('sheep'),'hands':pk('hands'),'last':t[-1] if t else {}}))
+          '''
+          rs=[]
+          for seed in (377000,377001):
+            for seat in (0,1):
+              p=subprocess.run([sys.executable,'-c',C,str(seed),str(seat)],text=True,capture_output=True,timeout=160)
+              line=next((x for x in p.stdout.splitlines() if x.startswith('R=')),None)
+              if not line:print('ERR',seed,seat,p.returncode,(p.stderr+p.stdout)[-3000:]);continue
+              r=json.loads(line[2:]);r.update(seed=seed,seat=seat);rs.append(r);print(json.dumps({k:v for k,v in r.items() if k!='last'}))
+          if rs:print('SMOKE',json.dumps({'median':statistics.median(float(x['reward'] or 0) for x in rs),'min':min(float(x['reward'] or 0) for x in rs),'max':max(float(x['reward'] or 0) for x in rs),'invalid':sum(x['status']!='DONE' for x in rs)}))
+          PY
