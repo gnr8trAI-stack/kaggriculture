@@ -1,0 +1,497 @@
+{
+  "version": "33.70.0-cross-district-crop-overflow",
+  "mechanism": "when an assigned Q1/Q2 crop worker would idle, let it service or plant the other owned crop district using unchanged parent seeds/capex",
+  "summaries": {
+    "baseline_v19_2": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 51587.458333333336,
+      "median": 52356.0,
+      "min": 40378.0,
+      "p10": 48887.0,
+      "p25": 49616.0,
+      "p75": 54470.0,
+      "p90": 54564.0,
+      "max": 54605.0,
+      "q3_games": 0,
+      "q4_games": 0,
+      "overflow_actions": 0,
+      "overflow_games": 0,
+      "median_peak_lands": 0.0,
+      "median_peak_hands": 0.0,
+      "median_peak_animals": 0.0,
+      "median_peak_productive": 0.0,
+      "median_peak_idle": 0.0,
+      "median_peak_cows": 0.0
+    },
+    "parent_v33_66": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 65475.416666666664,
+      "median": 70296.5,
+      "min": 41357.0,
+      "p10": 43814.0,
+      "p25": 45183.0,
+      "p75": 81474.0,
+      "p90": 86138.0,
+      "max": 89349.0,
+      "q3_games": 24,
+      "q4_games": 0,
+      "overflow_actions": 0,
+      "overflow_games": 0,
+      "median_peak_lands": 3.0,
+      "median_peak_hands": 14.0,
+      "median_peak_animals": 7.0,
+      "median_peak_productive": 61.5,
+      "median_peak_idle": 63.0,
+      "median_peak_cows": 0.0
+    },
+    "candidate_v33_70": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 65475.416666666664,
+      "median": 70296.5,
+      "min": 41357.0,
+      "p10": 43814.0,
+      "p25": 45183.0,
+      "p75": 81474.0,
+      "p90": 86138.0,
+      "max": 89349.0,
+      "q3_games": 24,
+      "q4_games": 0,
+      "overflow_actions": 0,
+      "overflow_games": 0,
+      "median_peak_lands": 3.0,
+      "median_peak_hands": 14.0,
+      "median_peak_animals": 7.0,
+      "median_peak_productive": 61.5,
+      "median_peak_idle": 63.0,
+      "median_peak_cows": 0.0
+    }
+  },
+  "paired_vs_v33_66": {
+    "wins": 0,
+    "losses": 0,
+    "ties": 24,
+    "mean_delta": 0.0,
+    "median_delta": 0.0
+  },
+  "paired_vs_v19_2": {
+    "wins": 16,
+    "losses": 8,
+    "ties": 0,
+    "mean_delta": 13887.958333333334,
+    "median_delta": 19069.5
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 390000,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 56118.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 69,
+        "idle": 63,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390000,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 56118.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 69,
+        "idle": 63,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390001,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 44637.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 57,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390001,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 45904.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 57,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390002,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 86395.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 62,
+        "idle": 59,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390002,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 86138.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 62,
+        "idle": 60,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390003,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 45183.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 61,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390003,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 47805.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 53,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390004,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 80855.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 6,
+        "productive": 60,
+        "idle": 61,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390004,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 76686.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 57,
+        "idle": 61,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390005,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 67284.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 8,
+        "productive": 61,
+        "idle": 63,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390005,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 71121.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 8,
+        "productive": 62,
+        "idle": 63,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390006,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 76776.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 63,
+        "idle": 63,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390006,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 81705.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 9,
+        "productive": 62,
+        "idle": 61,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390007,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 41357.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 67,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390007,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 43164.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 67,
+        "idle": 64,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390008,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 43814.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 6,
+        "productive": 54,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390008,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 44569.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 54,
+        "idle": 65,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390009,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 73581.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 6,
+        "productive": 59,
+        "idle": 60,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390009,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 81474.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 62,
+        "idle": 60,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390010,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 89349.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 62,
+        "idle": 58,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390010,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 86029.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 60,
+        "idle": 60,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390011,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 69472.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 7,
+        "productive": 66,
+        "idle": 59,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    },
+    {
+      "seed": 390011,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 75876.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 58,
+        "idle": 59,
+        "cows": 0
+      },
+      "q3": true,
+      "q4": false,
+      "overflow": 0
+    }
+  ]
+}
