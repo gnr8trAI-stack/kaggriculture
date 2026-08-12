@@ -1,0 +1,110 @@
+name: run-v33-industrial-v62
+on:
+  push:
+    branches: [agent/v33-industrial]
+    paths: [agents/v33_industrial_v62.py, .github/workflows/run-v33-industrial-v62.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Checkout candidate line
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v33-industrial
+          path: candidate
+      - name: Checkout V19.2 control
+        uses: actions/checkout@v6
+        with:
+          ref: agent/v32.4-surplus-land
+          path: baseline
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - name: Compile
+        run: |
+          python -m py_compile candidate/agents/v33_industrial_v62.py
+          python -m py_compile candidate/agents/v33_industrial_v25.py
+          python -m py_compile baseline/agents/v19_2_early_scale8.py
+      - name: Isolated 24-game x3 benchmark
+        run: |
+          python - <<'PY'
+          import json,statistics,subprocess,sys
+          from pathlib import Path
+          CHILD=r'''
+          import importlib,json,sys
+          from kaggle_environments import make
+          root,mod,seed,seat=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4])
+          sys.path.insert(0,root); a=importlib.import_module(mod)
+          if hasattr(a,'reset_state'): a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=False)
+          env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat]; tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          peaks={k:0 for k in ('lands','hands','animals','productive','idle','geese','cows','sheep')}
+          land_days=[]; q4=False; max_sell=0; sell_events=0; q4_events=0
+          for r in tel:
+            if not isinstance(r,dict): continue
+            for k in peaks: peaks[k]=max(peaks[k],int(r.get(k,0) or 0))
+            if int(r.get('lands',0) or 0)>=4: q4=True
+            alloc=r.get('allocator') or {}
+            if isinstance(alloc,dict):
+              d=alloc.get('demand_clock_v62') or {}
+              if alloc.get('q4_demand_clock'): q4_events += 1
+            mo=r.get('market_orders') or []
+            if isinstance(mo,list):
+              for o in mo:
+                if isinstance(o,list) and o and o[0]=='SELL':
+                  sell_events+=1
+                  if len(o)>=3:max_sell=max(max_sell,int(o[2] or 0))
+          print('RESULTJSON='+json.dumps({'status':str(st.status),'reward':float(st.reward or 0),'peaks':peaks,'q4':q4,'q4_events':q4_events,'sell_events':sell_events,'max_sell':max_sell},separators=(',',':')))
+          '''
+          def one(root,mod,seed,seat):
+            try:p=subprocess.run([sys.executable,'-c',CHILD,root,mod,str(seed),str(seat)],text=True,capture_output=True,timeout=170)
+            except subprocess.TimeoutExpired:return {'status':'TIMEOUT','reward':0.0,'peaks':{},'q4':False}
+            line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
+            if p.returncode or not line:return {'status':'ERROR','reward':0.0,'peaks':{},'q4':False,'stderr':p.stderr[-1000:]}
+            return json.loads(line.split('=',1)[1])
+          specs={'baseline_v19_2':('baseline','agents.v19_2_early_scale8'),'parent_v33_25':('candidate','agents.v33_industrial_v25'),'candidate_v33_62':('candidate','agents.v33_industrial_v62')}
+          allrows={}
+          for name,(root,mod) in specs.items():
+            rows=[]
+            for seed in range(382000,382012):
+              for seat in (0,1): rows.append({'seed':seed,'seat':seat,**one(root,mod,seed,seat)})
+            allrows[name]=rows
+          def summary(rows):
+            rw=[float(r.get('reward',0) or 0) for r in rows]; s=sorted(rw)
+            out={'games':len(rows),'invalid':sum(str(r.get('status'))!='DONE' for r in rows),'mean':statistics.mean(rw),'median':statistics.median(rw),'min':min(rw),'p10':s[2],'p25':s[5],'p75':s[18],'p90':s[-3],'max':max(rw)}
+            for k in ('lands','hands','animals','productive','idle','cows'):
+              out['median_peak_'+k]=statistics.median(float((r.get('peaks') or {}).get(k,0) or 0) for r in rows)
+            out['q4_games']=sum(bool(r.get('q4')) for r in rows)
+            return out
+          bs,ps,cs=(summary(allrows[k]) for k in ('baseline_v19_2','parent_v33_25','candidate_v33_62'))
+          pd=[allrows['candidate_v33_62'][i]['reward']-allrows['parent_v33_25'][i]['reward'] for i in range(24)]
+          vd=[allrows['candidate_v33_62'][i]['reward']-allrows['baseline_v19_2'][i]['reward'] for i in range(24)]
+          ready=cs['invalid']==0 and cs['games']>=24 and cs['median']>=150000 and cs['min']>=100000
+          report={'version':'33.62.0-demand-clock-industrial','mechanism':'town-clock realization + backlog-sized day labour + ROI Q4 short-cycle capacity','baseline_v19_2':bs,'parent_v33_25':ps,'candidate_v33_62':cs,'paired_vs_parent':{'wins':sum(x>0 for x in pd),'losses':sum(x<0 for x in pd),'ties':sum(x==0 for x in pd),'mean_delta':statistics.mean(pd),'median_delta':statistics.median(pd)},'paired_vs_v19_2':{'wins':sum(x>0 for x in vd),'losses':sum(x<0 for x in vd),'ties':sum(x==0 for x in vd),'mean_delta':statistics.mean(vd),'median_delta':statistics.median(vd)},'ready_150k':ready,'games_detail':allrows['candidate_v33_62']}
+          Path('candidate/benchmarks/v33_v62_latest.json').write_text(json.dumps(report,indent=2)); print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v33-62-isolated-benchmark
+          path: candidate/benchmarks/v33_v62_latest.json
+          retention-days: 14
+      - name: Record result in issue 16
+        if: always()
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          { echo '## V33.62 isolated demand-clock benchmark'; echo; echo '```json'; cat candidate/benchmarks/v33_v62_latest.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } > /tmp/v62.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v62.md
+      - name: Persist benchmark report
+        if: success()
+        working-directory: candidate
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v33_v62_latest.json
+          if ! git diff --cached --quiet; then git commit -m "bench: record V33.62 isolated distribution" && git push origin HEAD:agent/v33-industrial; fi
