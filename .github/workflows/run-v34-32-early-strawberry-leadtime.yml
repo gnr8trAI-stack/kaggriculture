@@ -1,0 +1,94 @@
+name: run-v34-32-early-strawberry-leadtime
+on:
+  push:
+    branches: [agent/v34-32-early-strawberry-leadtime]
+    paths:
+      - 'agents/v34_32_early_strawberry_leadtime.py'
+      - '.github/workflows/run-v34-32-early-strawberry-leadtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v34-32-early-strawberry-leadtime, path: candidate}
+      - uses: actions/checkout@v6
+        with: {ref: agent/v32.4-surplus-land, path: control}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - name: Compile
+        run: |
+          python -m py_compile candidate/agents/v34_32_early_strawberry_leadtime.py candidate/agents/v34_26_terminal_liquidation.py
+          python -m py_compile control/agents/v19_2_early_scale8.py
+      - name: Run isolated 24-game both-seat readiness gate
+        run: |
+          python - <<'PY'
+          import json,statistics,subprocess,sys
+          from pathlib import Path
+          CHILD=r'''
+          import importlib,json,sys,os
+          from kaggle_environments import make
+          root,mod,seed,seat=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]);sys.path.insert(0,root);os.chdir(root)
+          a=importlib.import_module(mod)
+          if hasattr(a,'reset_state'):a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=False)
+          env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat];tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          peak_active=peak_pastures=peak_productive=peak_hands=0;cash={8:0,12:0,16:0,20:0,24:0,28:0,29:0}
+          for r in tel:
+            if not isinstance(r,dict):continue
+            peak_active=max(peak_active,int(r.get('active_cows',0) or 0));peak_pastures=max(peak_pastures,int(r.get('pastures',0) or 0));h=r.get('health') or {};peak_productive=max(peak_productive,int(h.get('productive',0) or 0));d=int(r.get('day',-1) or -1);peak_hands=max(peak_hands,int(r.get('hands_count',r.get('hands',0)) or 0))
+            if d in cash:cash[d]=float(r.get('money',0) or 0)
+          peak_strawberries=0;strawberries_by_day={8:0,12:0,16:0,20:0,24:0}
+          for step in getattr(env,'steps',[]) or []:
+            try:
+              state=step[seat];obs=state.observation
+              if not isinstance(obs,dict):continue
+              player=int(obs.get('player',seat) or seat);farms=obs.get('farms') or []
+              if player>=len(farms):continue
+              farm=farms[player];tiles=farm.get('tiles') or [];count=0
+              for row in tiles:
+                if not isinstance(row,list):continue
+                for tile in row:
+                  if isinstance(tile,dict) and str(tile.get('kind','')).upper()=='PLANT' and str(tile.get('crop',tile.get('plant',''))).upper()=='STRAWBERRY':count+=1
+              peak_strawberries=max(peak_strawberries,count);day=int(obs.get('day',-1) or -1)
+              if day in strawberries_by_day:strawberries_by_day[day]=max(strawberries_by_day[day],count)
+            except Exception:pass
+          print('RESULTJSON='+json.dumps({'status':str(st.status),'reward':float(st.reward or 0),'peak_active_cows':peak_active,'peak_pastures':peak_pastures,'peak_productive':peak_productive,'peak_hands':peak_hands,'cash':cash,'peak_strawberries':peak_strawberries,'strawberries_by_day':strawberries_by_day,'strawberry_triggered':bool(a.strawberry_triggered()) if hasattr(a,'strawberry_triggered') else False,'liquidated':bool(a.terminal_liquidation_triggered()) if hasattr(a,'terminal_liquidation_triggered') else False},separators=(',',':')))
+          '''
+          def one(root,mod,seed,seat):
+            try:p=subprocess.run([sys.executable,'-c',CHILD,root,mod,str(seed),str(seat)],text=True,capture_output=True,timeout=150)
+            except subprocess.TimeoutExpired:return {'status':'TIMEOUT','reward':0.0}
+            line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
+            if p.returncode or not line:return {'status':'ERROR','reward':0.0,'stderr':(p.stderr+p.stdout)[-2000:]}
+            return json.loads(line.split('=',1)[1])
+          rows=[]
+          for seed in range(344100,344112):
+            for seat in (0,1):
+              c=one('candidate','agents.v34_32_early_strawberry_leadtime',seed,seat);p=one('candidate','agents.v34_26_terminal_liquidation',seed,seat);b=one('control','agents.v19_2_early_scale8',seed,seat)
+              rows.append({'seed':seed,'seat':seat,'candidate':c,'parent_v34_26':p,'control_v19_2':b,'delta_parent':c['reward']-p['reward'],'delta_control':c['reward']-b['reward']})
+          def summ(key):
+            rs=[x[key] for x in rows];rw=[float(r.get('reward',0) or 0) for r in rs];s=sorted(rw);out={'games':len(rs),'invalid':sum(str(r.get('status')) in ('ERROR','INVALID','TIMEOUT') for r in rs),'mean':statistics.mean(rw),'median':statistics.median(rw),'min':min(rw),'p10':s[2],'p25':s[5],'p75':s[-6],'p90':s[-3],'max':max(rw)}
+            if key=='candidate':
+              out['triggered_games']=sum(bool(r.get('strawberry_triggered')) for r in rs);out['median_peak_strawberries']=statistics.median(float(r.get('peak_strawberries',0) or 0) for r in rs);out['median_peak_productive']=statistics.median(float(r.get('peak_productive',0) or 0) for r in rs);out['median_peak_active_cows']=statistics.median(float(r.get('peak_active_cows',0) or 0) for r in rs)
+              for d in (8,12,16,20,24):out[f'median_d{d}_strawberries']=statistics.median(float((r.get('strawberries_by_day') or {}).get(str(d),(r.get('strawberries_by_day') or {}).get(d,0)) or 0) for r in rs)
+            return out
+          c=summ('candidate');p=summ('parent_v34_26');b=summ('control_v19_2');dp=[x['delta_parent'] for x in rows];db=[x['delta_control'] for x in rows]
+          report={'version':'34.32.0-early-strawberry-leadtime','mechanism':'V34.26 unchanged except mature STRAWBERRY gate day10/8cows/8k -> day4/0cows/2.5k to capture 10-day first-yield lead time','candidate':c,'parent_v34_26':p,'control_v19_2':b,'paired_parent':{'wins':sum(x>0 for x in dp),'losses':sum(x<0 for x in dp),'ties':sum(x==0 for x in dp),'median_delta':statistics.median(dp)},'paired_control':{'wins':sum(x>0 for x in db),'losses':sum(x<0 for x in db),'ties':sum(x==0 for x in db),'median_delta':statistics.median(db)},'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
+          out=Path('candidate/benchmarks/v34_v32_latest.json');out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: v34-32-early-strawberry-leadtime, path: candidate/benchmarks/v34_v32_latest.json, if-no-files-found: ignore, retention-days: 14}
+      - name: Persist benchmark report
+        if: always()
+        working-directory: candidate
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v34_v32_latest.json || true
+          if ! git diff --cached --quiet; then git commit -m 'bench: record V34.32 isolated 24-game distribution'; git push origin HEAD:agent/v34-32-early-strawberry-leadtime; fi
