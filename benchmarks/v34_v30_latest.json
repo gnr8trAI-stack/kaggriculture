@@ -1,0 +1,1282 @@
+{
+  "version": "34.30.0-strawberry-batch-harvest",
+  "mechanism": "V34.26 unchanged except recurring STRAWBERRY yield is hidden from scheduler until >=3 units to reduce worker service/travel frequency",
+  "candidate": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 63691.458333333336,
+    "median": 71733.5,
+    "min": 29087.0,
+    "p10": 33021.0,
+    "p25": 46834.0,
+    "p75": 74534.0,
+    "p90": 77311.0,
+    "max": 91072.0,
+    "median_deferred_strawberry_yields": 528.0,
+    "median_peak_productive": 25.5,
+    "median_peak_active_cows": 12.0
+  },
+  "parent_v34_26": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 63691.458333333336,
+    "median": 71733.5,
+    "min": 29087.0,
+    "p10": 33021.0,
+    "p25": 46834.0,
+    "p75": 74534.0,
+    "p90": 77311.0,
+    "max": 91072.0
+  },
+  "control_v19_2": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 50582.708333333336,
+    "median": 50578.5,
+    "min": 38399.0,
+    "p10": 49044.0,
+    "p25": 49571.0,
+    "p75": 51458.0,
+    "p90": 53968.0,
+    "max": 55790.0
+  },
+  "paired_parent": {
+    "wins": 0,
+    "losses": 0,
+    "ties": 24,
+    "median_delta": 0.0
+  },
+  "paired_control": {
+    "wins": 18,
+    "losses": 6,
+    "ties": 0,
+    "median_delta": 20516.5
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 343000,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 73807.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19801.0,
+          "20": 35444.0,
+          "25": 53939.0,
+          "28": 67788.0,
+          "29": 73591.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 73807.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19801.0,
+          "20": 35444.0,
+          "25": 53939.0,
+          "28": 67788.0,
+          "29": 73591.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50415.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 20254.0,
+          "20": 27121.0,
+          "25": 42459.0,
+          "28": 47531.0,
+          "29": 50307.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23392.0
+    },
+    {
+      "seed": 343000,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 75842.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20146.0,
+          "20": 36171.0,
+          "25": 58246.0,
+          "28": 69552.0,
+          "29": 75630.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 75842.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20146.0,
+          "20": 36171.0,
+          "25": 58246.0,
+          "28": 69552.0,
+          "29": 75630.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49917.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 20343.0,
+          "20": 26798.0,
+          "25": 41872.0,
+          "28": 46941.0,
+          "29": 49813.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 25925.0
+    },
+    {
+      "seed": 343001,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74066.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19936.0,
+          "20": 35776.0,
+          "25": 53363.0,
+          "28": 68706.0,
+          "29": 73850.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74066.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19936.0,
+          "20": 35776.0,
+          "25": 53363.0,
+          "28": 68706.0,
+          "29": 73850.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 48870.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 21202.0,
+          "20": 27846.0,
+          "25": 42223.0,
+          "28": 46162.0,
+          "29": 48780.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 25196.0
+    },
+    {
+      "seed": 343001,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74280.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20190.0,
+          "20": 33871.0,
+          "25": 57356.0,
+          "28": 68654.0,
+          "29": 73962.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74280.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20190.0,
+          "20": 33871.0,
+          "25": 57356.0,
+          "28": 68654.0,
+          "29": 73962.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50771.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 29,
+        "cash": {
+          "16": 21209.0,
+          "20": 27936.0,
+          "25": 42990.0,
+          "28": 47799.0,
+          "29": 50675.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23509.0
+    },
+    {
+      "seed": 343002,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 76652.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 26,
+        "cash": {
+          "16": 18010.0,
+          "20": 33804.0,
+          "25": 52906.0,
+          "28": 66395.0,
+          "29": 76444.0
+        },
+        "deferred": 1223
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 76652.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 26,
+        "cash": {
+          "16": 18010.0,
+          "20": 33804.0,
+          "25": 52906.0,
+          "28": 66395.0,
+          "29": 76444.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53883.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 37,
+        "cash": {
+          "16": 17831.0,
+          "20": 25682.0,
+          "25": 43125.0,
+          "28": 50035.0,
+          "29": 53783.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 22769.0
+    },
+    {
+      "seed": 343002,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77311.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 30,
+        "cash": {
+          "16": 17653.0,
+          "20": 32643.0,
+          "25": 53613.0,
+          "28": 66112.0,
+          "29": 76987.0
+        },
+        "deferred": 1344
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 77311.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 30,
+        "cash": {
+          "16": 17653.0,
+          "20": 32643.0,
+          "25": 53613.0,
+          "28": 66112.0,
+          "29": 76987.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53968.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 36,
+        "cash": {
+          "16": 18871.0,
+          "20": 26514.0,
+          "25": 43306.0,
+          "28": 50218.0,
+          "29": 53868.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23343.0
+    },
+    {
+      "seed": 343003,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74534.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17657.0,
+          "20": 32464.0,
+          "25": 50432.0,
+          "28": 60044.0,
+          "29": 74216.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74534.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17657.0,
+          "20": 32464.0,
+          "25": 50432.0,
+          "28": 60044.0,
+          "29": 74216.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50610.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 28,
+        "cash": {
+          "16": 18899.0,
+          "20": 25341.0,
+          "25": 40660.0,
+          "28": 47274.0,
+          "29": 50502.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23924.0
+    },
+    {
+      "seed": 343003,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74534.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17657.0,
+          "20": 32464.0,
+          "25": 50432.0,
+          "28": 60044.0,
+          "29": 74216.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74534.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17657.0,
+          "20": 32464.0,
+          "25": 50432.0,
+          "28": 60044.0,
+          "29": 74216.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50680.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 28,
+        "cash": {
+          "16": 18899.0,
+          "20": 25341.0,
+          "25": 40642.0,
+          "28": 47343.0,
+          "29": 50574.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23854.0
+    },
+    {
+      "seed": 343004,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 36968.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20173.0,
+          "20": 28937.0,
+          "25": 36320.0,
+          "28": 36675.0,
+          "29": 36668.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 36968.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20173.0,
+          "20": 28937.0,
+          "25": 36320.0,
+          "28": 36675.0,
+          "29": 36668.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51458.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18657.0,
+          "20": 25456.0,
+          "25": 41676.0,
+          "28": 47771.0,
+          "29": 51356.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": -14490.0
+    },
+    {
+      "seed": 343004,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 29087.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19978.0,
+          "20": 27509.0,
+          "25": 29923.0,
+          "28": 29028.0,
+          "29": 28879.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 29087.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19978.0,
+          "20": 27509.0,
+          "25": 29923.0,
+          "28": 29028.0,
+          "29": 28879.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49627.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18707.0,
+          "20": 25215.0,
+          "25": 41018.0,
+          "28": 46353.0,
+          "29": 49527.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": -20540.0
+    },
+    {
+      "seed": 343005,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 29150.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20653.0,
+          "20": 28305.0,
+          "25": 29619.0,
+          "28": 29274.0,
+          "29": 28942.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 29150.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20653.0,
+          "20": 28305.0,
+          "25": 29619.0,
+          "28": 29274.0,
+          "29": 28942.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 38399.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 36,
+        "cash": {
+          "16": 18732.0,
+          "20": 23205.0,
+          "25": 35241.0,
+          "28": 37802.0,
+          "29": 38303.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": -9249.0
+    },
+    {
+      "seed": 343005,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 33021.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19050.0,
+          "20": 26479.0,
+          "25": 33811.0,
+          "28": 33216.0,
+          "29": 32605.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 33021.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19050.0,
+          "20": 26479.0,
+          "25": 33811.0,
+          "28": 33216.0,
+          "29": 32605.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50259.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 36,
+        "cash": {
+          "16": 21468.0,
+          "20": 27210.0,
+          "25": 42511.0,
+          "28": 47219.0,
+          "29": 50161.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": -17238.0
+    },
+    {
+      "seed": 343006,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 70064.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 27,
+        "cash": {
+          "16": 18191.0,
+          "20": 30878.0,
+          "25": 47798.0,
+          "28": 58558.0,
+          "29": 69047.0
+        },
+        "deferred": 1343
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 70064.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 27,
+        "cash": {
+          "16": 18191.0,
+          "20": 30878.0,
+          "25": 47798.0,
+          "28": 58558.0,
+          "29": 69047.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50547.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 28,
+        "cash": {
+          "16": 18229.0,
+          "20": 24107.0,
+          "25": 40788.0,
+          "28": 47334.0,
+          "29": 50447.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 19517.0
+    },
+    {
+      "seed": 343006,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 72921.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 27,
+        "cash": {
+          "16": 17688.0,
+          "20": 31710.0,
+          "25": 51550.0,
+          "28": 63608.0,
+          "29": 72615.0
+        },
+        "deferred": 1056
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 72921.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 27,
+        "cash": {
+          "16": 17688.0,
+          "20": 31710.0,
+          "25": 51550.0,
+          "28": 63608.0,
+          "29": 72615.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49044.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18300.0,
+          "20": 24546.0,
+          "25": 39442.0,
+          "28": 45817.0,
+          "29": 48960.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 23877.0
+    },
+    {
+      "seed": 343007,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 66581.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20083.0,
+          "20": 31850.0,
+          "25": 50474.0,
+          "28": 62241.0,
+          "29": 66269.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 66581.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20083.0,
+          "20": 31850.0,
+          "25": 50474.0,
+          "28": 62241.0,
+          "29": 66269.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49510.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 19333.0,
+          "20": 26140.0,
+          "25": 41198.0,
+          "28": 46415.0,
+          "29": 49423.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 17071.0
+    },
+    {
+      "seed": 343007,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 66305.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20083.0,
+          "20": 31850.0,
+          "25": 51055.0,
+          "28": 61706.0,
+          "29": 66097.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 66305.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 20083.0,
+          "20": 31850.0,
+          "25": 51055.0,
+          "28": 61706.0,
+          "29": 66097.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49852.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 19333.0,
+          "20": 26140.0,
+          "25": 41166.0,
+          "28": 46713.0,
+          "29": 49756.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 16453.0
+    },
+    {
+      "seed": 343008,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 54102.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19492.0,
+          "20": 32393.0,
+          "25": 47431.0,
+          "28": 52490.0,
+          "29": 53778.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 54102.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19492.0,
+          "20": 32393.0,
+          "25": 47431.0,
+          "28": 52490.0,
+          "29": 53778.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51167.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 35,
+        "cash": {
+          "16": 18419.0,
+          "20": 24929.0,
+          "25": 42153.0,
+          "28": 47605.0,
+          "29": 51079.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 2935.0
+    },
+    {
+      "seed": 343008,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 53828.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19403.0,
+          "20": 32277.0,
+          "25": 46898.0,
+          "28": 52105.0,
+          "29": 53497.0
+        },
+        "deferred": 0
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 53828.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "cash": {
+          "16": 19403.0,
+          "20": 32277.0,
+          "25": 46898.0,
+          "28": 52105.0,
+          "29": 53497.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52325.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 19613.0,
+          "20": 26522.0,
+          "25": 42069.0,
+          "28": 48552.0,
+          "29": 52237.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 1503.0
+    },
+    {
+      "seed": 343009,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 43097.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17620.0,
+          "20": 27500.0,
+          "25": 33386.0,
+          "28": 32587.0,
+          "29": 42761.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 43097.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17620.0,
+          "20": 27500.0,
+          "25": 33386.0,
+          "28": 32587.0,
+          "29": 42761.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49571.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18162.0,
+          "20": 24604.0,
+          "25": 39344.0,
+          "28": 46375.0,
+          "29": 49463.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": -6474.0
+    },
+    {
+      "seed": 343009,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 46834.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17620.0,
+          "20": 27500.0,
+          "25": 33847.0,
+          "28": 35106.0,
+          "29": 46498.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 46834.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17620.0,
+          "20": 27500.0,
+          "25": 33847.0,
+          "28": 35106.0,
+          "29": 46498.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49203.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18162.0,
+          "20": 24624.0,
+          "25": 39217.0,
+          "28": 46154.0,
+          "29": 49097.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": -2369.0
+    },
+    {
+      "seed": 343010,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 71787.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "cash": {
+          "16": 17700.0,
+          "20": 30686.0,
+          "25": 49000.0,
+          "28": 56955.0,
+          "29": 71451.0
+        },
+        "deferred": 1344
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 71787.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "cash": {
+          "16": 17700.0,
+          "20": 30686.0,
+          "25": 49000.0,
+          "28": 56955.0,
+          "29": 71451.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51198.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 18182.0,
+          "20": 24180.0,
+          "25": 39892.0,
+          "28": 47960.0,
+          "29": 51111.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 20589.0
+    },
+    {
+      "seed": 343010,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 71680.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17620.0,
+          "20": 32010.0,
+          "25": 48154.0,
+          "28": 56009.0,
+          "29": 71344.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 71680.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17620.0,
+          "20": 32010.0,
+          "25": 48154.0,
+          "28": 56009.0,
+          "29": 71344.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51236.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "cash": {
+          "16": 18232.0,
+          "20": 23980.0,
+          "25": 40539.0,
+          "28": 48105.0,
+          "29": 51128.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 20444.0
+    },
+    {
+      "seed": 343011,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 91072.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17736.0,
+          "20": 36059.0,
+          "25": 59177.0,
+          "28": 72792.0,
+          "29": 90754.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 91072.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17736.0,
+          "20": 36059.0,
+          "25": 59177.0,
+          "28": 72792.0,
+          "29": 90754.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 55685.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18226.0,
+          "20": 26367.0,
+          "25": 43322.0,
+          "28": 51645.0,
+          "29": 55587.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 35387.0
+    },
+    {
+      "seed": 343011,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 91072.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17736.0,
+          "20": 36059.0,
+          "25": 59177.0,
+          "28": 72792.0,
+          "29": 90754.0
+        },
+        "deferred": 1440
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 91072.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "cash": {
+          "16": 17736.0,
+          "20": 36059.0,
+          "25": 59177.0,
+          "28": 72792.0,
+          "29": 90754.0
+        },
+        "deferred": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 55790.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "cash": {
+          "16": 18226.0,
+          "20": 26337.0,
+          "25": 43458.0,
+          "28": 51750.0,
+          "29": 55692.0
+        },
+        "deferred": 0
+      },
+      "delta_parent": 0.0,
+      "delta_control": 35282.0
+    }
+  ]
+}
