@@ -59,3 +59,5 @@ def reset_telemetry():
 
 def get_telemetry(clear: bool = False):
     return _p.get_telemetry(clear=clear)
+
+# benchmark trigger: V33.40 isolated capital brake
