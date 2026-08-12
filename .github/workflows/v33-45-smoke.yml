@@ -1,4 +1,4 @@
-name: v33-46-smoke
+name: v33-47-smoke
 on:
   push:
     branches: [agent/v33-industrial]
@@ -22,12 +22,11 @@ jobs:
           C=r'''
           import importlib,json,sys
           from kaggle_environments import make
-          a=importlib.import_module('agents.v33_industrial_v46');a.reset_state();seed=int(sys.argv[1]);seat=int(sys.argv[2]);env=make('kaggriculture',configuration={'seed':seed},debug=False);env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent]);t=a.get_telemetry();s=env.state[seat]
+          a=importlib.import_module('agents.v33_industrial_v47');a.reset_state();seed=int(sys.argv[1]);seat=int(sys.argv[2]);env=make('kaggriculture',configuration={'seed':seed},debug=False);env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent]);t=a.get_telemetry();s=env.state[seat]
           def pk(k):return max([int(x.get(k,0) or 0) for x in t] or [0])
-          unlock={}
+          unlock={};days={}
           for r in t:
             for q,v in (r.get('land_unlock_steps') or {}).items():unlock[str(q)]=min(unlock.get(str(q),9999),int(v))
-          days={}
           for d in (4,6,8,10,12,16,20,24,28):
             z=[r for r in t if int(r.get('day',-1) or -1)==d]
             if z:
