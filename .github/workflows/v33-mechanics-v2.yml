@@ -1,0 +1,39 @@
+name: v33-mechanics-v2
+on:
+  push:
+    branches: [agent/v33-industrial]
+    paths: ['.github/workflows/v33-mechanics-v2.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - run: pip install -q kaggle-environments
+      - name: Dump Kaggriculture mechanics
+        run: |
+          python - <<'PY'
+          import inspect, pathlib, json
+          from kaggle_environments import make
+          env=make('kaggriculture', debug=False)
+          impl=env._Environment__interpreter if hasattr(env,'_Environment__interpreter') else None
+          print('CONFIG',env.configuration)
+          print('SPEC',env.specification)
+          try:
+            print('INTERPRETER_FILE',inspect.getsourcefile(impl))
+          except Exception as e: print('NO_INTERPRETER_FILE',e)
+          import kaggle_environments
+          root=pathlib.Path(kaggle_environments.__file__).resolve().parent
+          for p in root.rglob('*kaggriculture*'):
+            print('PATH',p)
+            if p.is_file() and p.suffix in {'.py','.json','.md','.html','.js'}:
+              try:
+                txt=p.read_text(errors='ignore')
+              except Exception: continue
+              for needle in ['GOOSE','COW','SHEEP','EGG','FERTILIZER','BUY_LAND','market','price','reward','WHEAT','yield']:
+                if needle.lower() in txt.lower():
+                  print('---FILE',p,'SIZE',len(txt))
+                  print(txt[:50000])
+                  break
+          PY
