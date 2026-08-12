@@ -1,0 +1,2152 @@
+{
+  "version": "34.32.0-early-strawberry-leadtime",
+  "mechanism": "V34.26 unchanged except mature STRAWBERRY gate day10/8cows/8k -> day4/0cows/2.5k to capture 10-day first-yield lead time",
+  "candidate": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 70945.29166666667,
+    "median": 71466.0,
+    "min": 51395.0,
+    "p10": 58148.0,
+    "p25": 60396.0,
+    "p75": 79521.0,
+    "p90": 83042.0,
+    "max": 87603.0,
+    "triggered_games": 24,
+    "median_peak_strawberries": 15.0,
+    "median_peak_productive": 31.0,
+    "median_peak_active_cows": 12.0,
+    "median_d8_strawberries": 0.0,
+    "median_d12_strawberries": 2.0,
+    "median_d16_strawberries": 15.0,
+    "median_d20_strawberries": 15.0,
+    "median_d24_strawberries": 15.0
+  },
+  "parent_v34_26": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 70976.20833333333,
+    "median": 70238.0,
+    "min": 58398.0,
+    "p10": 58861.0,
+    "p25": 60351.0,
+    "p75": 79111.0,
+    "p90": 83646.0,
+    "max": 85692.0
+  },
+  "control_v19_2": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 51471.166666666664,
+    "median": 51820.5,
+    "min": 47537.0,
+    "p10": 48855.0,
+    "p25": 49538.0,
+    "p75": 53320.0,
+    "p90": 53663.0,
+    "max": 55411.0
+  },
+  "paired_parent": {
+    "wins": 12,
+    "losses": 12,
+    "ties": 0,
+    "median_delta": 46.0
+  },
+  "paired_control": {
+    "wins": 24,
+    "losses": 0,
+    "ties": 0,
+    "median_delta": 20104.5
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 344100,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 79521.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18320.0,
+          "16": 17716.0,
+          "20": 32483.0,
+          "24": 49159.0,
+          "28": 67933.0,
+          "29": 79321.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 77013.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17520.0,
+          "16": 17673.0,
+          "20": 33792.0,
+          "24": 48323.0,
+          "28": 65045.0,
+          "29": 76725.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53341.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17024.0,
+          "16": 18343.0,
+          "20": 25488.0,
+          "24": 38095.0,
+          "28": 49827.0,
+          "29": 53253.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 2508.0,
+      "delta_control": 26180.0
+    },
+    {
+      "seed": 344100,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 81248.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18320.0,
+          "16": 18053.0,
+          "20": 34222.0,
+          "24": 49017.0,
+          "28": 66415.0,
+          "29": 81048.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 79111.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17520.0,
+          "16": 17813.0,
+          "20": 33932.0,
+          "24": 48609.0,
+          "28": 63200.0,
+          "29": 78805.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53663.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17024.0,
+          "16": 18443.0,
+          "20": 25144.0,
+          "24": 38596.0,
+          "28": 50023.0,
+          "29": 53559.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 2137.0,
+      "delta_control": 27585.0
+    },
+    {
+      "seed": 344101,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 70083.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18318.0,
+          "16": 17767.0,
+          "20": 31085.0,
+          "24": 44099.0,
+          "28": 59714.0,
+          "29": 69459.0
+        },
+        "peak_strawberries": 14,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 14,
+          "20": 13,
+          "24": 13
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 69889.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17518.0,
+          "16": 17607.0,
+          "20": 30925.0,
+          "24": 44596.0,
+          "28": 59160.0,
+          "29": 69577.0
+        },
+        "peak_strawberries": 13,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 13,
+          "20": 12,
+          "24": 12
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50588.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17794.0,
+          "16": 19449.0,
+          "20": 25456.0,
+          "24": 37589.0,
+          "28": 47388.0,
+          "29": 50486.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 194.0,
+      "delta_control": 19495.0
+    },
+    {
+      "seed": 344101,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 69392.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18318.0,
+          "16": 18029.0,
+          "20": 31503.0,
+          "24": 42154.0,
+          "28": 55411.0,
+          "29": 69008.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 70410.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17518.0,
+          "16": 17789.0,
+          "20": 31627.0,
+          "24": 43954.0,
+          "28": 55475.0,
+          "29": 70081.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52144.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17794.0,
+          "16": 19829.0,
+          "20": 25887.0,
+          "24": 37830.0,
+          "28": 48800.0,
+          "29": 52046.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -1018.0,
+      "delta_control": 17248.0
+    },
+    {
+      "seed": 344102,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 59715.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17594.0,
+          "16": 18576.0,
+          "20": 29868.0,
+          "24": 42274.0,
+          "28": 54645.0,
+          "29": 59562.0
+        },
+        "peak_strawberries": 8,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 7,
+          "20": 7,
+          "24": 7
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 65885.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 13,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19394.0,
+          "16": 20754.0,
+          "20": 33424.0,
+          "24": 45033.0,
+          "28": 61504.0,
+          "29": 65673.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49251.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 33,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17800.0,
+          "16": 19613.0,
+          "20": 26081.0,
+          "24": 38354.0,
+          "28": 46357.0,
+          "29": 49159.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -6170.0,
+      "delta_control": 10464.0
+    },
+    {
+      "seed": 344102,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 65356.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 29,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17594.0,
+          "16": 18055.0,
+          "20": 31589.0,
+          "24": 43223.0,
+          "28": 55760.0,
+          "29": 65258.0
+        },
+        "peak_strawberries": 14,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 14,
+          "20": 14,
+          "24": 14
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 65424.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19314.0,
+          "16": 20031.0,
+          "20": 31527.0,
+          "24": 46112.0,
+          "28": 61357.0,
+          "29": 65212.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49538.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 33,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18060.0,
+          "16": 19253.0,
+          "20": 26190.0,
+          "24": 38879.0,
+          "28": 46212.0,
+          "29": 49442.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -68.0,
+      "delta_control": 15818.0
+    },
+    {
+      "seed": 344103,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 72650.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17643.0,
+          "16": 18300.0,
+          "20": 31961.0,
+          "24": 46242.0,
+          "28": 64707.0,
+          "29": 72328.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 3,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 80005.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19363.0,
+          "16": 20294.0,
+          "20": 35023.0,
+          "24": 54930.0,
+          "28": 74153.0,
+          "29": 79723.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51936.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17881.0,
+          "16": 18973.0,
+          "20": 26024.0,
+          "24": 38764.0,
+          "28": 48371.0,
+          "29": 51846.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -7355.0,
+      "delta_control": 20714.0
+    },
+    {
+      "seed": 344103,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74942.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17643.0,
+          "16": 18220.0,
+          "20": 33755.0,
+          "24": 47451.0,
+          "28": 65470.0,
+          "29": 74758.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 79030.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19363.0,
+          "16": 20114.0,
+          "20": 33520.0,
+          "24": 51635.0,
+          "28": 72489.0,
+          "29": 78830.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50097.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 29,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17871.0,
+          "16": 18711.0,
+          "20": 25551.0,
+          "24": 37782.0,
+          "28": 46740.0,
+          "29": 50003.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -4088.0,
+      "delta_control": 24845.0
+    },
+    {
+      "seed": 344104,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 87603.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18299.0,
+          "16": 17976.0,
+          "20": 34135.0,
+          "24": 50426.0,
+          "28": 70613.0,
+          "29": 87383.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 84261.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17499.0,
+          "16": 17736.0,
+          "20": 33960.0,
+          "24": 49623.0,
+          "28": 66434.0,
+          "29": 83943.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51705.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17797.0,
+          "16": 18819.0,
+          "20": 25722.0,
+          "24": 37487.0,
+          "28": 48361.0,
+          "29": 51603.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 3342.0,
+      "delta_control": 35898.0
+    },
+    {
+      "seed": 344104,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 86309.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18299.0,
+          "16": 17976.0,
+          "20": 32565.0,
+          "24": 49716.0,
+          "28": 69430.0,
+          "29": 85979.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 85692.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17499.0,
+          "16": 17816.0,
+          "20": 32405.0,
+          "24": 49722.0,
+          "28": 67822.0,
+          "29": 85368.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 16,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52686.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17797.0,
+          "16": 18909.0,
+          "20": 26110.0,
+          "24": 38039.0,
+          "28": 49166.0,
+          "29": 52582.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 617.0,
+      "delta_control": 33623.0
+    },
+    {
+      "seed": 344105,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 76161.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 16985.0,
+          "16": 17974.0,
+          "20": 34137.0,
+          "24": 49228.0,
+          "28": 67537.0,
+          "29": 75949.0
+        },
+        "peak_strawberries": 11,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 11,
+          "20": 11,
+          "24": 11
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 77557.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18625.0,
+          "16": 20055.0,
+          "20": 34382.0,
+          "24": 53347.0,
+          "28": 71693.0,
+          "29": 77227.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51646.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17861.0,
+          "16": 18644.0,
+          "20": 25670.0,
+          "24": 38157.0,
+          "28": 48059.0,
+          "29": 51544.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -1396.0,
+      "delta_control": 24515.0
+    },
+    {
+      "seed": 344105,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 79150.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17549.0,
+          "16": 17888.0,
+          "20": 33977.0,
+          "24": 48241.0,
+          "28": 65629.0,
+          "29": 78820.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 72684.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19269.0,
+          "16": 19403.0,
+          "20": 34642.0,
+          "24": 50675.0,
+          "28": 67303.0,
+          "29": 72464.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 54473.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 36,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17871.0,
+          "16": 18606.0,
+          "20": 26772.0,
+          "24": 39615.0,
+          "28": 50762.0,
+          "29": 54369.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 6466.0,
+      "delta_control": 24677.0
+    },
+    {
+      "seed": 344106,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 52305.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18272.0,
+          "16": 17857.0,
+          "20": 29542.0,
+          "24": 36576.0,
+          "28": 40927.0,
+          "29": 51981.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 58398.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17472.0,
+          "16": 17617.0,
+          "20": 29252.0,
+          "24": 37995.0,
+          "28": 45177.0,
+          "29": 58074.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 48855.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 16981.0,
+          "16": 18233.0,
+          "20": 22936.0,
+          "24": 35260.0,
+          "28": 45944.0,
+          "29": 48768.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -6093.0,
+      "delta_control": 3450.0
+    },
+    {
+      "seed": 344106,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 51395.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18272.0,
+          "16": 17857.0,
+          "20": 29542.0,
+          "24": 36280.0,
+          "28": 40116.0,
+          "29": 51017.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 58398.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17472.0,
+          "16": 17617.0,
+          "20": 29252.0,
+          "24": 37995.0,
+          "28": 45177.0,
+          "29": 58074.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 48564.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 16981.0,
+          "16": 18233.0,
+          "20": 23256.0,
+          "24": 35146.0,
+          "28": 45652.0,
+          "29": 48476.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -7003.0,
+      "delta_control": 2831.0
+    },
+    {
+      "seed": 344107,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77852.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18285.0,
+          "16": 17925.0,
+          "20": 32320.0,
+          "24": 45311.0,
+          "28": 62162.0,
+          "29": 77528.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 70066.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17485.0,
+          "16": 17685.0,
+          "20": 31631.0,
+          "24": 43940.0,
+          "28": 55421.0,
+          "29": 69736.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52821.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 16993.0,
+          "16": 18381.0,
+          "20": 24818.0,
+          "24": 38078.0,
+          "28": 49232.0,
+          "29": 52721.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 7786.0,
+      "delta_control": 25031.0
+    },
+    {
+      "seed": 344107,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 70946.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18285.0,
+          "16": 17925.0,
+          "20": 32320.0,
+          "24": 44917.0,
+          "28": 60837.0,
+          "29": 70298.0
+        },
+        "peak_strawberries": 17,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 16,
+          "20": 16,
+          "24": 16
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 68683.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17485.0,
+          "16": 17765.0,
+          "20": 32160.0,
+          "24": 45438.0,
+          "28": 58742.0,
+          "29": 68035.0
+        },
+        "peak_strawberries": 18,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 16,
+          "20": 16,
+          "24": 16
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53320.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 16993.0,
+          "16": 18381.0,
+          "20": 24818.0,
+          "24": 38038.0,
+          "28": 49729.0,
+          "29": 53218.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 2263.0,
+      "delta_control": 17626.0
+    },
+    {
+      "seed": 344108,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 83042.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17579.0,
+          "16": 17871.0,
+          "20": 33852.0,
+          "24": 50106.0,
+          "28": 71719.0,
+          "29": 82834.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 14,
+          "20": 14,
+          "24": 14
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 82773.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19299.0,
+          "16": 20217.0,
+          "20": 35520.0,
+          "24": 55493.0,
+          "28": 76565.0,
+          "29": 82461.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 55411.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19455.0,
+          "16": 20175.0,
+          "20": 27189.0,
+          "24": 41996.0,
+          "28": 51422.0,
+          "29": 55311.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 269.0,
+      "delta_control": 27631.0
+    },
+    {
+      "seed": 344108,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 80636.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17579.0,
+          "16": 17868.0,
+          "20": 33339.0,
+          "24": 49785.0,
+          "28": 68328.0,
+          "29": 79510.0
+        },
+        "peak_strawberries": 17,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 17,
+          "20": 17,
+          "24": 17
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 83646.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 13,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19379.0,
+          "16": 20105.0,
+          "20": 34324.0,
+          "24": 54631.0,
+          "28": 76679.0,
+          "29": 83438.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53363.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 27,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19661.0,
+          "16": 19862.0,
+          "20": 26846.0,
+          "24": 39868.0,
+          "28": 49646.0,
+          "29": 53267.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -3010.0,
+      "delta_control": 27273.0
+    },
+    {
+      "seed": 344109,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 68713.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18269.0,
+          "16": 18307.0,
+          "20": 29821.0,
+          "24": 43340.0,
+          "28": 56819.0,
+          "29": 68603.0
+        },
+        "peak_strawberries": 14,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 14,
+          "20": 14,
+          "24": 14
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 60351.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17469.0,
+          "16": 18147.0,
+          "20": 28632.0,
+          "24": 42542.0,
+          "28": 50584.0,
+          "29": 60243.0
+        },
+        "peak_strawberries": 14,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 14,
+          "20": 14,
+          "24": 14
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49956.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17819.0,
+          "16": 18613.0,
+          "20": 24934.0,
+          "24": 37452.0,
+          "28": 46663.0,
+          "29": 49956.0
+        },
+        "peak_strawberries": 3,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 1,
+          "20": 1,
+          "24": 1
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 8362.0,
+      "delta_control": 18757.0
+    },
+    {
+      "seed": 344109,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 58148.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18269.0,
+          "16": 17888.0,
+          "20": 30604.0,
+          "24": 39880.0,
+          "28": 46666.0,
+          "29": 57824.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 59974.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17469.0,
+          "16": 17648.0,
+          "20": 30299.0,
+          "24": 40019.0,
+          "28": 47248.0,
+          "29": 59656.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 47537.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17751.0,
+          "16": 18899.0,
+          "20": 24707.0,
+          "24": 36258.0,
+          "28": 44871.0,
+          "29": 47433.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -1826.0,
+      "delta_control": 10611.0
+    },
+    {
+      "seed": 344110,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 66117.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 28,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18269.0,
+          "16": 17777.0,
+          "20": 30710.0,
+          "24": 42485.0,
+          "28": 56137.0,
+          "29": 65793.0
+        },
+        "peak_strawberries": 14,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 14,
+          "20": 14,
+          "24": 14
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 72441.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 30,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17469.0,
+          "16": 17617.0,
+          "20": 31144.0,
+          "24": 44789.0,
+          "28": 60934.0,
+          "29": 72117.0
+        },
+        "peak_strawberries": 16,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 16,
+          "20": 16,
+          "24": 16
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52275.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 37,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17841.0,
+          "16": 18397.0,
+          "20": 25394.0,
+          "24": 37452.0,
+          "28": 48869.0,
+          "29": 52171.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -6324.0,
+      "delta_control": 13842.0
+    },
+    {
+      "seed": 344110,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 59021.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 26,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 18269.0,
+          "16": 17728.0,
+          "20": 28982.0,
+          "24": 41036.0,
+          "28": 52276.0,
+          "29": 59237.0
+        },
+        "peak_strawberries": 10,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 1,
+          "16": 10,
+          "20": 10,
+          "24": 10
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 58861.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 26,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17549.0,
+          "16": 17568.0,
+          "20": 28822.0,
+          "24": 40876.0,
+          "28": 52116.0,
+          "29": 59077.0
+        },
+        "peak_strawberries": 10,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 10,
+          "20": 10,
+          "24": 10
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51996.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17781.0,
+          "16": 18193.0,
+          "20": 24512.0,
+          "24": 36970.0,
+          "28": 48417.0,
+          "29": 51894.0
+        },
+        "peak_strawberries": 2,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 2,
+          "20": 2,
+          "24": 2
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 160.0,
+      "delta_control": 7025.0
+    },
+    {
+      "seed": 344111,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 71986.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 31,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17596.0,
+          "16": 18088.0,
+          "20": 32180.0,
+          "24": 45657.0,
+          "28": 60406.0,
+          "29": 71802.0
+        },
+        "peak_strawberries": 15,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 2,
+          "16": 15,
+          "20": 15,
+          "24": 15
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 59586.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19316.0,
+          "16": 19985.0,
+          "20": 31557.0,
+          "24": 46456.0,
+          "28": 57436.0,
+          "29": 59394.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49352.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 33,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 20258.0,
+          "16": 20946.0,
+          "20": 28089.0,
+          "24": 39575.0,
+          "28": 46540.0,
+          "29": 49264.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": 12400.0,
+      "delta_control": 22634.0
+    },
+    {
+      "seed": 344111,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 60396.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 17596.0,
+          "16": 18321.0,
+          "20": 32474.0,
+          "24": 42884.0,
+          "28": 53637.0,
+          "29": 60200.0
+        },
+        "peak_strawberries": 11,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 10,
+          "20": 10,
+          "24": 10
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 63291.0,
+        "peak_active_cows": 12,
+        "peak_pastures": 12,
+        "peak_productive": 25,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 19396.0,
+          "16": 20267.0,
+          "20": 34672.0,
+          "24": 47090.0,
+          "28": 59463.0,
+          "29": 63103.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": true,
+        "liquidated": true
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50790.0,
+        "peak_active_cows": 4,
+        "peak_pastures": 4,
+        "peak_productive": 32,
+        "peak_hands": 0,
+        "cash": {
+          "8": 812.0,
+          "12": 20148.0,
+          "16": 21090.0,
+          "20": 27258.0,
+          "24": 39590.0,
+          "28": 47592.0,
+          "29": 50700.0
+        },
+        "peak_strawberries": 0,
+        "strawberries_by_day": {
+          "8": 0,
+          "12": 0,
+          "16": 0,
+          "20": 0,
+          "24": 0
+        },
+        "strawberry_triggered": false,
+        "liquidated": false
+      },
+      "delta_parent": -2895.0,
+      "delta_control": 9606.0
+    }
+  ]
+}
