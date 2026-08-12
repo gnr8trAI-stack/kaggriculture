@@ -1,0 +1,77 @@
+name: run-v33-34-burst-crew8
+on:
+  push:
+    branches: [agent/v33.34-burst-crew8]
+    paths:
+      - 'agents/v33_industrial_v34.py'
+      - '.github/workflows/run-v33-34-burst-crew8.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33.34-burst-crew8, path: candidate}
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33-industrial, path: parent}
+      - uses: actions/checkout@v6
+        with: {ref: agent/v32.4-surplus-land, path: baseline}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - name: Compile
+        run: |
+          python -m py_compile candidate/agents/v33_industrial_v34.py
+          python -m py_compile parent/agents/v33_industrial_v32.py
+          python -m py_compile baseline/agents/v19_2_early_scale8.py
+      - name: Run isolated 24-game both-seat benchmark
+        run: |
+          python - <<'PY'
+          import json,statistics,subprocess,sys
+          from pathlib import Path
+          CHILD=r'''
+          import importlib,json,sys,os
+          from kaggle_environments import make
+          root,mod,seed,seat=sys.argv[1],sys.argv[2],int(sys.argv[3]),int(sys.argv[4]);sys.path.insert(0,root);os.chdir(root)
+          a=importlib.import_module(mod)
+          if hasattr(a,'reset_state'):a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=False)
+          env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat];tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          peaks={'lands':0,'hands':0,'animals':0,'productive':0,'q3_pasture':0,'q3_animals':0}
+          for r in tel:
+            if not isinstance(r,dict):continue
+            for k in ('lands','hands','animals','productive'):peaks[k]=max(peaks[k],int(r.get(k,0) or 0))
+            q3=r.get('q3',{}) if isinstance(r.get('q3',{}),dict) else {}
+            peaks['q3_pasture']=max(peaks['q3_pasture'],int(q3.get('pasture',0) or 0));peaks['q3_animals']=max(peaks['q3_animals'],int(q3.get('animals',0) or 0))
+          print('RESULTJSON='+json.dumps({'status':str(st.status),'reward':float(st.reward or 0),'peaks':peaks},separators=(',',':')))
+          '''
+          def one(root,mod,seed,seat):
+            try:p=subprocess.run([sys.executable,'-c',CHILD,root,mod,str(seed),str(seat)],text=True,capture_output=True,timeout=150)
+            except subprocess.TimeoutExpired:return {'status':'TIMEOUT','reward':0.0,'peaks':{}}
+            line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
+            if p.returncode or not line:return {'status':'ERROR','reward':0.0,'peaks':{},'stderr':(p.stderr+p.stdout)[-2000:]}
+            return json.loads(line.split('=',1)[1])
+          rows=[]
+          for seed in range(366000,366012):
+            for seat in (0,1):
+              c=one('candidate','agents.v33_industrial_v34',seed,seat)
+              p=one('parent','agents.v33_industrial_v32',seed,seat)
+              b=one('baseline','agents.v19_2_early_scale8',seed,seat)
+              rows.append({'seed':seed,'seat':seat,'candidate':c,'parent_v33_32':p,'control_v19_2':b,'delta_parent':c['reward']-p['reward'],'delta_control':c['reward']-b['reward']})
+          def summ(key):
+            rs=[x[key] for x in rows]; rewards=[float(r.get('reward',0) or 0) for r in rs]; s=sorted(rewards)
+            invalid=sum(str(r.get('status')) in ('ERROR','INVALID','TIMEOUT') for r in rs)
+            def med_peak(k):return statistics.median(float((r.get('peaks') or {}).get(k,0) or 0) for r in rs)
+            return {'games':len(rs),'invalid':invalid,'mean':statistics.mean(rewards),'median':statistics.median(rewards),'min':min(rewards),'p10':s[2],'p25':s[5],'p90':s[-3],'max':max(rewards),'median_peak_animals':med_peak('animals'),'median_q3_animals':med_peak('q3_animals'),'median_q3_pasture':med_peak('q3_pasture'),'median_peak_hands':med_peak('hands'),'median_peak_productive':med_peak('productive')}
+          c=summ('candidate');p=summ('parent_v33_32');b=summ('control_v19_2')
+          dp=[x['delta_parent'] for x in rows];dc=[x['delta_control'] for x in rows]
+          report={'version':'33.34.0-burst-crew8','mechanism':'V33.32 unchanged except livestock service crew ceiling 7->8','candidate':c,'parent_v33_32':p,'control_v19_2':b,'paired_parent':{'wins':sum(x>0 for x in dp),'losses':sum(x<0 for x in dp),'ties':sum(x==0 for x in dp),'mean_delta':statistics.mean(dp),'median_delta':statistics.median(dp)},'paired_control':{'wins':sum(x>0 for x in dc),'losses':sum(x<0 for x in dc),'ties':sum(x==0 for x in dc),'mean_delta':statistics.mean(dc),'median_delta':statistics.median(dc)},'ready_150k':c['invalid']==0 and c['games']>=24 and c['median']>=150000 and c['min']>=100000,'games_detail':rows}
+          Path('/tmp/v3334.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='games_detail'},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: v33-34-burst-crew8, path: /tmp/v3334.json, if-no-files-found: ignore, retention-days: 14}
