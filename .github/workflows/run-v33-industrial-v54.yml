@@ -1,0 +1,65 @@
+name: run-v33-industrial-v54
+on:
+  push:
+    branches: [agent/v33-industrial]
+    paths: [agents/v33_industrial_v54.py, .github/workflows/run-v33-industrial-v54.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33-industrial}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - run: python -m py_compile agents/v33_industrial_v54.py
+      - name: 24-game both-seat readiness gate
+        run: |
+          python - <<'PY'
+          import json,statistics,subprocess,sys
+          from pathlib import Path
+          CHILD=r'''
+          import importlib,json,sys
+          from kaggle_environments import make
+          mod,seed,seat=sys.argv[1],int(sys.argv[2]),int(sys.argv[3]); a=importlib.import_module(mod)
+          if hasattr(a,'reset_state'): a.reset_state()
+          env=make('kaggriculture',configuration={'seed':seed},debug=False); env.run([a.agent,'starter'] if seat==0 else ['starter',a.agent])
+          st=env.state[seat]; tel=a.get_telemetry() if hasattr(a,'get_telemetry') else []
+          peaks={k:0 for k in ('lands','hands','animals','productive','idle','geese','cows','sheep')}; unlock={}; snaps={d:{} for d in (2,4,6,8,10,12,15,18,20,24,28)}
+          for r in tel:
+            if not isinstance(r,dict): continue
+            for k in peaks: peaks[k]=max(peaks[k],int(r.get(k,0) or 0))
+            for q,s in (r.get('land_unlock_steps') or {}).items(): unlock[str(q)]=min(unlock.get(str(q),10**9),int(s))
+            d=int(r.get('day',-1) or -1)
+            if d in snaps: snaps[d]={k:r.get(k,0) for k in ('money','productive','idle','lands','hands','animals','geese','cows','sheep','q1','q2','q3','q4','market','allocator')}
+          print('RESULTJSON='+json.dumps({'status':str(st.status),'reward':float(st.reward or 0),'peaks':peaks,'unlock':unlock,'snaps':snaps},separators=(',',':')))
+          '''
+          def one(seed,seat):
+            try:p=subprocess.run([sys.executable,'-c',CHILD,'agents.v33_industrial_v54',str(seed),str(seat)],text=True,capture_output=True,timeout=160)
+            except subprocess.TimeoutExpired:return {'status':'TIMEOUT','reward':0,'peaks':{},'unlock':{},'snaps':{}}
+            line=next((x for x in reversed(p.stdout.splitlines()) if x.startswith('RESULTJSON=')),None)
+            if p.returncode or not line:return {'status':'ERROR','reward':0,'peaks':{},'unlock':{},'snaps':{},'stderr':(p.stderr+p.stdout)[-3000:]}
+            return json.loads(line.split('=',1)[1])
+          rows=[{'seed':seed,'seat':seat,**one(seed,seat)} for seed in range(377600,377612) for seat in (0,1)]
+          rw=[float(r.get('reward',0) or 0) for r in rows]; s=sorted(rw)
+          summary={'games':24,'invalid':sum(r['status']!='DONE' for r in rows),'mean':statistics.mean(rw),'median':statistics.median(rw),'min':min(rw),'p10':s[2],'p25':s[5],'p75':s[18],'p90':s[-3],'max':max(rw)}
+          for k in ('lands','productive','hands','animals','geese','cows','sheep'): summary['median_peak_'+k]=statistics.median(float(r.get('peaks',{}).get(k,0) or 0) for r in rows)
+          for q in ('2','3','4'): summary['median_unlock_q'+q]=statistics.median(int(r.get('unlock',{}).get(q,9999)) for r in rows)
+          for d in (2,4,6,8,10,12,15,18,20,24,28):
+            for k in ('money','productive','lands','animals','geese'):
+              summary[f'median_d{d}_{k}']=statistics.median(float((r.get('snaps',{}).get(str(d)) or r.get('snaps',{}).get(d) or {}).get(k,0) or 0) for r in rows)
+          ready=summary['invalid']==0 and summary['median']>=150000 and summary['min']>=100000
+          report={'version':'33.54.0-crop-funded-husbandry-solvency','candidate':summary,'ready_150k':ready,'games_detail':rows}
+          Path('benchmarks/v33_v54_latest.json').write_text(json.dumps(report,indent=2)); print(json.dumps({'candidate':summary,'ready_150k':ready},indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: v33-54-benchmark, path: benchmarks/v33_v54_latest.json, retention-days: 14}
+      - name: Persist report
+        run: |
+          git config user.name github-actions[bot]; git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v33_v54_latest.json
+          if ! git diff --cached --quiet; then git commit -m "bench: record V33.54 distribution"; git push origin HEAD:agent/v33-industrial; fi
