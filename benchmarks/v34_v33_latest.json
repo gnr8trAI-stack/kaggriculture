@@ -1,0 +1,780 @@
+{
+  "version": "34.33.0-strawberry-seed-floor",
+  "mechanism": "V34.26 + six-seed strawberry floor only while specialization eligible and active strawberries <30",
+  "candidate": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 70366.83333333333,
+    "median": 71434.0,
+    "min": 48153.0,
+    "p10": 56323.0,
+    "p25": 64640.0,
+    "p75": 77309.0,
+    "p90": 80979.0,
+    "max": 92638.0,
+    "triggered_games": 24,
+    "median_seed_floor_triggers": 15.5,
+    "median_peak_strawberries": 16.5,
+    "median_peak_productive": 31.0,
+    "median_peak_active_cows": 12.0
+  },
+  "parent_v34_26": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 70000.0,
+    "median": 72658.5,
+    "min": 28012.0,
+    "p10": 57708.0,
+    "p25": 67816.0,
+    "p75": 78770.0,
+    "p90": 80869.0,
+    "max": 90982.0
+  },
+  "control_v19_2": {
+    "games": 24,
+    "invalid": 0,
+    "mean": 50348.125,
+    "median": 50202.0,
+    "min": 41093.0,
+    "p10": 43382.0,
+    "p25": 48399.0,
+    "p75": 53040.0,
+    "p90": 56063.0,
+    "max": 57529.0
+  },
+  "paired_parent": {
+    "wins": 10,
+    "losses": 14,
+    "ties": 0,
+    "median_delta": -825.0
+  },
+  "paired_control": {
+    "wins": 24,
+    "losses": 0,
+    "ties": 0,
+    "median_delta": 21178.5
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 345100,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77020.0,
+        "peak_strawberries": 15,
+        "peak_productive": 28,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 5
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 78031.0,
+        "peak_strawberries": 15,
+        "peak_productive": 28,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 56063.0,
+        "peak_strawberries": 2,
+        "peak_productive": 36,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -1011.0,
+      "delta_control": 20957.0
+    },
+    {
+      "seed": 345100,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 92638.0,
+        "peak_strawberries": 16,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 17
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 90982.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 57529.0,
+        "peak_strawberries": 2,
+        "peak_productive": 31,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 1656.0,
+      "delta_control": 35109.0
+    },
+    {
+      "seed": 345101,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 68505.0,
+        "peak_strawberries": 14,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 15
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 69341.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49365.0,
+        "peak_strawberries": 2,
+        "peak_productive": 30,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -836.0,
+      "delta_control": 19140.0
+    },
+    {
+      "seed": 345101,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 68566.0,
+        "peak_strawberries": 18,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 15
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 69341.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49405.0,
+        "peak_strawberries": 2,
+        "peak_productive": 30,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -775.0,
+      "delta_control": 19161.0
+    },
+    {
+      "seed": 345102,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74456.0,
+        "peak_strawberries": 20,
+        "peak_productive": 35,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 8
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 79598.0,
+        "peak_strawberries": 17,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51398.0,
+        "peak_strawberries": 2,
+        "peak_productive": 31,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -5142.0,
+      "delta_control": 23058.0
+    },
+    {
+      "seed": 345102,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 80979.0,
+        "peak_strawberries": 14,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 15
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 80869.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53040.0,
+        "peak_strawberries": 2,
+        "peak_productive": 31,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 110.0,
+      "delta_control": 27939.0
+    },
+    {
+      "seed": 345103,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 56323.0,
+        "peak_strawberries": 19,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 13
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 57708.0,
+        "peak_strawberries": 16,
+        "peak_productive": 30,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52410.0,
+        "peak_strawberries": 2,
+        "peak_productive": 34,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -1385.0,
+      "delta_control": 3913.0
+    },
+    {
+      "seed": 345103,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 59665.0,
+        "peak_strawberries": 14,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 15
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 71290.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52038.0,
+        "peak_strawberries": 2,
+        "peak_productive": 31,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -11625.0,
+      "delta_control": 7627.0
+    },
+    {
+      "seed": 345104,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 75154.0,
+        "peak_strawberries": 17,
+        "peak_productive": 30,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 33
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 68959.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 48399.0,
+        "peak_strawberries": 0,
+        "peak_productive": 29,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 6195.0,
+      "delta_control": 26755.0
+    },
+    {
+      "seed": 345104,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77998.0,
+        "peak_strawberries": 16,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 18
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74832.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49446.0,
+        "peak_strawberries": 0,
+        "peak_productive": 27,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 3166.0,
+      "delta_control": 28552.0
+    },
+    {
+      "seed": 345105,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 49357.0,
+        "peak_strawberries": 17,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 20
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 28312.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 41093.0,
+        "peak_strawberries": 0,
+        "peak_productive": 27,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 21045.0,
+      "delta_control": 8264.0
+    },
+    {
+      "seed": 345105,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 48153.0,
+        "peak_strawberries": 19,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 26
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 28012.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 41278.0,
+        "peak_strawberries": 0,
+        "peak_productive": 29,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 20141.0,
+      "delta_control": 6875.0
+    },
+    {
+      "seed": 345106,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 71044.0,
+        "peak_strawberries": 15,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 13
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 70170.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 53515.0,
+        "peak_strawberries": 2,
+        "peak_productive": 33,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 874.0,
+      "delta_control": 17529.0
+    },
+    {
+      "seed": 345106,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 64640.0,
+        "peak_strawberries": 21,
+        "peak_productive": 34,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 15
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74926.0,
+        "peak_strawberries": 15,
+        "peak_productive": 30,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 47791.0,
+        "peak_strawberries": 2,
+        "peak_productive": 35,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -10286.0,
+      "delta_control": 16849.0
+    },
+    {
+      "seed": 345107,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 71824.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 4
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 74027.0,
+        "peak_strawberries": 16,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 50424.0,
+        "peak_strawberries": 2,
+        "peak_productive": 38,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -2203.0,
+      "delta_control": 21400.0
+    },
+    {
+      "seed": 345107,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 74510.0,
+        "peak_strawberries": 14,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 15
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 75324.0,
+        "peak_strawberries": 16,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49735.0,
+        "peak_strawberries": 2,
+        "peak_productive": 29,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -814.0,
+      "delta_control": 24775.0
+    },
+    {
+      "seed": 345108,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 64755.0,
+        "peak_strawberries": 17,
+        "peak_productive": 29,
+        "peak_active_cows": 9,
+        "seed_floor_triggers": 37
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 78770.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 51712.0,
+        "peak_strawberries": 0,
+        "peak_productive": 28,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -14015.0,
+      "delta_control": 13043.0
+    },
+    {
+      "seed": 345108,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 79281.0,
+        "peak_strawberries": 19,
+        "peak_productive": 34,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 26
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 69429.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 52070.0,
+        "peak_strawberries": 0,
+        "peak_productive": 39,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 9852.0,
+      "delta_control": 27211.0
+    },
+    {
+      "seed": 345109,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 65073.0,
+        "peak_strawberries": 12,
+        "peak_productive": 26,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 21
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 67816.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 48914.0,
+        "peak_strawberries": 0,
+        "peak_productive": 28,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -2743.0,
+      "delta_control": 16159.0
+    },
+    {
+      "seed": 345109,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 63915.0,
+        "peak_strawberries": 17,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 28
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 66875.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 43382.0,
+        "peak_strawberries": 0,
+        "peak_productive": 27,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -2960.0,
+      "delta_control": 20533.0
+    },
+    {
+      "seed": 345110,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 77309.0,
+        "peak_strawberries": 18,
+        "peak_productive": 31,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 31
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 80769.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 54896.0,
+        "peak_strawberries": 0,
+        "peak_productive": 31,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -3460.0,
+      "delta_control": 22413.0
+    },
+    {
+      "seed": 345110,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 83305.0,
+        "peak_strawberries": 17,
+        "peak_productive": 32,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 17
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 81686.0,
+        "peak_strawberries": 0,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 56548.0,
+        "peak_strawberries": 0,
+        "peak_productive": 32,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 1619.0,
+      "delta_control": 26757.0
+    },
+    {
+      "seed": 345111,
+      "seat": 0,
+      "candidate": {
+        "status": "DONE",
+        "reward": 71024.0,
+        "peak_strawberries": 16,
+        "peak_productive": 29,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 16
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 66693.0,
+        "peak_strawberries": 14,
+        "peak_productive": 29,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 47924.0,
+        "peak_strawberries": 2,
+        "peak_productive": 29,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": 4331.0,
+      "delta_control": 23100.0
+    },
+    {
+      "seed": 345111,
+      "seat": 1,
+      "candidate": {
+        "status": "DONE",
+        "reward": 73310.0,
+        "peak_strawberries": 9,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 11
+      },
+      "parent_v34_26": {
+        "status": "DONE",
+        "reward": 76240.0,
+        "peak_strawberries": 9,
+        "peak_productive": 25,
+        "peak_active_cows": 12,
+        "seed_floor_triggers": 0
+      },
+      "control_v19_2": {
+        "status": "DONE",
+        "reward": 49980.0,
+        "peak_strawberries": 2,
+        "peak_productive": 30,
+        "peak_active_cows": 4,
+        "seed_floor_triggers": 0
+      },
+      "delta_parent": -2930.0,
+      "delta_control": 23330.0
+    }
+  ]
+}
