@@ -1,0 +1,1731 @@
+{
+  "version": "33.73.0-utilization-gated-q4",
+  "mechanism": "restore Q4 only after dense three-land commissioning, cash coverage, serviced Q3 and positive remaining-horizon ROI",
+  "summaries": {
+    "baseline_v19_2": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 51163.041666666664,
+      "median": 51667.5,
+      "min": 44998.0,
+      "p10": 46274.0,
+      "p25": 48066.0,
+      "p75": 54079.0,
+      "p90": 54688.0,
+      "max": 57185.0,
+      "q3_games": 0,
+      "q4_games": 0,
+      "median_peak_lands": 0.0,
+      "median_peak_hands": 0.0,
+      "median_peak_animals": 0.0,
+      "median_peak_productive": 0.0,
+      "median_peak_idle": 0.0,
+      "median_d12_money": 18278.5,
+      "median_d12_productive": 0.0,
+      "median_d12_idle": 0.0,
+      "median_d12_animals": 0.0,
+      "median_d12_hands": 0.0,
+      "median_d12_q3_productive": 0.0,
+      "median_d12_q3_idle": 0.0,
+      "median_d12_q4_productive": 0.0,
+      "median_d12_q4_idle": 0.0,
+      "median_d20_money": 26331.0,
+      "median_d20_productive": 0.0,
+      "median_d20_idle": 0.0,
+      "median_d20_animals": 0.0,
+      "median_d20_hands": 0.0,
+      "median_d20_q3_productive": 0.0,
+      "median_d20_q3_idle": 0.0,
+      "median_d20_q4_productive": 0.0,
+      "median_d20_q4_idle": 0.0,
+      "median_d25_money": 42823.5,
+      "median_d25_productive": 0.0,
+      "median_d25_idle": 0.0,
+      "median_d25_animals": 0.0,
+      "median_d25_hands": 0.0,
+      "median_d25_q3_productive": 0.0,
+      "median_d25_q3_idle": 0.0,
+      "median_d25_q4_productive": 0.0,
+      "median_d25_q4_idle": 0.0,
+      "median_final_money": 51573.5,
+      "median_final_productive": 0.0,
+      "median_final_idle": 0.0,
+      "median_final_animals": 0.0,
+      "median_final_hands": 0.0,
+      "median_final_q3_productive": 0.0,
+      "median_final_q3_idle": 0.0,
+      "median_final_q4_productive": 0.0,
+      "median_final_q4_idle": 0.0,
+      "median_q4_unlock_day": 0
+    },
+    "parent_v33_66": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 70275.04166666667,
+      "median": 76384.5,
+      "min": 29906.0,
+      "p10": 31296.0,
+      "p25": 52726.0,
+      "p75": 83461.0,
+      "p90": 84610.0,
+      "max": 90923.0,
+      "q3_games": 24,
+      "q4_games": 0,
+      "median_peak_lands": 3.0,
+      "median_peak_hands": 13.0,
+      "median_peak_animals": 6.0,
+      "median_peak_productive": 59.0,
+      "median_peak_idle": 61.0,
+      "median_d12_money": 14656.0,
+      "median_d12_productive": 48.0,
+      "median_d12_idle": 24.0,
+      "median_d12_animals": 4.0,
+      "median_d12_hands": 12.0,
+      "median_d12_q3_productive": 9.0,
+      "median_d12_q3_idle": 15.0,
+      "median_d12_q4_productive": 0.0,
+      "median_d12_q4_idle": 0.0,
+      "median_d20_money": 16815.0,
+      "median_d20_productive": 56.0,
+      "median_d20_idle": 16.0,
+      "median_d20_animals": 6.0,
+      "median_d20_hands": 13.0,
+      "median_d20_q3_productive": 13.0,
+      "median_d20_q3_idle": 11.0,
+      "median_d20_q4_productive": 0.0,
+      "median_d20_q4_idle": 0.0,
+      "median_d25_money": 46017.0,
+      "median_d25_productive": 55.0,
+      "median_d25_idle": 17.0,
+      "median_d25_animals": 6.0,
+      "median_d25_hands": 11.0,
+      "median_d25_q3_productive": 13.0,
+      "median_d25_q3_idle": 11.0,
+      "median_d25_q4_productive": 0.0,
+      "median_d25_q4_idle": 0.0,
+      "median_final_money": 76384.5,
+      "median_final_productive": 11.0,
+      "median_final_idle": 61.0,
+      "median_final_animals": 6.0,
+      "median_final_hands": 8.0,
+      "median_final_q3_productive": 7.0,
+      "median_final_q3_idle": 17.0,
+      "median_final_q4_productive": 0.0,
+      "median_final_q4_idle": 0.0,
+      "median_q4_unlock_day": 0
+    },
+    "candidate_v33_73": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 68665.54166666667,
+      "median": 75889.0,
+      "min": 29906.0,
+      "p10": 31296.0,
+      "p25": 52726.0,
+      "p75": 83443.0,
+      "p90": 84290.0,
+      "max": 90923.0,
+      "q3_games": 24,
+      "q4_games": 4,
+      "median_peak_lands": 3.0,
+      "median_peak_hands": 13.0,
+      "median_peak_animals": 6.0,
+      "median_peak_productive": 59.5,
+      "median_peak_idle": 61.0,
+      "median_d12_money": 14656.0,
+      "median_d12_productive": 48.0,
+      "median_d12_idle": 24.0,
+      "median_d12_animals": 4.0,
+      "median_d12_hands": 12.0,
+      "median_d12_q3_productive": 9.0,
+      "median_d12_q3_idle": 15.0,
+      "median_d12_q4_productive": 0.0,
+      "median_d12_q4_idle": 0.0,
+      "median_d20_money": 16632.5,
+      "median_d20_productive": 56.5,
+      "median_d20_idle": 16.0,
+      "median_d20_animals": 6.0,
+      "median_d20_hands": 13.0,
+      "median_d20_q3_productive": 13.0,
+      "median_d20_q3_idle": 11.0,
+      "median_d20_q4_productive": 0.0,
+      "median_d20_q4_idle": 0.0,
+      "median_d25_money": 44977.5,
+      "median_d25_productive": 55.0,
+      "median_d25_idle": 18.0,
+      "median_d25_animals": 6.0,
+      "median_d25_hands": 11.0,
+      "median_d25_q3_productive": 13.0,
+      "median_d25_q3_idle": 11.0,
+      "median_d25_q4_productive": 0.0,
+      "median_d25_q4_idle": 0.0,
+      "median_final_money": 75889.0,
+      "median_final_productive": 11.0,
+      "median_final_idle": 61.0,
+      "median_final_animals": 6.0,
+      "median_final_hands": 8.0,
+      "median_final_q3_productive": 7.0,
+      "median_final_q3_idle": 17.0,
+      "median_final_q4_productive": 0.0,
+      "median_final_q4_idle": 0.0,
+      "median_q4_unlock_day": 16.5
+    }
+  },
+  "paired_vs_v33_66": {
+    "wins": 0,
+    "losses": 4,
+    "ties": 20,
+    "mean_delta": -1609.5,
+    "median_delta": 0.0
+  },
+  "paired_vs_v19_2": {
+    "wins": 19,
+    "losses": 5,
+    "ties": 0,
+    "mean_delta": 17502.5,
+    "median_delta": 23244.5
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 393000,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 84290.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14134.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 16763.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 48776.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 84290.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393000,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 90923.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 60,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14134.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 17902.0,
+        "productive": 57,
+        "idle": 15,
+        "animals": 6,
+        "hands": 13,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 52505.0,
+        "productive": 55,
+        "idle": 17,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 90923.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393001,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 83461.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14164.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 16815.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 48069.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 83461.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393001,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 83443.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14164.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 16815.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 48091.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 83443.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393002,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 76069.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 6,
+        "productive": 68,
+        "idle": 54
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 12
+      },
+      "d12": {
+        "money": 18466.0,
+        "productive": 37,
+        "idle": 35,
+        "animals": 0,
+        "hands": 9,
+        "q3_productive": 4,
+        "q3_idle": 20,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 12050.0,
+        "productive": 57,
+        "idle": 14,
+        "animals": 6,
+        "hands": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 42576.0,
+        "productive": 54,
+        "idle": 18,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 76069.0,
+        "productive": 17,
+        "idle": 54,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393002,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 71900.0,
+      "peaks": {
+        "lands": 4,
+        "hands": 14,
+        "animals": 7,
+        "productive": 69,
+        "idle": 66
+      },
+      "q3": true,
+      "q4": true,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11,
+        "4": 15
+      },
+      "d12": {
+        "money": 15121.0,
+        "productive": 44,
+        "idle": 28,
+        "animals": 3,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 9712.0,
+        "productive": 60,
+        "idle": 36,
+        "animals": 7,
+        "hands": 14,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 42504.0,
+        "productive": 58,
+        "idle": 36,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 10,
+        "q3_idle": 14,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 71900.0,
+        "productive": 11,
+        "idle": 66,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393003,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 79652.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14139.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 16502.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 46203.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 79652.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393003,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 79588.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14139.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 15740.0,
+        "productive": 57,
+        "idle": 15,
+        "animals": 6,
+        "hands": 13,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 46417.0,
+        "productive": 55,
+        "idle": 17,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 79588.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393004,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 30474.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 62,
+        "idle": 68
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 12
+      },
+      "d12": {
+        "money": 22386.0,
+        "productive": 39,
+        "idle": 33,
+        "animals": 0,
+        "hands": 9,
+        "q3_productive": 4,
+        "q3_idle": 20,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 24535.0,
+        "productive": 39,
+        "idle": 32,
+        "animals": 0,
+        "hands": 12,
+        "q3_productive": 19,
+        "q3_idle": 5,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 27069.0,
+        "productive": 40,
+        "idle": 32,
+        "animals": 0,
+        "hands": 11,
+        "q3_productive": 23,
+        "q3_idle": 1,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 30474.0,
+        "productive": 4,
+        "idle": 68,
+        "animals": 0,
+        "hands": 8,
+        "q3_productive": 4,
+        "q3_idle": 20,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393004,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 31296.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 62,
+        "idle": 65
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 12
+      },
+      "d12": {
+        "money": 22386.0,
+        "productive": 39,
+        "idle": 33,
+        "animals": 0,
+        "hands": 9,
+        "q3_productive": 4,
+        "q3_idle": 20,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 24810.0,
+        "productive": 41,
+        "idle": 31,
+        "animals": 0,
+        "hands": 12,
+        "q3_productive": 19,
+        "q3_idle": 5,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 27200.0,
+        "productive": 46,
+        "idle": 26,
+        "animals": 0,
+        "hands": 11,
+        "q3_productive": 20,
+        "q3_idle": 4,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 31296.0,
+        "productive": 7,
+        "idle": 65,
+        "animals": 0,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393005,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 72401.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 58,
+        "idle": 58
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 12
+      },
+      "d12": {
+        "money": 16866.0,
+        "productive": 36,
+        "idle": 36,
+        "animals": 0,
+        "hands": 9,
+        "q3_productive": 2,
+        "q3_idle": 22,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 7464.0,
+        "productive": 57,
+        "idle": 15,
+        "animals": 7,
+        "hands": 13,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 41817.0,
+        "productive": 52,
+        "idle": 19,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 72401.0,
+        "productive": 14,
+        "idle": 58,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393005,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 76658.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 9,
+        "productive": 62,
+        "idle": 63
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 13471.0,
+        "productive": 50,
+        "idle": 22,
+        "animals": 4,
+        "hands": 13,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 12407.0,
+        "productive": 60,
+        "idle": 12,
+        "animals": 9,
+        "hands": 13,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 45831.0,
+        "productive": 54,
+        "idle": 18,
+        "animals": 9,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 76658.0,
+        "productive": 9,
+        "idle": 63,
+        "animals": 9,
+        "hands": 8,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393006,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 83022.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 6,
+        "productive": 61,
+        "idle": 60
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 16481.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 2,
+        "hands": 13,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 12515.0,
+        "productive": 60,
+        "idle": 12,
+        "animals": 6,
+        "hands": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 48087.0,
+        "productive": 59,
+        "idle": 13,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 83022.0,
+        "productive": 12,
+        "idle": 60,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393006,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 75629.0,
+      "peaks": {
+        "lands": 4,
+        "hands": 14,
+        "animals": 7,
+        "productive": 77,
+        "idle": 65
+      },
+      "q3": true,
+      "q4": true,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11,
+        "4": 15
+      },
+      "d12": {
+        "money": 15303.0,
+        "productive": 53,
+        "idle": 19,
+        "animals": 3,
+        "hands": 13,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 11855.0,
+        "productive": 63,
+        "idle": 32,
+        "animals": 7,
+        "hands": 14,
+        "q3_productive": 15,
+        "q3_idle": 8,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 44472.0,
+        "productive": 65,
+        "idle": 30,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 75629.0,
+        "productive": 11,
+        "idle": 65,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393007,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 84610.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 59,
+        "idle": 60
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14168.0,
+        "productive": 47,
+        "idle": 25,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 16492.0,
+        "productive": 58,
+        "idle": 14,
+        "animals": 7,
+        "hands": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 48933.0,
+        "productive": 54,
+        "idle": 18,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 84610.0,
+        "productive": 12,
+        "idle": 60,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393007,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 83512.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 61,
+        "idle": 60
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14191.0,
+        "productive": 47,
+        "idle": 25,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 17633.0,
+        "productive": 57,
+        "idle": 15,
+        "animals": 7,
+        "hands": 13,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 47855.0,
+        "productive": 55,
+        "idle": 17,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 83512.0,
+        "productive": 12,
+        "idle": 60,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393008,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 76111.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 14164.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 17103.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 46467.0,
+        "productive": 55,
+        "idle": 17,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 76111.0,
+        "productive": 11,
+        "idle": 61,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393008,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 75709.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 57,
+        "idle": 50
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 12
+      },
+      "d12": {
+        "money": 17666.0,
+        "productive": 36,
+        "idle": 36,
+        "animals": 0,
+        "hands": 9,
+        "q3_productive": 2,
+        "q3_idle": 22,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 10087.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 6,
+        "hands": 13,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 45483.0,
+        "productive": 56,
+        "idle": 16,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 75709.0,
+        "productive": 17,
+        "idle": 50,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393009,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 62394.0,
+      "peaks": {
+        "lands": 4,
+        "hands": 14,
+        "animals": 7,
+        "productive": 76,
+        "idle": 66
+      },
+      "q3": true,
+      "q4": true,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11,
+        "4": 18
+      },
+      "d12": {
+        "money": 13686.0,
+        "productive": 50,
+        "idle": 22,
+        "animals": 4,
+        "hands": 13,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 10761.0,
+        "productive": 76,
+        "idle": 20,
+        "animals": 6,
+        "hands": 14,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 38085.0,
+        "productive": 61,
+        "idle": 32,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 62394.0,
+        "productive": 9,
+        "idle": 66,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393009,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 62513.0,
+      "peaks": {
+        "lands": 4,
+        "hands": 14,
+        "animals": 7,
+        "productive": 74,
+        "idle": 66
+      },
+      "q3": true,
+      "q4": true,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11,
+        "4": 18
+      },
+      "d12": {
+        "money": 13686.0,
+        "productive": 50,
+        "idle": 22,
+        "animals": 4,
+        "hands": 13,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 10668.0,
+        "productive": 73,
+        "idle": 23,
+        "animals": 6,
+        "hands": 14,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 38021.0,
+        "productive": 59,
+        "idle": 34,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 62513.0,
+        "productive": 9,
+        "idle": 66,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393010,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 29906.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 66,
+        "idle": 67
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 12
+      },
+      "d12": {
+        "money": 23086.0,
+        "productive": 38,
+        "idle": 34,
+        "animals": 0,
+        "hands": 9,
+        "q3_productive": 5,
+        "q3_idle": 19,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 24996.0,
+        "productive": 39,
+        "idle": 33,
+        "animals": 0,
+        "hands": 12,
+        "q3_productive": 24,
+        "q3_idle": 0,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 26929.0,
+        "productive": 40,
+        "idle": 32,
+        "animals": 0,
+        "hands": 11,
+        "q3_productive": 21,
+        "q3_idle": 3,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 29906.0,
+        "productive": 5,
+        "idle": 67,
+        "animals": 0,
+        "hands": 8,
+        "q3_productive": 5,
+        "q3_idle": 19,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393010,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 49846.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 56,
+        "idle": 64
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 18733.0,
+        "productive": 48,
+        "idle": 24,
+        "animals": 4,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 23355.0,
+        "productive": 35,
+        "idle": 37,
+        "animals": 7,
+        "hands": 13,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 38587.0,
+        "productive": 30,
+        "idle": 41,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 49846.0,
+        "productive": 8,
+        "idle": 64,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393011,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 52726.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 52,
+        "idle": 64
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 20134.0,
+        "productive": 45,
+        "idle": 27,
+        "animals": 3,
+        "hands": 12,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 24557.0,
+        "productive": 36,
+        "idle": 36,
+        "animals": 6,
+        "hands": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 40750.0,
+        "productive": 34,
+        "idle": 38,
+        "animals": 6,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 52726.0,
+        "productive": 8,
+        "idle": 64,
+        "animals": 6,
+        "hands": 8,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    },
+    {
+      "seed": 393011,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 51840.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 57,
+        "idle": 64
+      },
+      "q3": true,
+      "q4": false,
+      "unlock": {
+        "1": 0,
+        "2": 10,
+        "3": 11
+      },
+      "d12": {
+        "money": 18303.0,
+        "productive": 50,
+        "idle": 22,
+        "animals": 4,
+        "hands": 13,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d20": {
+        "money": 21371.0,
+        "productive": 37,
+        "idle": 35,
+        "animals": 7,
+        "hands": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "d25": {
+        "money": 36217.0,
+        "productive": 35,
+        "idle": 37,
+        "animals": 7,
+        "hands": 11,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q4_productive": 0,
+        "q4_idle": 0
+      },
+      "final": {
+        "money": 51840.0,
+        "productive": 8,
+        "idle": 64,
+        "animals": 7,
+        "hands": 8,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q4_productive": 0,
+        "q4_idle": 0
+      }
+    }
+  ]
+}
