@@ -1,0 +1,1259 @@
+{
+  "version": "33.72.0-q3-feed-strip-parallelism",
+  "mechanism": "reassign one already-paid Q1/Q2 crop worker to Q3 feed/crop role after Q3 commissioning; no new labour/capex or livestock service reduction",
+  "summaries": {
+    "baseline_v19_2": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 50399.625,
+      "median": 49944.5,
+      "min": 46262.0,
+      "p10": 47537.0,
+      "p25": 48498.0,
+      "p75": 52222.0,
+      "p90": 54196.0,
+      "max": 57444.0,
+      "q3_games": 0,
+      "q4_games": 0,
+      "median_max_feed_roles": 0.0,
+      "median_peak_lands": 0.0,
+      "median_peak_hands": 0.0,
+      "median_peak_animals": 0.0,
+      "median_peak_productive": 0.0,
+      "median_peak_idle": 0.0,
+      "median_d20_money": 25794.0,
+      "median_d20_productive": 0.0,
+      "median_d20_idle": 0.0,
+      "median_d20_q3_productive": 0.0,
+      "median_d20_q3_idle": 0.0,
+      "median_d20_q3_plants": 0.0,
+      "median_d20_animals": 0.0,
+      "median_d20_hands": 0.0,
+      "median_d25_money": 40939.5,
+      "median_d25_productive": 0.0,
+      "median_d25_idle": 0.0,
+      "median_d25_q3_productive": 0.0,
+      "median_d25_q3_idle": 0.0,
+      "median_d25_q3_plants": 0.0,
+      "median_d25_animals": 0.0,
+      "median_d25_hands": 0.0,
+      "median_final_money": 49852.5,
+      "median_final_productive": 0.0,
+      "median_final_idle": 0.0,
+      "median_final_q3_productive": 0.0,
+      "median_final_q3_idle": 0.0,
+      "median_final_q3_plants": 0.0,
+      "median_final_animals": 0.0,
+      "median_final_hands": 0.0
+    },
+    "parent_v33_66": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 76231.95833333333,
+      "median": 80634.0,
+      "min": 59357.0,
+      "p10": 60406.0,
+      "p25": 67265.0,
+      "p75": 85594.0,
+      "p90": 87098.0,
+      "max": 88848.0,
+      "q3_games": 24,
+      "q4_games": 0,
+      "median_max_feed_roles": 1.0,
+      "median_peak_lands": 3.0,
+      "median_peak_hands": 13.0,
+      "median_peak_animals": 7.0,
+      "median_peak_productive": 59.0,
+      "median_peak_idle": 61.0,
+      "median_d20_money": 14932.5,
+      "median_d20_productive": 57.0,
+      "median_d20_idle": 15.0,
+      "median_d20_q3_productive": 13.0,
+      "median_d20_q3_idle": 11.0,
+      "median_d20_q3_plants": 6.0,
+      "median_d20_animals": 6.0,
+      "median_d20_hands": 13.0,
+      "median_d25_money": 45166.5,
+      "median_d25_productive": 56.0,
+      "median_d25_idle": 16.0,
+      "median_d25_q3_productive": 13.0,
+      "median_d25_q3_idle": 11.0,
+      "median_d25_q3_plants": 5.5,
+      "median_d25_animals": 6.0,
+      "median_d25_hands": 11.0,
+      "median_final_money": 80634.0,
+      "median_final_productive": 11.0,
+      "median_final_idle": 61.0,
+      "median_final_q3_productive": 7.0,
+      "median_final_q3_idle": 17.0,
+      "median_final_q3_plants": 0.0,
+      "median_final_animals": 7.0,
+      "median_final_hands": 8.0
+    },
+    "candidate_v33_72": {
+      "games": 24,
+      "invalid": 0,
+      "mean": 76231.95833333333,
+      "median": 80634.0,
+      "min": 59357.0,
+      "p10": 60406.0,
+      "p25": 67265.0,
+      "p75": 85594.0,
+      "p90": 87098.0,
+      "max": 88848.0,
+      "q3_games": 24,
+      "q4_games": 0,
+      "median_max_feed_roles": 1.0,
+      "median_peak_lands": 3.0,
+      "median_peak_hands": 13.0,
+      "median_peak_animals": 7.0,
+      "median_peak_productive": 59.0,
+      "median_peak_idle": 61.0,
+      "median_d20_money": 14932.5,
+      "median_d20_productive": 57.0,
+      "median_d20_idle": 15.0,
+      "median_d20_q3_productive": 13.0,
+      "median_d20_q3_idle": 11.0,
+      "median_d20_q3_plants": 6.0,
+      "median_d20_animals": 6.0,
+      "median_d20_hands": 13.0,
+      "median_d25_money": 45166.5,
+      "median_d25_productive": 56.0,
+      "median_d25_idle": 16.0,
+      "median_d25_q3_productive": 13.0,
+      "median_d25_q3_idle": 11.0,
+      "median_d25_q3_plants": 5.5,
+      "median_d25_animals": 6.0,
+      "median_d25_hands": 11.0,
+      "median_final_money": 80634.0,
+      "median_final_productive": 11.0,
+      "median_final_idle": 61.0,
+      "median_final_q3_productive": 7.0,
+      "median_final_q3_idle": 17.0,
+      "median_final_q3_plants": 0.0,
+      "median_final_animals": 7.0,
+      "median_final_hands": 8.0
+    }
+  },
+  "paired_vs_v33_66": {
+    "wins": 0,
+    "losses": 0,
+    "ties": 24,
+    "mean_delta": 0.0,
+    "median_delta": 0.0
+  },
+  "paired_vs_v19_2": {
+    "wins": 24,
+    "losses": 0,
+    "ties": 0,
+    "mean_delta": 25832.333333333332,
+    "median_delta": 26903.5
+  },
+  "ready_150k": false,
+  "games_detail": [
+    {
+      "seed": 392000,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 79579.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 64,
+        "idle": 55
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 11792.0,
+        "productive": 64,
+        "idle": 8,
+        "q3_productive": 18,
+        "q3_idle": 6,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 42613.0,
+        "productive": 61,
+        "idle": 11,
+        "q3_productive": 17,
+        "q3_idle": 7,
+        "q3_plants": 5,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 79579.0,
+        "productive": 17,
+        "idle": 55,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392000,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 85768.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 13246.0,
+        "productive": 58,
+        "idle": 14,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 48465.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q3_plants": 4,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 85768.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392001,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 85594.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 16639.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 12
+      },
+      "d25": {
+        "money": 48722.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 85594.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392001,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 85656.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 16639.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 12
+      },
+      "d25": {
+        "money": 48732.0,
+        "productive": 56,
+        "idle": 15,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 85656.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392002,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 75965.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 55,
+        "idle": 63
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 17163.0,
+        "productive": 55,
+        "idle": 17,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 7,
+        "animals": 6,
+        "hands": 12
+      },
+      "d25": {
+        "money": 44927.0,
+        "productive": 53,
+        "idle": 19,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 5,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 75965.0,
+        "productive": 9,
+        "idle": 63,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392002,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 82803.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 60,
+        "idle": 63
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 16645.0,
+        "productive": 59,
+        "idle": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 7,
+        "animals": 6,
+        "hands": 13
+      },
+      "d25": {
+        "money": 49629.0,
+        "productive": 53,
+        "idle": 18,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 82803.0,
+        "productive": 9,
+        "idle": 63,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392003,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 83171.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 58,
+        "idle": 62
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 15446.0,
+        "productive": 57,
+        "idle": 15,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 13
+      },
+      "d25": {
+        "money": 48772.0,
+        "productive": 54,
+        "idle": 18,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q3_plants": 3,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 83171.0,
+        "productive": 10,
+        "idle": 62,
+        "q3_productive": 6,
+        "q3_idle": 18,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392003,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 87098.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 58,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 15446.0,
+        "productive": 57,
+        "idle": 15,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 13
+      },
+      "d25": {
+        "money": 50070.0,
+        "productive": 58,
+        "idle": 13,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 87098.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392004,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 67265.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 59,
+        "idle": 64
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 14970.0,
+        "productive": 59,
+        "idle": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 40531.0,
+        "productive": 51,
+        "idle": 21,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 4,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 67265.0,
+        "productive": 8,
+        "idle": 64,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392004,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 83060.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 59,
+        "idle": 59
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 14607.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 13
+      },
+      "d25": {
+        "money": 49213.0,
+        "productive": 55,
+        "idle": 16,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 83060.0,
+        "productive": 13,
+        "idle": 59,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392005,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 68317.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 68,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 11503.0,
+        "productive": 57,
+        "idle": 15,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 6,
+        "animals": 5,
+        "hands": 13
+      },
+      "d25": {
+        "money": 39910.0,
+        "productive": 54,
+        "idle": 18,
+        "q3_productive": 10,
+        "q3_idle": 14,
+        "q3_plants": 4,
+        "animals": 5,
+        "hands": 11
+      },
+      "final": {
+        "money": 68317.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 6,
+        "q3_idle": 18,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392005,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 68246.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 68,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 11503.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 6,
+        "animals": 5,
+        "hands": 13
+      },
+      "d25": {
+        "money": 39839.0,
+        "productive": 54,
+        "idle": 18,
+        "q3_productive": 10,
+        "q3_idle": 14,
+        "q3_plants": 4,
+        "animals": 5,
+        "hands": 11
+      },
+      "final": {
+        "money": 68246.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 6,
+        "q3_idle": 18,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392006,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 59357.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 69,
+        "idle": 68
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 17699.0,
+        "productive": 69,
+        "idle": 3,
+        "q3_productive": 24,
+        "q3_idle": 0,
+        "q3_plants": 20,
+        "animals": 0,
+        "hands": 12
+      },
+      "d25": {
+        "money": 38124.0,
+        "productive": 60,
+        "idle": 12,
+        "q3_productive": 21,
+        "q3_idle": 3,
+        "q3_plants": 17,
+        "animals": 0,
+        "hands": 11
+      },
+      "final": {
+        "money": 59357.0,
+        "productive": 4,
+        "idle": 68,
+        "q3_productive": 4,
+        "q3_idle": 20,
+        "q3_plants": 0,
+        "animals": 0,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392006,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 59357.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 0,
+        "productive": 69,
+        "idle": 68
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 17699.0,
+        "productive": 69,
+        "idle": 3,
+        "q3_productive": 24,
+        "q3_idle": 0,
+        "q3_plants": 20,
+        "animals": 0,
+        "hands": 12
+      },
+      "d25": {
+        "money": 38124.0,
+        "productive": 60,
+        "idle": 12,
+        "q3_productive": 21,
+        "q3_idle": 3,
+        "q3_plants": 17,
+        "animals": 0,
+        "hands": 11
+      },
+      "final": {
+        "money": 59357.0,
+        "productive": 4,
+        "idle": 68,
+        "q3_productive": 4,
+        "q3_idle": 20,
+        "q3_plants": 0,
+        "animals": 0,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392007,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 88848.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 59,
+        "idle": 60
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 14895.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q3_plants": 4,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 51440.0,
+        "productive": 54,
+        "idle": 18,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 5,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 88848.0,
+        "productive": 12,
+        "idle": 60,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392007,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 87113.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 59,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 12871.0,
+        "productive": 58,
+        "idle": 14,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 48903.0,
+        "productive": 59,
+        "idle": 13,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 7,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 87113.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392008,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 81167.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 7,
+        "productive": 58,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 15473.0,
+        "productive": 57,
+        "idle": 15,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 13
+      },
+      "d25": {
+        "money": 48412.0,
+        "productive": 58,
+        "idle": 14,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 81167.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392008,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 80779.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 60,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 14478.0,
+        "productive": 60,
+        "idle": 12,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 13
+      },
+      "d25": {
+        "money": 47952.0,
+        "productive": 58,
+        "idle": 14,
+        "q3_productive": 13,
+        "q3_idle": 11,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 80779.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392009,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 82183.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 65,
+        "idle": 60
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 9774.0,
+        "productive": 63,
+        "idle": 9,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 44316.0,
+        "productive": 61,
+        "idle": 11,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 5,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 82183.0,
+        "productive": 12,
+        "idle": 60,
+        "q3_productive": 9,
+        "q3_idle": 15,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392009,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 80489.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 15,
+        "animals": 7,
+        "productive": 62,
+        "idle": 60
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 8206.0,
+        "productive": 62,
+        "idle": 10,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 13
+      },
+      "d25": {
+        "money": 45406.0,
+        "productive": 62,
+        "idle": 10,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 6,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 80489.0,
+        "productive": 12,
+        "idle": 60,
+        "q3_productive": 8,
+        "q3_idle": 16,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392010,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 60406.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 7,
+        "productive": 59,
+        "idle": 65
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 17685.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 7,
+        "animals": 7,
+        "hands": 12
+      },
+      "d25": {
+        "money": 40216.0,
+        "productive": 47,
+        "idle": 25,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 5,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 60406.0,
+        "productive": 7,
+        "idle": 65,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392010,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 60995.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 7,
+        "productive": 59,
+        "idle": 65
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 17685.0,
+        "productive": 56,
+        "idle": 16,
+        "q3_productive": 14,
+        "q3_idle": 10,
+        "q3_plants": 7,
+        "animals": 7,
+        "hands": 12
+      },
+      "d25": {
+        "money": 40311.0,
+        "productive": 47,
+        "idle": 25,
+        "q3_productive": 12,
+        "q3_idle": 12,
+        "q3_plants": 5,
+        "animals": 7,
+        "hands": 11
+      },
+      "final": {
+        "money": 60995.0,
+        "productive": 7,
+        "idle": 65,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 7,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392011,
+      "seat": 0,
+      "status": "DONE",
+      "reward": 65362.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 12,
+        "animals": 6,
+        "productive": 67,
+        "idle": 55
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 13115.0,
+        "productive": 55,
+        "idle": 16,
+        "q3_productive": 13,
+        "q3_idle": 10,
+        "q3_plants": 6,
+        "animals": 6,
+        "hands": 12
+      },
+      "d25": {
+        "money": 31131.0,
+        "productive": 58,
+        "idle": 14,
+        "q3_productive": 15,
+        "q3_idle": 9,
+        "q3_plants": 8,
+        "animals": 6,
+        "hands": 11
+      },
+      "final": {
+        "money": 65362.0,
+        "productive": 16,
+        "idle": 55,
+        "q3_productive": 7,
+        "q3_idle": 17,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    },
+    {
+      "seed": 392011,
+      "seat": 1,
+      "status": "DONE",
+      "reward": 70989.0,
+      "peaks": {
+        "lands": 3,
+        "hands": 13,
+        "animals": 6,
+        "productive": 68,
+        "idle": 61
+      },
+      "q3": true,
+      "q4": false,
+      "max_feed_roles": 1,
+      "d20": {
+        "money": 11487.0,
+        "productive": 55,
+        "idle": 17,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q3_plants": 5,
+        "animals": 5,
+        "hands": 13
+      },
+      "d25": {
+        "money": 40813.0,
+        "productive": 55,
+        "idle": 17,
+        "q3_productive": 11,
+        "q3_idle": 13,
+        "q3_plants": 5,
+        "animals": 5,
+        "hands": 11
+      },
+      "final": {
+        "money": 70989.0,
+        "productive": 11,
+        "idle": 61,
+        "q3_productive": 6,
+        "q3_idle": 18,
+        "q3_plants": 0,
+        "animals": 6,
+        "hands": 8
+      }
+    }
+  ]
+}
