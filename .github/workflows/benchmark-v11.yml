@@ -1,0 +1,46 @@
+name: benchmark-v11
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run V11 focused tests
+        run: pytest -q tests/test_v11_adaptive_planner.py
+      - name: Build standalone submission
+        run: |
+          python scripts/build_v11_submission.py
+          python -m py_compile dist/submission.py
+          test -s dist/submission.py
+          ! grep -Eq 'from agents|import agents|from scripts|import scripts' dist/submission.py
+      - name: Run both-seat benchmark with turn telemetry
+        run: >-
+          python scripts/benchmark_v11.py
+          --games-per-seat 10
+          --seed-start 70000
+          --output experiments/v11-benchmark.json
+          --telemetry-output experiments/v11-telemetry.jsonl
+      - name: Compress telemetry
+        if: always()
+        run: gzip -9 -f experiments/v11-telemetry.jsonl || true
+      - name: Upload benchmark and telemetry
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v11-adaptive-benchmark
+          path: |
+            experiments/v11-benchmark.json
+            experiments/v11-telemetry.jsonl.gz
+            dist/submission.py
+          if-no-files-found: warn
+          retention-days: 90

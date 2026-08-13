@@ -1,0 +1,46 @@
+name: benchmark-v12
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Run V12 focused tests
+        run: pytest -q tests/test_v12_market_aware.py
+      - name: Build standalone submission
+        run: |
+          python scripts/build_v12_submission.py
+          python -m py_compile dist/submission.py
+          test -s dist/submission.py
+          ! grep -Eq 'from agents|import agents|from scripts|import scripts' dist/submission.py
+      - name: Run both-seat benchmark with telemetry
+        run: >-
+          python scripts/benchmark_v12.py
+          --games-per-seat 10
+          --seed-start 80000
+          --output experiments/v12-benchmark.json
+          --telemetry-output experiments/v12-telemetry.jsonl
+      - name: Compress telemetry
+        if: always()
+        run: gzip -9 -f experiments/v12-telemetry.jsonl || true
+      - name: Upload benchmark package
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v12-market-aware-benchmark
+          path: |
+            experiments/v12-benchmark.json
+            experiments/v12-telemetry.jsonl.gz
+            dist/submission.py
+          if-no-files-found: warn
+          retention-days: 90
