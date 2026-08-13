@@ -1,0 +1,114 @@
+name: live-candidate-factory
+
+on:
+  push:
+    branches:
+      - agent/adaptive-replay-lab-final
+    paths:
+      - 'agents/v15_champion.py'
+      - 'agents/v19_livestock_compound.py'
+      - 'agents/v21_scarcity_safe.py'
+      - 'agents/v23_direct_donor_clock.py'
+      - 'agents/v23_direct_donor_clock_v2.py'
+      - 'LIVE_EVALUATION_PROTOCOL.md'
+      - '.github/workflows/live-candidate-factory.yml'
+  pull_request:
+    paths:
+      - '.github/workflows/live-candidate-factory.yml'
+  workflow_dispatch:
+
+jobs:
+  package-live-candidates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Build standalone candidates
+        run: |
+          mkdir -p live_candidates
+          python - <<'PY'
+          from pathlib import Path
+          import base64, hashlib, json, types, zipfile, zlib
+          import agents.v15_champion as champ
+
+          out=Path('live_candidates')
+
+          def pack(version, source, note):
+              d=out/version
+              d.mkdir(parents=True, exist_ok=True)
+              main=d/'main.py'
+              main.write_text(source)
+              compile(source, 'main.py', 'exec')
+              z=d/f'kaggriculture_adaptive_{version}_submission.zip'
+              with zipfile.ZipFile(z,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as f:
+                  f.write(main,'main.py')
+              with zipfile.ZipFile(z) as f:
+                  assert f.namelist()==['main.py']
+              sha=hashlib.sha256(z.read_bytes()).hexdigest()
+              (d/f'RELEASE_NOTES_{version}.md').write_text(
+                  f'# {version}\n\nStatus: READY_FOR_LIVE\n\n{note}\n\n'
+                  'Internal simulation is diagnostic only. Final disposition requires live Kaggle evidence.\n'
+              )
+              (d/f'release_manifest_{version}.json').write_text(json.dumps({
+                  'version':version,'status':'READY_FOR_LIVE','submission_sha256':sha,
+                  'zip_members':['main.py'],'live_evidence_required':True
+              },indent=2))
+              return {'version':version,'sha256':sha,'zip':str(z)}
+
+          # V15 is already a self-contained compressed wrapper.
+          v15=Path('agents/v15_champion.py').read_text()
+
+          # Embed V15 implementation into V19 so the final file has no package imports.
+          v19=Path('agents/v19_livestock_compound.py').read_text()
+          marker='from agents import v15_champion as _v15'
+          embedded=(
+              'import base64 as _b64, zlib as _zl, types as _types\n'
+              '_v15=_types.ModuleType("_v15_embedded")\n'
+              f'_V15_PAYLOAD={champ._PAYLOAD!r}\n'
+              'exec(_zl.decompress(_b64.b64decode(_V15_PAYLOAD)).decode("utf-8"),_v15.__dict__,_v15.__dict__)'
+          )
+          assert marker in v19
+          v19s=v19.replace(marker,embedded,1)
+
+          # Embed the complete V19 standalone into V21-safe.
+          v21=Path('agents/v21_scarcity_safe.py').read_text()
+          marker21='from agents import v19_livestock_compound as _v19'
+          assert marker21 in v21
+          v21s=v21.replace(marker21,
+              'import types as _types_v21\n_v19=_types_v21.ModuleType("_v19_embedded")\nexec('+repr(v19s)+',_v19.__dict__,_v19.__dict__)',1)
+
+          # V23 alpha2 uses the exact donor stream but tolerates only the broken zlib wrapper checksum.
+          v23=Path('agents/v23_direct_donor_clock.py').read_text()
+          old='_SCHEDULE=json.loads(zlib.decompress(base64.b64decode(_PAYLOAD)).decode("utf-8"))'
+          new='''\ndef _decode_schedule_payload(payload):\n    data=base64.b64decode(payload)\n    try: raw=zlib.decompress(data)\n    except zlib.error: raw=zlib.decompress(data[2:-4], -zlib.MAX_WBITS)\n    value=json.loads(raw.decode("utf-8"))\n    if not isinstance(value,list) or len(value)!=720: raise ValueError("donor schedule integrity failure")\n    return value\n_SCHEDULE=_decode_schedule_payload(_PAYLOAD)'''
+          assert old in v23
+          v23s=v23.replace(old,new,1)
+
+          manifest=[]
+          manifest.append(pack('v15.0.0-live-control',v15,'Frozen historical control.'))
+          manifest.append(pack('v19.0.0-live-rc1',v19s,'Livestock-compounding candidate; strongest current local economic control.'))
+          manifest.append(pack('v21.0.0-alpha2-live',v21s,'Scarcity-safe V19 mutation. Preserve for field comparison rather than internal-only rejection.'))
+          manifest.append(pack('v23.0.0-alpha2-live',v23s,'Direct donor-clock probe. Internal transfer was poor, but build is preserved for real-field evidence.'))
+          (out/'LIVE_CANDIDATE_INDEX.json').write_text(json.dumps(manifest,indent=2))
+          PY
+      - name: Contract check packages
+        run: |
+          find live_candidates -name main.py -print -exec python -m py_compile {} \;
+          python - <<'PY'
+          import json,zipfile
+          from pathlib import Path
+          idx=json.loads(Path('live_candidates/LIVE_CANDIDATE_INDEX.json').read_text())
+          assert len(idx)>=4
+          for row in idx:
+              z=Path(row['zip'])
+              with zipfile.ZipFile(z) as f: assert f.namelist()==['main.py']
+          print(json.dumps(idx,indent=2))
+          PY
+      - name: Upload live candidate bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggriculture-live-candidate-bundle
+          path: live_candidates/
+          retention-days: 30
