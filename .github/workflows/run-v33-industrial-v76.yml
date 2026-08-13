@@ -1,0 +1,47 @@
+name: run-v33-industrial-v76
+on:
+  push:
+    branches: [agent/v33-industrial]
+    paths: [agents/v33_industrial_v76.py, .github/workflows/run-v33-industrial-v76.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33-industrial}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - run: python -m py_compile agents/v33_industrial_v76.py
+      - name: 24-game isolated benchmark
+        run: |
+          python - <<'PY'
+          import json,statistics,subprocess,sys
+          from pathlib import Path
+          child='''import importlib,json,sys\nfrom kaggle_environments import make\na=importlib.import_module("agents.v33_industrial_v76")\na.reset_state()\nseed=int(sys.argv[1]);seat=int(sys.argv[2]);e=make("kaggriculture",configuration={"seed":seed},debug=False);e.run([a.agent,"starter"] if seat==0 else ["starter",a.agent]);s=e.state[seat];t=a.get_telemetry();p={k:max([int(x.get(k,0) or 0) for x in t] or [0]) for k in ("lands","hands","animals","productive","idle")};print("R="+json.dumps({"status":str(s.status),"reward":float(s.reward or 0),"peaks":p}))'''
+          rows=[]
+          for seed in range(396000,396012):
+            for seat in (0,1):
+              try:p=subprocess.run([sys.executable,'-c',child,str(seed),str(seat)],capture_output=True,text=True,timeout=170)
+              except subprocess.TimeoutExpired: rows.append({'status':'TIMEOUT','reward':0,'peaks':{}});continue
+              line=next((x for x in p.stdout.splitlines() if x.startswith('R=')),None)
+              rows.append(json.loads(line[2:]) if p.returncode==0 and line else {'status':'ERROR','reward':0,'peaks':{}})
+          r=[x['reward'] for x in rows];z=sorted(r)
+          report={'version':'33.76.0-early-mixed-herd','games':24,'invalid':sum(x['status']!='DONE' for x in rows),'mean':statistics.mean(r),'median':statistics.median(r),'min':min(r),'p10':z[2],'p25':z[5],'p75':z[18],'p90':z[-3],'max':max(r)}
+          for k in ('lands','hands','animals','productive','idle'):report['median_peak_'+k]=statistics.median(float(x.get('peaks',{}).get(k,0) or 0) for x in rows)
+          report['ready_150k']=report['invalid']==0 and report['median']>=150000 and report['min']>=100000
+          Path('benchmarks/v33_v76_latest.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: v33-76-isolated-benchmark, path: benchmarks/v33_v76_latest.json, retention-days: 14}
+      - name: Record result
+        if: always()
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          { echo '## V33.76 isolated early mixed-herd benchmark'; echo; echo '```json'; cat benchmarks/v33_v76_latest.json 2>/dev/null || echo '{"error":"no report"}'; echo '```'; } >/tmp/v76.md
+          gh issue comment 16 --repo "$GITHUB_REPOSITORY" --body-file /tmp/v76.md
