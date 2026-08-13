@@ -1,0 +1,36 @@
+name: run-v34-33-strawberry-seed-floor
+on:
+  push:
+    branches: [agent/v34-33-strawberry-seed-floor]
+    paths:
+      - 'agents/v34_33_strawberry_seed_floor.py'
+      - 'scripts/benchmark_v34_33.py'
+      - '.github/workflows/run-v34-33-strawberry-seed-floor.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v34-33-strawberry-seed-floor, path: candidate}
+      - uses: actions/checkout@v6
+        with: {ref: agent/v32.4-surplus-land, path: control}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - run: python -m py_compile candidate/agents/v34_33_strawberry_seed_floor.py candidate/scripts/benchmark_v34_33.py control/agents/v19_2_early_scale8.py
+      - run: python candidate/scripts/benchmark_v34_33.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: v34-33-strawberry-seed-floor, path: candidate/benchmarks/v34_v33_latest.json, if-no-files-found: ignore, retention-days: 14}
+      - name: Persist benchmark report
+        if: always()
+        working-directory: candidate
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add benchmarks/v34_v33_latest.json || true
+          if ! git diff --cached --quiet; then git commit -m 'bench: record V34.33 isolated 24-game distribution'; git push origin HEAD:agent/v34-33-strawberry-seed-floor; fi
