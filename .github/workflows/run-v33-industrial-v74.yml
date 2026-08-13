@@ -1,0 +1,31 @@
+name: run-v33-industrial-v74
+on:
+  push:
+    branches: [agent/v33.74-q3-feed-worker]
+    paths: [.github/workflows/run-v33-industrial-v74.yml]
+permissions:
+  contents: read
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v6
+        with: {ref: agent/v33.74-q3-feed-worker, path: candidate}
+      - uses: actions/checkout@v6
+        with: {ref: agent/v32.4-surplus-land, path: baseline}
+      - uses: actions/setup-python@v6
+        with: {python-version: '3.11'}
+      - run: pip install -q kaggle-environments
+      - name: Compile
+        run: |
+          python -m py_compile candidate/agents/v33_industrial_v73.py
+          python -m py_compile candidate/agents/v33_industrial_v66.py
+          python -m py_compile baseline/agents/v19_2_early_scale8.py
+      - name: Isolated 24-game benchmark
+        run: |
+          python candidate/scripts/benchmark_v33_v74.py --baseline-root baseline --candidate-root candidate --output v33_v74_latest.json
+      - uses: actions/upload-artifact@v6
+        with:
+          name: v33-v74-benchmark
+          path: v33_v74_latest.json
