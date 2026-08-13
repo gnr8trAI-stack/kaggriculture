@@ -11,7 +11,7 @@ from typing import Any, Mapping
 from agents import v33_industrial_v76 as _p
 
 _b = _p._b
-_v28 = _p._p._p
+_v28 = _p._v28
 _parent_roles = _v28._roles
 _parent_unit_action = _v28._unit_action
 
@@ -35,7 +35,7 @@ def _builder_action(obs: Mapping[str,Any], farm: Mapping[str,Any], p, stats, res
     day = int(obs.get('day',0) or 0)
     lands = int(stats.get('lands',0) or 0)
     tiles = farm.get('tiles') or []
-    tc, ts, pasture_target = _p._mixed_targets(day, lands)
+    _, _, pasture_target = _p._mixed_targets(day, lands)
     pastures = _p._animal_positions(tiles)
     if day > 14 or len(pastures) >= pasture_target or _unfed_exists(tiles):
         return None
