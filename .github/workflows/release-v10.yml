@@ -1,0 +1,93 @@
+name: release-v10
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  release-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install latest validated Kaggriculture engine
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+          python -m pip install 'git+https://github.com/Kaggle/kaggle-environments.git@a4dce5ae6e2ffe3c1afea8ec4b24b562df74cc07'
+
+      - name: Run repository tests
+        run: python -m pytest -q
+
+      - name: Build exact standalone submission
+        run: |
+          python scripts/build_v10_submission.py
+          python -m py_compile dist/submission.py
+          test -s dist/submission.py
+          ! grep -Eq 'from agents|import agents|from scripts|import scripts' dist/submission.py
+
+      - name: Run 504-game unseen-seed release validation
+        run: |
+          python scripts/release_validate_v10.py \
+            --games-per-seat 42 \
+            --start-seed 10000 \
+            --output experiments/v10-release.json
+
+      - name: Write release notes
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          report = Path('experiments/v10-release.json')
+          lines = ['# V10 Release Candidate', '']
+          if report.exists():
+              data = json.loads(report.read_text())
+              lines += [
+                  f"Release ready: **{data.get('release_ready')}**",
+                  '',
+                  '## Overall benchmark',
+                  '```json',
+                  json.dumps(data.get('summary', {}), indent=2, sort_keys=True),
+                  '```',
+                  '',
+                  '## Release gates',
+                  '```json',
+                  json.dumps(data.get('release_gates', {}), indent=2, sort_keys=True),
+                  '```',
+              ]
+          else:
+              lines.append('Release validation did not produce a report.')
+          Path('experiments/RELEASE_RESULTS.md').write_text('\n'.join(lines), encoding='utf-8')
+          PY
+
+      - name: Package submission
+        if: always()
+        run: |
+          mkdir -p release-package
+          cp dist/submission.py release-package/submission.py
+          cp experiments/v10-release.json release-package/benchmark_results.json 2>/dev/null || true
+          cp experiments/RELEASE_RESULTS.md release-package/RELEASE_RESULTS.md
+          cp README.md release-package/README.md
+
+      - name: Upload release candidate package
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggriculture-v10-release-candidate
+          path: release-package/
+          retention-days: 90
+
+      - name: Upload full benchmark artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kaggriculture-v10-release-validation
+          path: experiments/
+          retention-days: 90
